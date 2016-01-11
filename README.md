@@ -36,11 +36,11 @@ Source Code
 About Authlete
 --------------
 
-[Authlete][7] is an OAuth 2.0 & OpenID Connect implementation _on cloud_
-([overview][8]). You can easily get the functionalities of OAuth 2.0 and OpenID
-Connect either by using the default implementation provided by Authlete or by
-implementing your own authorization server using [Authlete Web APIs][6] as
-this implementation (java-oauth-server) does.
+[Authlete][7] is a cloud service that provides an implementation of OAuth 2.0
+& OpenID Connect ([overview][8]). You can easily get the functionalities of
+OAuth 2.0 and OpenID Connect either by using the default implementation
+provided by Authlete or by implementing your own authorization server using
+[Authlete Web APIs][6] as this implementation (java-oauth-server) does.
 
 To use this authorization server implementation, you need to get API credentials
 from Authlete and set them in `authlete.properties`. The steps to get API
@@ -101,7 +101,7 @@ Basically,
 you need to do programming for _end-user authentication_ because Authlete does
 not manage end-user accounts. This is by design. The architecture of Authlete
 carefully seperates authorization from authentication so that you can add OAuth
-2.0 and OpenID Connect functionalities seamlessly into your existing web
+2.0 and OpenID Connect functionalities seamlessly into even an existing web
 service which may already have a mechanism for end-user authentication.
 
 
@@ -113,8 +113,8 @@ The class is included in [Jersey][18] (the reference implementation of JAX-RS),
 but it is not a part of JAX-RS 2.0 API.
 
 
-Specifications
---------------
+Related Specifications
+----------------------
 
 - [RFC 6749][1] - The OAuth 2.0 Authorization Framework
 - [RFC 6750][19] - The OAuth 2.0 Authorization Framework: Bearer Token Usage
