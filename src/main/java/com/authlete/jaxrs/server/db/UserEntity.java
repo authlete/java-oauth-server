@@ -17,6 +17,7 @@
 package com.authlete.jaxrs.server.db;
 
 
+import com.authlete.common.dto.Address;
 import com.authlete.common.types.StandardClaims;
 import com.authlete.common.types.User;
 
@@ -53,14 +54,37 @@ public class UserEntity implements User
 
 
     /**
+     * The email address of the user.
+     */
+    private String email;
+
+
+    /**
+     * The postal address of the user.
+     */
+    private Address address;
+
+
+    /**
+     * The phone number of the user.
+     */
+    private String phoneNumber;
+
+
+    /**
      * Constructor with initial values.
      */
-    public UserEntity(String subject, String loginId, String password, String name)
+    public UserEntity(
+            String subject, String loginId, String password, String name,
+            String email, Address address, String phoneNumber)
     {
-        this.subject  = subject;
-        this.loginId  = loginId;
-        this.password = password;
-        this.name     = name;
+        this.subject     = subject;
+        this.loginId     = loginId;
+        this.password    = password;
+        this.name        = name;
+        this.email       = email;
+        this.address     = address;
+        this.phoneNumber = phoneNumber;
     }
 
 
@@ -103,11 +127,28 @@ public class UserEntity implements User
             return null;
         }
 
+        // See "OpenID Connect Core 1.0, 5. Claims".
         switch (claimName)
         {
             case StandardClaims.NAME:
-                // "name" claim.
+                // "name" claim. This claim can be requested by including "profile"
+                // in "scope" parameter of an authorization request.
                 return name;
+
+            case StandardClaims.EMAIL:
+                // "email" claim. This claim can be requested by including "email"
+                // in "scope" parameter of an authorization request.
+                return email;
+
+            case StandardClaims.ADDRESS:
+                // "address" claim. This claim can be requested by including "address"
+                // in "scope" parameter of an authorization request.
+                return address;
+
+            case StandardClaims.PHONE_NUMBER:
+                // "phone_number" claim. This claim can be requested by included "phone"
+                // in "scope" parameter of an authorization request.
+                return phoneNumber;
 
             default:
                 // Unsupported claim.

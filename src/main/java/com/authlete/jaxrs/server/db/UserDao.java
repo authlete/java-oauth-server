@@ -17,6 +17,7 @@
 package com.authlete.jaxrs.server.db;
 
 
+import com.authlete.common.dto.Address;
 import com.authlete.common.types.User;
 
 
@@ -31,8 +32,10 @@ public class UserDao
      * Dummy user database.
      */
     private static final UserEntity[] sUserDB = {
-            new UserEntity("1001", "john", "john", "John Smith"),
-            new UserEntity("1002", "jane", "jane", "Jane Smith")
+            new UserEntity("1001", "john", "john", "John Smith", "john@example.com",
+                    new Address().setCountry("USA"), "+1 (425) 555-1212"),
+            new UserEntity("1002", "jane", "jane", "Jane Smith", "jane@example.com",
+                    new Address().setCountry("Chile"), "+56 (2) 687 2400")
     };
 
 
