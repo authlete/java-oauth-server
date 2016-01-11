@@ -85,24 +85,35 @@ Authorization Request Example
 
 The following is an example to get an access token from the authorization
 endpoint using [Implicit Flow][16]. Don't forget to replace `{client-id}` in
-the URL with the real client ID of one of your client applications.
+the URL with the real client ID of one of your client applications. As for
+client applications, see [Getting Started][10] and the [document][17] of
+_Developer Console_.
 
     http://localhost:8080/api/authorization?client_id={client-id}&response_type=token
 
-As for client applications, see [Getting Started][10] and the [document][17] of
-_Developer Console_.
+The request above will show you an authorization page. The page asks you to
+input login credentials and click "Authorize" button or "Deny" button. Use
+one of the following as login credentials.
+
+| Login ID | Password |
+|:--------:|:--------:|
+|   john   |   john   |
+|   jane   |   jane   |
+
+Of course, these login credentials are dummy data, so you need to replace
+the user database implementation with your own.
 
 
 Customization
 -------------
 
 How to customize this implementation is described in [CUSTOMIZATION.md][39].
-Basically,
-you need to do programming for _end-user authentication_ because Authlete does
-not manage end-user accounts. This is by design. The architecture of Authlete
-carefully seperates authorization from authentication so that you can add OAuth
-2.0 and OpenID Connect functionalities seamlessly into even an existing web
-service which may already have a mechanism for end-user authentication.
+Basically, you need to do programming for _end-user authentication_ because
+Authlete does not manage end-user accounts. This is by design. The
+architecture of Authlete carefully seperates authorization from authentication
+so that you can add OAuth 2.0 and OpenID Connect functionalities seamlessly
+into even an existing web service which may already have a mechanism for
+end-user authentication.
 
 
 Implementation Note
