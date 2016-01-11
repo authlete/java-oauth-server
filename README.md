@@ -39,12 +39,12 @@ About Authlete
 [Authlete][7] is an OAuth 2.0 & OpenID Connect implementation _on cloud_
 ([overview][8]). You can easily get the functionalities of OAuth 2.0 and OpenID
 Connect either by using the default implementation provided by Authlete or by
-implementing your own authorization server using [Authlete's Web APIs][6] as
+implementing your own authorization server using [Authlete Web APIs][6] as
 this implementation (java-oauth-server) does.
 
 To use this authorization server implementation, you need to get API credentials
 from Authlete and set them in `authlete.properties`. The steps to get API
-credentials is very easy. All you have to do is just to register your account
+credentials are very easy. All you have to do is just to register your account
 ([sign up][9]). See [Getting Started][10] for details.
 
 
@@ -53,16 +53,16 @@ How To Run
 
 1. Download the source code of this authorization server implementation.
 
-    $ git clone https://github.com/authlete/java-oauth-server.git
-    $ cd java-oauth-server
+        $ git clone https://github.com/authlete/java-oauth-server.git
+        $ cd java-oauth-server
 
 2. Edit the configuration file to set the API credentials of yours.
 
-    $ vi authlete.properties
+        $ vi authlete.properties
 
 3. Start the authorization server on [http://localhost:8080][38].
 
-    $ mvn jetty:run &
+        $ mvn jetty:run &
 
 
 Endpoints
@@ -96,7 +96,8 @@ _Developer Console_.
 Customization
 -------------
 
-How to customize this implementation is described in CUSTOMIZATION.md. Basically,
+How to customize this implementation is described in [CUSTOMIZATION.md][39].
+Basically,
 you need to do programming for _end-user authentication_ because Authlete does
 not manage end-user accounts. This is by design. The architecture of Authlete
 carefully seperates authorization from authentication so that you can add OAuth
@@ -191,3 +192,4 @@ support@authlete.com
 [36]: http://openid.net/specs/openid-connect-registration-1_0.html
 [37]: http://openid.net/specs/openid-connect-session-1_0.html
 [38]: http://localhost:8080
+[39]: CUSTOMIZATION.md
