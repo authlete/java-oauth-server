@@ -1,0 +1,127 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.authlete</groupId>
+  <artifactId>java-oauth-server</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>java-oauth-server</name>
+  <url>https://github.com/authlete/java-oauth-server</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <authlete.java.common.version>1.26</authlete.java.common.version>
+    <authlete.java.jaxrs.version>1.0</authlete.java.jaxrs.version>
+    <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
+    <jersey.version>2.22.1</jersey.version>
+    <jetty.version>9.3.6.v20151106</jetty.version>
+    <maven.compiler.plugin.version>3.3</maven.compiler.plugin.version>
+    <maven.war.plugin.version>2.5</maven.war.plugin.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.authlete</groupId>
+      <artifactId>authlete-java-common</artifactId>
+      <version>${authlete.java.common.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.authlete</groupId>
+      <artifactId>authlete-java-jaxrs</artifactId>
+      <version>${authlete.java.jaxrs.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${javax.servlet-api.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.containers</groupId>
+      <artifactId>jersey-container-servlet</artifactId>
+      <version>${jersey.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-moxy</artifactId>
+      <version>${jersey.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.ext</groupId>
+      <artifactId>jersey-mvc</artifactId>
+      <version>${jersey.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.ext</groupId>
+      <artifactId>jersey-mvc-jsp</artifactId>
+      <version>${jersey.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin.version}</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+          <compilerArgument>-proc:none</compilerArgument>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>${maven.war.plugin.version}</version>
+        <configuration>
+          <nonFilteredFileExtensions>
+            <nonFilteredFileExtension>jar</nonFilteredFileExtension>
+          </nonFilteredFileExtensions>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>${jetty.version}</version>
+        <configuration>
+          <webApp>
+            <webInfIncludeJarPattern>.*/.*jersey-[^/]\.jar$</webInfIncludeJarPattern>
+          </webApp>
+          <httpConnector>
+            <port>8080</port>
+          </httpConnector>
+          <stopPort>9999</stopPort>
+          <stopKey>stop</stopKey>
+        </configuration>
+        <executions>
+          <execution>
+            <id>start-jetty</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>stop-jetty</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

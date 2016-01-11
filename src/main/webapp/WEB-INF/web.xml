@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+  metadata-complete="true"
+  id="java-oauth-server"
+  version="3.0">
+
+  <filter>
+    <filter-name>API</filter-name>
+
+    <filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
+
+    <init-param>
+      <param-name>jersey.config.disableAutoDiscovery</param-name>
+      <param-value>true</param-value>
+    </init-param>
+
+    <init-param>
+      <param-name>jersey.config.disableMetainfServicesLookup</param-name>
+      <param-value>true</param-value>
+    </init-param>
+
+    <init-param>
+      <param-name>jersey.config.server.provider.classnames</param-name>
+      <param-value>
+        com.authlete.jaxrs.server.api.AuthorizationDecisionEndpoint,
+        com.authlete.jaxrs.server.api.AuthorizationEndpoint,
+        com.authlete.jaxrs.server.api.TokenEndpoint,
+        org.glassfish.jersey.moxy.json.MoxyJsonFeature,
+        org.glassfish.jersey.server.mvc.jsp.JspMvcFeature
+      </param-value>
+    </init-param>
+
+    <init-param>
+        <param-name>jersey.config.server.response.setStatusOverSendError</param-name>
+        <param-value>true</param-value>
+    </init-param>
+
+    <init-param>
+        <param-name>jersey.config.servlet.filter.forwardOn404</param-name>
+        <param-value>false</param-value>
+    </init-param>
+
+    <init-param>
+        <param-name>jersey.config.server.mvc.templateBasePath.jsp</param-name>
+        <param-value>/WEB-INF/template</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>API</filter-name>
+    <url-pattern>/api/*</url-pattern>
+  </filter-mapping>
+
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>

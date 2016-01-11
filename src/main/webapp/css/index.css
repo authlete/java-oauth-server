@@ -1,0 +1,49 @@
+body {
+  margin: 0;
+  text-shadow: none;
+}
+
+#page_title {
+  background: #333;
+  color: white;
+  padding: 0.5em;
+  margin: 0;
+  font-size: 200%;
+}
+
+#content {
+  padding: 20px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td {
+  padding: 10px;
+}
+
+td.label {
+  background-color: #E0E0E0;
+}
+
+a {
+  text-decoration: none;
+  color: blue;
+}
+
+a:visited {
+  color: blue;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.font-default
+{
+  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Segoe UI', 'Arial', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 200;
+  font-size: 18px;
+}

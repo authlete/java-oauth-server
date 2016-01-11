@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>Authorization Server</title>
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body class="font-default" style="margin: 0; text-shadow: none;">
+  <div id="page_title">Authorization Server</div>
+
+  <div id="content">
+    <p>
+      Authorization server supporting OAuth 2.0 &amp; OpenID Connect, powered by
+      <b><a href="https://www.authlete.com/" target="_blank">Authlete</a></b>.
+    </p>
+
+    <table border="1" style="margin: 40px 20px;">
+      <tbody>
+        <tr>
+          <td valign="top" class="label">Authorization Endpoint</td>
+          <td>/api/authorization</td>
+        </tr>
+        <tr>
+          <td valign="top" class="label">Token Endpoint</td>
+          <td>/api/token</td>
+        </tr>
+        <tr>
+          <td valign="top" class="label">Management Console</td>
+          <td><a href="https://so.authlete.com/" target="_blank">https://so.authlete.com</a></td>
+        </tr>
+        <tr>
+          <td valign="top" class="label">Source Code</td>
+          <td><a href="https://github.com/authlete/java-oauth-server" target="_blank">https://github.com/authlete/java-oauth-server</a></td>
+        </tr>
+        <tr>
+          <td valign="top" class="label">Libraries</td>
+          <td>
+            <a href="https://github.com/authlete/authlete-java-common" target="_blank">https://github.com/authlete/authlete-java-common</a><br/>
+            <a href="https://github.com/authlete/authlete-java-jaxrs" target="_blank">https://github.com/authlete/authlete-java-jaxrs</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ol>
+      <li>
+        <a href="https://www.authlete.com/" target="_blank">Authlete</a>
+        is an OAuth 2.0 &amp; OpenID Connect implementation on cloud
+        (<a href="https://www.authlete.com/documents/overview" target="_bank">overview</a>).
+      <li>
+        This authorization server is written using Authlete's open source libraries.
+      <li>
+        This authorization server is DB-less because authorization data are stored on cloud.
+      <li>
+        You can manage settings of authorization servers by
+        <a href="https://so.authlete.com/" target="_blank">Service Owner Console</a>
+        (<a href="https://www.authlete.com/documents/so_console" target="_blank">document</a>).
+      <li>
+        You can manage settings of client applications by Developer Console
+        (<a href="https://www.authlete.com/documents/cd_console" target="_blank">document</a>).
+    </ol>
+  </div>
+
+</body>
+</html>
