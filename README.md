@@ -203,4 +203,4 @@ support@authlete.com
 [36]: http://openid.net/specs/openid-connect-registration-1_0.html
 [37]: http://openid.net/specs/openid-connect-session-1_0.html
 [38]: http://localhost:8080
-[39]: CUSTOMIZATION.md
+[39]: doc/CUSTOMIZATION.md
