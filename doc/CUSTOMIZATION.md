@@ -67,16 +67,18 @@ so far.
 Authorization Endpoint
 ----------------------
 
-The implementation of the authorization endpoint is in [AuthorizationEndpoint.java][14].
-The code is incredibly short although it supports OpenID Connect in addition to
-OAuth 2.0. There is little need to change this file.
+The implementation of the authorization endpoint is in
+<code>[AuthorizationEndpoint.java][14]</code>. The code is incredibly short
+although it supports OpenID Connect in addition to OAuth 2.0. There is little
+need to change this file.
 
-The implementation uses [AuthorizationRequestHandler][15] class and delegates
-the task to handle an authorization request to `handle()` method of the class.
-Details about the class is written in the README file of [authlete-java-jaxrs][6]
-library. What is important here is that the constructor of the class requires
-an implementation of [AuthorizationRequestHandlerSpi][16] interface and that
-the implementation must be provided by you. In other words, the methods in
+The implementation uses <code>[AuthorizationRequestHandler][15]</code> class
+and delegates the task to handle an authorization request to `handle()` method
+of the class. Details about the class is written in the README file of
+[authlete-java-jaxrs][6] library. What is important here is that the
+constructor of the class requires an implementation of
+<code>[AuthorizationRequestHandlerSpi][16]</code> interface and that the
+implementation must be provided by you. In other words, the methods in
 `AuthorizationRequestHandlerSpi` interface are customization points.
 
 The interface has the methods listed below. See the [JavaDoc][8] of
@@ -88,26 +90,26 @@ authlete-java-jaxrs API for details about the requirements of these methods.
   4. `String getAcr()`
   5. `Response generateAuthorizationPage(AuthorizationResponse)`
 
-The most important method among the above is [generateAuthorizationPage()][17].
-The method is called to generate an authorization page. In contrast, the
-other methods are not so important because they are called only when an
-authorization request comes with a special request parameter `prompt=none`.
-If you have no mind to support `prompt=none`, you can leave your
-implementations of the methods empty. Details about `prompt=none` is
-written in "[3.1.2.1. Authorization Request][10]" in
-[OpenID Connect Core 1.0][11].
+The most important method among the above is
+<code>[generateAuthorizationPage()][17]</code>. The method is called to
+generate an authorization page. In contrast, the other methods are not so
+important because they are called only when an authorization request comes
+with a special request parameter `prompt=none`. If you have no mind to
+support `prompt=none`, you can leave your implementations of the methods
+empty. Details about `prompt=none` is written in
+"[3.1.2.1. Authorization Request][10]" of [OpenID Connect Core 1.0][11].
 
 The implementation of `AuthorizationRequestHandlerSpi` interface in
-java-oauth-server is written in [AuthorizationRequestHandlerSpiImpl.java][18].
-The implementation class in the file, `AuthorizationRequestHandlerSpiImpl`,
-extends [AuthorizationRequestHandlerSpiAdapter][19] class which is an empty
-implementation of `AuthorizationRequestHandlerSpi` interface, and overrides
-`generateAuthorizationPage()` method only. The code snippet below shows
-the rough structure of the implementation.
+java-oauth-server is written in
+<code>[AuthorizationRequestHandlerSpiImpl.java][18]</code>. The implementation
+class in the file, `AuthorizationRequestHandlerSpiImpl`, extends
+<code>[AuthorizationRequestHandlerSpiAdapter][19]</code> class which is an
+empty implementation of `AuthorizationRequestHandlerSpi` interface, and
+overrides `generateAuthorizationPage()` method only. The code snippet below
+shows the rough structure of the implementation.
 
 ```java
-class AuthorizationRequestHandlerSpiImpl
-    extends AuthorizationRequestHandlerSpiAdapter
+class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiAdapter
 {
     ......
 
@@ -126,11 +128,12 @@ Authorization Page
 As mentioned, `generateAuthorizationPage()` in `AuthorizationRequestHandlerSpi`
 interface is a method to generate an authorization page. The current
 implementation of the method in java-oauth-server retrieves data from the
-argument (an intance of [AuthorizationResponse][20] class which represents a
-response from Authlete's `/api/auth/authorization` API) and embeds them into
-an HTML template, [authorization.jsp][21]. To achieve this, the implementation
-uses `Viewable` class. The class is included in [Jersey][12] (the reference
-implementation of JAX-RS), but it is not a part of JAX-RS 2.0 API.
+argument (an intance of <code>[AuthorizationResponse][20]</code> class which
+represents a response from Authlete's `/api/auth/authorization` API) and
+embeds them into an HTML template, <code>[authorization.jsp][21]</code>.
+To achieve this, the implementation uses `Viewable` class. The class is
+included in [Jersey][12] (the reference implementation of JAX-RS), but it
+is not a part of JAX-RS 2.0 API.
 
 If you want to customize the authorization page, change the implementation
 of `generateAuthorizationPage()` method and/or the template of the
@@ -172,7 +175,7 @@ you may use any means you like to internationalize the authorization page.
 An authorization request may contain `display` request parameter to specify
 how to display the authorization page. It is a new request parameter defined
 in [OpenID Connect Core 1.0][11]. The predefined values of the request
-parameters are as follows. The descriptions in the table are excerptes from
+parameter are as follows. The descriptions in the table are excerpts from
 the specification.
 
 | Value | Description |
@@ -183,13 +186,13 @@ the specification.
 | wap   | The Authorization Server SHOULD display the authentication and consent UI consistent with a "feature phone" type display. |
 
 You can get the value of `display` request parameter as an instance of
-[Display][22] enum by calling `getDisplay()` method of `AuthorizationResponse`
-instance. By default, all the display types are checked as supported in the
-management console ([Service Owner Console][13]), but you can uncheck them
-to declare some values are not supported. If an unsupported value is specified
-as the value of `display` request parameter, it will result in returning an
-`invalid_request` error to the client application that made the authorization
-request.
+<code>[Display][22]</code> enum by calling `getDisplay()` method of
+`AuthorizationResponse` instance. By default, all the display types are
+checked as supported in the management console ([Service Owner Console][13]),
+but you can uncheck them to declare some values are not supported. If an
+unsupported value is specified as the value of `display` request parameter,
+it will result in returning an `invalid_request` error to the client
+application that made the authorization request.
 
 TBW
 
@@ -197,30 +200,31 @@ TBW
 Token Endpoint
 --------------
 
-The implementation of the token endpoint is in [TokenEndpoint.java][23].
+The implementation of the token endpoint is in <code>[TokenEndpoint.java][23]</code>.
 The code is incredibly short and there is little need to change the content of
 the file.
 
-The implementation uses [TokenRequestHandler][24] class and delegates the task
-to handle a token request to `handle()` method of the class. Details about the
-class is written in the README file of [authlete-java-jaxrs][6] library. What
+The implementation uses <code>[TokenRequestHandler][24]</code> class and delegates
+the task to handle a token request to `handle()` method of the class. Details about
+the class is written in the README file of [authlete-java-jaxrs][6] library. What
 is important here is that the constructor of the class requires an implementation
-of [TokenRequestHandlerSpi][25] interface and that the implementation must be
-provided by you. In other words, the methods in `TokenRequestHandlerSpi`
+of <code>[TokenRequestHandlerSpi][25]</code> interface and that the implementation
+must be provided by you. In other words, the methods in `TokenRequestHandlerSpi`
 interface are customization points.
 
 The current definition of the interface has only one method named `authenticateUser`.
-This method is called to authenticate an end-user. However, the method is called
-only when the grant type of the token request is [Resource Owner Password
+This method is used to authenticate an end-user. However, the method is called
+only when the grant type of a token request is [Resource Owner Password
 Credentials][26]. Therefore, if you have no mind to support the grant type,
 you can leave your implementation of the method empty.
 
 The implementation of `TokenRequestHandlerSpi` interface in java-oauth-server
-is written in [TokenRequestHandlerSpiImpl.java][27]. The implmentation class
-in the file, `TokenRequestHandlerSpiImpl`, extends
-[TokenRequestHandlerSpiAdapter][28] class which is an empty implementation of
-`TokenRequestHandlerSpi` interface, and overrides `authenticateUser()` method.
-The code snippet below shows the rough structure of the implementation.
+is written in <code>[TokenRequestHandlerSpiImpl.java][27]</code>. The implmentation
+class in the file, `TokenRequestHandlerSpiImpl`, extends
+<code>[TokenRequestHandlerSpiAdapter][28]</code> class which is an empty
+implementation of `TokenRequestHandlerSpi` interface, and overrides
+`authenticateUser()` method. The code snippet below shows the rough structure of
+the implementation.
 
 ```java
 class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
