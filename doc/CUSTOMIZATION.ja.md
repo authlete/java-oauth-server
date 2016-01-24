@@ -254,7 +254,7 @@ support@authlete.com
 [7]: http://authlete.github.io/authlete-java-common/
 [8]: http://authlete.github.io/authlete-java-jaxrs/
 [9]: https://jcp.org/en/jsr/detail?id=339
-10]: http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+[10]: http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
 [11]: http://openid.net/specs/openid-connect-core-1_0.html
 [12]: https://jersey.java.net/
 [13]: https://www.authlete.com/documents/so_console/
