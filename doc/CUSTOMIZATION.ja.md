@@ -88,8 +88,8 @@ OAuth 2.0 に加えて OpenID Connect もサポートしているにもかかわ
 対照的に、他のメソッド群は、認可リクエストが `prompt=none`
 という特別なリクエストパラメーターを含んでいる場合しか呼ばれないので、それほど重要ではありません。
 もしも `prompt=none` をサポートする気がないのであれば、それらのメソッド群の実装は空でかまいません。
-`prompt=none` の詳細については [OpenID Connect Core 1.0][11]
-の「[3.1.2.1. Authorization Request][10]」に記述されています。
+`prompt=none` の詳細については [OpenID Connect Core 1.0][11] の
+[3.1.2.1. Authorization Request][10] に記述されています。
 
 java-oauth-server における `AuthorizationRequestHandlerSpi` インターフェースの実装は
 <code>[AuthorizationRequestHandlerSpiImpl.java][18]</code> です。 ファイル内の
@@ -118,7 +118,7 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
 既に述べたとおり、`AuthorizationRequestHandlerSpi` インターフェースの
 `generateAuthorizationPage()` メソッドは認可ページを生成するために呼ばれます。
 java-oauth-server の現在の実装では、(Authlete の `/api/auth/authorization` API
-からの応答を表す <code>[AuthorizationResponse][20]</code> クラスのインスタンスの)
+からの応答を表す <code>[AuthorizationResponse][20]</code> クラスのインスタンスである)
 引数からデータを取り出し、そのデータを <code>[authorization.jsp][21]</code>
 という HTML テンプレートに埋め込みます。 これをおこなうため、実装では `Viewable`
 というクラスを使用しています。 このクラスは [Jersey][12] (JAX-RS のレファレンス実装)
@@ -126,7 +126,7 @@ java-oauth-server の現在の実装では、(Authlete の `/api/auth/authorizat
 
 認可ページをカスタマイズしたい場合は、`generateAuthorizationPage()`
 メソッドと認可ページのテンプレート (`authorization.jsp`)
-のどちらか、もしくは一方を変更してください。 `AuthorizationResponse`
+のどちらか、もしくは両方を変更してください。 `AuthorizationResponse`
 クラスの詳細については authlete-java-common ライブラリの [JavaDoc][7]
 を参照してください。
 
@@ -136,7 +136,7 @@ java-oauth-server の現在の実装では、(Authlete の `/api/auth/authorizat
 認可ページの国際化に際して、認可リクエストに含まれる `ui_locales`
 パラメーターを考慮に入れてもよいでしょう。 これは [OpenID Connect Core 1.0][11]
 で新たに定義されたリクエストパラメーターです。
-下記はこのパラメータに関する説明を仕様から抜粋したものです。
+下記は、このパラメータに関する説明を仕様から抜粋したものです。
 
 > OPTIONAL. End-User's preferred languages and scripts for the user interface,
 > represented as a space-separated list of BCP47 [RFC5646] language tag values,
@@ -150,12 +150,12 @@ java-oauth-server の現在の実装では、(Authlete の `/api/auth/authorizat
 リクエストパラメーターの値を `String` の配列として取得することができます。
 ただし、`getUiLocales()` メソッドはサポートされている UI ロケールしか返さないので、
 管理コーンソール ([Service Owner Console][13]) を使って明示的に UI
-ロケールを指定しなければならないので、注意してください。 別の言い方をすると、`ui_locales`
+ロケールを指定する必要があることに注意してください。 別の言い方をすると、`ui_locales`
 リクエストパラメーターがどのような値であろうとも、`getUiLocales()`
 が返す配列にはサポートしている UI ロケールしか含まれていないことが保証されています。
 
 `ui_locales` パラメーターを尊重するか否かはあなたの自由です。
-もちろん、認可ページの国際化は好きな方法を選ぶことができます。
+もちろん、認可ページの国際化は好きな方法でおこなうことができます。
 
 
 ### 表示モード
