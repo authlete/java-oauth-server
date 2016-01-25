@@ -78,7 +78,7 @@ OAuth 2.0 に加えて OpenID Connect もサポートしているにもかかわ
 [JavaDoc][8] を参照してください。
 
   1. `boolean isUserAuthenticated()`
-  2. `long etUserAuthenticatedAt()`
+  2. `long getUserAuthenticatedAt()`
   3. `String getUserSubject()`
   4. `String getAcr()`
   5. `Response generateAuthorizationPage(AuthorizationResponse)`
@@ -158,7 +158,7 @@ java-oauth-server の現在の実装では、(Authlete の `/api/auth/authorizat
 もちろん、認可ページの国際化は好きな方法でおこなうことができます。
 
 
-### 表示モード
+#### 表示モード
 
 認可リクエストには認可ページの表示方法を指定するための `display`
 パラメーターが含まれることがあります。 これは [OpenID Connect Core 1.0][11]
@@ -184,6 +184,93 @@ java-oauth-server の現在の実装では、(Authlete の `/api/auth/authorizat
 エラーが返されることになります。
 
 TBW
+
+
+認可決定エンドポイント
+----------------------
+
+認可ページでエンドユーザーは、認可リクエストをおこなったクライアントアプリケーションに権限を与えるか、
+もしくは認可リクエストを拒否するか、どちらかを選択します。
+認可サーバはその決定を受け取り、それに従ってクライアントアプリケーションに適切な応答を返せなければなりません。
+
+java-oauth-server の現在の実装は、エンドユーザーの決定を `/api/authorization/decision` で受け取ります。
+この文書では、当該エンドポイントを認可決定エンドポイントと呼びます。 java-oauth-server
+では、認可決定エンドポイントの実装は <code>[AuthorizationDecisionEndpoint.java][29]</code>
+内にあります。
+
+実装では、<code>[AuthorizationDecisionHandler][30]</code>
+クラスを使い、エンドユーザーの決定を処理する作業をそのクラスの `handle()` メソッドに委譲しています。
+クラスの詳細については [authlete-java-jaxrs][6] ライブラリの README ファイルに書かれています。
+ここで重要なのは、このクラスのコンストラクタが <code>[AuthorizationDecisionHandlerSpi][31]</code>
+インターフェースの実装を必要とし、その実装はあなたが提供しなければならないという点です。
+別の言い方をすると、`AuthorizationDecisionHandlerSpi` インターフェースのメソッド群がカスタマイズポイントです。
+
+当該インターフェースには、次のようなメソッド群が定義されています。
+これらのメソッド群の要求事項の詳細については authlete-java-jaxrs API の
+[JavaDoc][8] を参照してください。
+
+  1. `boolean isClientAuthorized()`
+  2. `long getUserAuthenticatedAt()`
+  3. `String getUserSubject()`
+  4. `String getAcr()`
+  5. `getUserClaim(String claimName, String languageTag)`
+
+java-oauth-server における `AuthorizationDecisionHandlerSpi` インターフェースの実装は
+<code>[AuthorizationDecisionHandlerSpiImpl.java][32]</code> です。 ファイル内の
+`AuthorizationDecisionHandlerSpiImpl` という実装クラスは、`AuthorizationDecisionHandlerSpi`
+インターフェースの空実装である <code>[AuthorizationDecisionHandlerSpiAdapter][33]</code>
+クラスを拡張し、`getAcr()` 以外のメソッド群を全てをオーバーライドしています。
+下記のコードは、実装のおおまかな構造を示してます。
+
+```java
+class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSpiAdapter
+{
+    ......
+
+    @Override
+    public boolean isClientAuthorized()
+    {
+        ......
+    }
+
+    @Override
+    public long getUserAuthenticatedAt()
+    {
+        ......
+    }
+
+    @Override
+    public String getUserSubject()
+    {
+        ......
+    }
+
+    @Override
+    public Object getUserClaim(String claimName, String languageTag)
+    {
+        ......
+    }
+}
+```
+
+
+#### エンドユーザー認証
+
+エンドユーザーをどのように認証するかについては、Authlete は全く気にしません。
+その代わりに、Authlete は認証されたエンドユーザーのサブジェクトを要求します。
+
+「サブジェクト」はアイデンティティー関連分野の専門用語で、一意識別子のことを意味します。
+典型的には、エンドユーザーのサブジェクトは、
+ユーザーデータベース内のプライマリーキーカラムもしくは他のユニークカラムの値です。
+
+エンドユーザーがクライアントアプリケーションに権限を与えたときは、そのエンドユーザーのサブジェクトを
+Authlete に伝える必要があります。 `AuthorizationDecisionhandlerSpi` インターフェースの文脈では、
+次のように表現することができます： _「もしも `isClientAuthorized()` が `true`
+を返すのであれば、そのときは `getUserSubject()` はエンドユーザーのサブジェクトを返さなければならない。」_
+
+エンドユーザー認証のため、java-oauth-server には `UserDao` クラスと `UserEntity`
+クラスがあります。この二つのクラスでダミーのユーザーデータベースを構成しています。
+もちろん、実際のユーザーデータベースを参照するためには、これらをあなたの実装で置き換える必要があります。
 
 
 トークンエンドポイント
@@ -224,8 +311,6 @@ class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
     }
 }
 ```
-
-TBW
 
 
 その他の情報
@@ -273,3 +358,8 @@ support@authlete.com
 [26]: https://tools.ietf.org/html/rfc6749#section-4.3
 [27]: ../src/main/java/com/authlete/jaxrs/server/api/TokenRequestHandlerSpiImpl.java
 [28]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/TokenRequestHandlerSpiAdapter.html
+[29]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationDecisionEndpoint.java
+[30]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/AuthorizationDecisionHandler.html
+[31]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationDecisionHandlerSpi.html
+[32]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationDecisionHandlerSpiImpl.java
+[33]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationDecisionHandlerSpiAdapter.html

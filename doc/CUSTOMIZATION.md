@@ -85,7 +85,7 @@ The interface has the methods listed below. See the [JavaDoc][8] of
 authlete-java-jaxrs API for details about the requirements of these methods.
 
   1. `boolean isUserAuthenticated()`
-  2. `long etUserAuthenticatedAt()`
+  2. `long getUserAuthenticatedAt()`
   3. `String getUserSubject()`
   4. `String getAcr()`
   5. `Response generateAuthorizationPage(AuthorizationResponse)`
@@ -197,6 +197,101 @@ application that made the authorization request.
 TBW
 
 
+Authorization Decision Endpoint
+-------------------------------
+
+In an authorization page, an end-user decides either to grant permissions to
+the client application which made the authorization request or to deny the
+authorization request. An authorization server must be able to receive the
+decision and return a proper response to the client application according to
+the decision.
+
+The current implementation of java-oauth-server receives the end-user's
+decision at `/api/authorization/decision`. In this document, we call the
+endpoint _authorization decision endpoint_. In java-oauth-server, the
+implementation of the authorization decision endpoint is in
+<code>[AuthorizationDecisionEndpoint.java][29]</code>.
+
+The implementation uses <code>[AuthorizationDecisionHandler][30]</code> class
+and delegates the task to handle an end-user's decision to `handle()` method
+of the class. Details about the class is written in the README file of
+[authlete-java-jaxrs][6] library. What is important here is that the
+constructor of the class requires an implementation of
+<code>[AuthorizationDecisionHandlerSpi][31]</code> interface and that the
+implementation must be provided by you. In other words, the methods in
+`AuthorizationDecisionHandlerSpi` interface are customization points.
+
+The interface has the methods listed below. See the [JavaDoc][8] of
+authlete-java-jaxrs API for details about the requirements of these methods.
+
+  1. `boolean isClientAuthorized()`
+  2. `long getUserAuthenticatedAt()`
+  3. `String getUserSubject()`
+  4. `String getAcr()`
+  5. `getUserClaim(String claimName, String languageTag)`
+
+The implementation of `AuthorizationDecisionHandlerSpi` interface in
+java-oauth-server is written in
+<code>[AuthorizationDecisionHandlerSpiImpl.java][32]</code>. The implementation
+class in the file, `AuthorizationDecisionHandlerSpiImpl`, extends
+<code>[AuthorizationDecisionHandlerSpiAdapter][33]</code> class which is an
+empty implementation of `AuthorizationDecisionHandlerSpi` interface, and
+overrides all the methods except `getAcr()`. The code snippet below shows
+the rough structure of the implementation.
+
+```java
+class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSpiAdapter
+{
+    ......
+
+    @Override
+    public boolean isClientAuthorized()
+    {
+        ......
+    }
+
+    @Override
+    public long getUserAuthenticatedAt()
+    {
+        ......
+    }
+
+    @Override
+    public String getUserSubject()
+    {
+        ......
+    }
+
+    @Override
+    public Object getUserClaim(String claimName, String languageTag)
+    {
+        ......
+    }
+}
+```
+
+
+#### End-User Authentication
+
+Authlete does not care about how to authenticate an end-user at all.
+Instead, Authlete requires the subject of the authenticated end-user.
+
+_Subject_ is a technical term in the area related to identity and it means
+a unique identifier. In a typical case, subjects of end-users are values of
+the primary key column or another unique column in a user database.
+
+When an end-user grants permissions to a client application, you have
+to let Authlete know the subject of the end-user. In the context of
+`AuthorizationDecisionHandlerSpi` interface, this can be described as
+follows: _"if `isClientAuthorized()` returns `true`, then `getUserSubject()`
+must return the subject of the end-user."_
+
+For end-user authentication, java-oauth-server has `UserDao` class and
+`UserEntity` class. These two classes compose a dummy user database.
+Of course, you have to replace them with your own implementation to
+refer to your actual user database.
+
+
 Token Endpoint
 --------------
 
@@ -238,8 +333,6 @@ class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
     }
 }
 ```
-
-TBW
 
 
 See Also
@@ -287,3 +380,8 @@ support@authlete.com
 [26]: https://tools.ietf.org/html/rfc6749#section-4.3
 [27]: ../src/main/java/com/authlete/jaxrs/server/api/TokenRequestHandlerSpiImpl.java
 [28]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/TokenRequestHandlerSpiAdapter.html
+[29]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationDecisionEndpoint.java
+[30]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/AuthorizationDecisionHandler.html
+[31]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationDecisionHandlerSpi.html
+[32]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationDecisionHandlerSpiImpl.java
+[33]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationDecisionHandlerSpiAdapter.html
