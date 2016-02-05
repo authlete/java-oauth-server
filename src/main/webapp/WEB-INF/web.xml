@@ -28,6 +28,9 @@
       <param-value>
         com.authlete.jaxrs.server.api.AuthorizationDecisionEndpoint,
         com.authlete.jaxrs.server.api.AuthorizationEndpoint,
+        com.authlete.jaxrs.server.api.ConfigurationEndpoint,
+        com.authlete.jaxrs.server.api.JwksEndpoint,
+        com.authlete.jaxrs.server.api.RevocationEndpoint,
         com.authlete.jaxrs.server.api.TokenEndpoint,
         org.glassfish.jersey.moxy.json.MoxyJsonFeature,
         org.glassfish.jersey.server.mvc.jsp.JspMvcFeature
@@ -53,6 +56,7 @@
   <filter-mapping>
     <filter-name>API</filter-name>
     <url-pattern>/api/*</url-pattern>
+    <url-pattern>/.well-known/openid-configuration</url-pattern>
   </filter-mapping>
 
   <welcome-file-list>
