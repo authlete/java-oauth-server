@@ -23,7 +23,7 @@ td {
   padding: 10px;
 }
 
-td.label {
+tr.label, td.label {
   background-color: #E0E0E0;
 }
 

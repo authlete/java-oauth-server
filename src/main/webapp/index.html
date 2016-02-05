@@ -16,15 +16,38 @@
     </p>
 
     <table border="1" style="margin: 40px 20px;">
+      <thead>
+        <tr class="label">
+          <th>Endpoint</th>
+          <th>Path</th>
+        </tr>
+      </thead>
       <tbody>
         <tr>
-          <td valign="top" class="label">Authorization Endpoint</td>
+          <td valign="top">Authorization Endpoint</td>
           <td>/api/authorization</td>
         </tr>
         <tr>
-          <td valign="top" class="label">Token Endpoint</td>
+          <td valign="top">Token Endpoint</td>
           <td>/api/token</td>
         </tr>
+        <tr>
+          <td valign="top">JWK Set Endpoint</td>
+          <td><a href="/api/jwks">/api/jwks</a></td>
+        </tr>
+        <tr>
+          <td valign="top">Configuration Endpoint</td>
+          <td><a href="/.well-known/openid-configuration">/.well-known/openid-configuration</a></td>
+        </tr>
+        <tr>
+          <td valign="top">Revocation Endpoint</td>
+          <td>/api/revocation</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table border="1" style="margin: 40px 20px;">
+      <tbody>
         <tr>
           <td valign="top" class="label">Management Console</td>
           <td><a href="https://so.authlete.com/" target="_blank">https://so.authlete.com</a></td>
