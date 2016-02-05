@@ -27,7 +27,7 @@ authlete-java-jaxrs は [authlete-java-common][5] ライブラリを使用して
 ソースコード
 ------------
 
-  https://github.com/authlete/java-oauth-server
+  <code>https://github.com/authlete/java-oauth-server</code>
 
 
 Authlete について
@@ -67,16 +67,30 @@ API クレデンシャルズを取得する手順はとても簡単です。
 エンドポイント
 --------------
 
-この実装は、[認可エンドポイント][11]と[トークンエンドポイント][12]の二つのエンドポイントを提供します。
-パスは下表のとおりです。
+この実装は、下表に示すエンドポイントを公開します。
 
-| エンドポイント        | パス               |
-|:----------------------|:-------------------|
-| 認可エンドポイント    | /api/authorization |
-| トークンエンドポイント| /api/token         |
+| エンドポイント         | パス                                |
+|:-----------------------|:------------------------------------|
+| 認可エンドポイント     | `/api/authorization`                |
+| トークンエンドポイント | `/api/token`                        |
+| JWK Set エンドポイント | `/api/jwks`                         |
+| 設定エンドポイント     | `/.well-known/openid-configuration` |
+| 取り消しエンドポイント | `/api/revocation`                   |
 
-認可エンドポイントは、[RFC 6749][1]、[OpenID Connect Core 1.0][13]、及び
-[RFC 7636][14] ([PKCE][15]) で説明されているパラメーター群を受け付けます。
+認可エンドポイントとトークンエンドポイントは、[RFC 6749][1]、[OpenID Connect Core 1.0][13]、
+[OAuth 2.0 Multiple Response Type Encoding Practices][33]、[RFC 7636][14] ([PKCE][15])、
+その他の仕様で説明されているパラメーター群を受け付けます。
+
+JWK Set エンドポイントは、クライアントアプリケーションが (1) この OpenID
+プロバイダーによる署名を検証できるようにするため、また (2) この OpenID
+へのリクエストを暗号化できるようにするため、JSON Web Key Set ドキュメント
+(JWK Set) を公開します。
+
+設定エンドポイントは、この OpenID プロバイダーの設定情報を
+[OpenID Connect Discovery 1.0][35] で定義されている JSON フォーマットで公開します。
+
+取り消しエンドポイントはアクセストークンやリフレッシュトークンを取り消すための
+Web API です。 その動作は [RFC 7009][21] で定義されています。
 
 
 認可リクエストの例
@@ -171,8 +185,8 @@ support@authlete.com
 [8]: https://www.authlete.com/documents/overview
 [9]: https://so.authlete.com/accounts/signup
 [10]: https://www.authlete.com/documents/getting_started
-[11]: https://tools.ietf.org/html/rfc6749#section-3.1
-[12]: https://tools.ietf.org/html/rfc6749#section-3.2
+[11]: http://tools.ietf.org/html/rfc6749#section-3.1
+[12]: http://tools.ietf.org/html/rfc6749#section-3.2
 [13]: http://openid.net/specs/openid-connect-core-1_0.html
 [14]: http://tools.ietf.org/html/rfc7636
 [15]: https://www.authlete.com/documents/article/pkce

@@ -30,7 +30,7 @@ License
 Source Code
 -----------
 
-  https://github.com/authlete/java-oauth-server
+  <code>https://github.com/authlete/java-oauth-server</code>
 
 
 About Authlete
@@ -68,16 +68,30 @@ How To Run
 Endpoints
 ---------
 
-This implementation exposes two endpoints, an [authorization endpoint][11] and
-an [token endpoint][12], at the following paths.
+This implementation exposes endpoints as listed in the table below.
 
-| Endpoint               | Path               |
-|:-----------------------|:-------------------|
-| Authorization Endpoint | /api/authorization |
-| Token Endpoint         | /api/token         |
+| Endpoint               | Path                                |
+|:-----------------------|:------------------------------------|
+| Authorization Endpoint | `/api/authorization`                |
+| Token Endpoint         | `/api/token`                        |
+| JWK Set Endpoint       | `/api/jwks`                         |
+| Configuration Endpoint | `/.well-known/openid-configuration` |
+| Revocation Endpoint    | `/api/revocation`                   |
 
-The authorization endpoint accepts parameters described in [RFC 6749][1],
-[OpenID Connect Core 1.0][13] and [RFC 7636][14] ([PKCE][15]).
+The authorization endpoint and the token point accept parameters described
+in [RFC 6749][1], [OpenID Connect Core 1.0][13],
+[OAuth 2.0 Multiple Response Type Encoding Practices][33], [RFC 7636][14]
+([PKCE][15]) and other specifications.
+
+The JWK Set endpoint exposes a JSON Web Key Set document (JWK Set) so that
+client applications can (1) verify signatures by this OpenID Provider and
+(2) encrypt their requests to this OpenID Provider.
+
+The configuration endpoint exposes the configuration information of this
+OpenID Provider in the JSON format defined in [OpenID Connect Discovery 1.0][35].
+
+The revocation endpoint is a Web API to revoke access tokens and refresh
+tokens. Its behavior is defined in [RFC 7009][21].
 
 
 Authorization Request Example
@@ -175,8 +189,8 @@ support@authlete.com
 [8]: https://www.authlete.com/documents/overview
 [9]: https://so.authlete.com/accounts/signup
 [10]: https://www.authlete.com/documents/getting_started
-[11]: https://tools.ietf.org/html/rfc6749#section-3.1
-[12]: https://tools.ietf.org/html/rfc6749#section-3.2
+[11]: http://tools.ietf.org/html/rfc6749#section-3.1
+[12]: http://tools.ietf.org/html/rfc6749#section-3.2
 [13]: http://openid.net/specs/openid-connect-core-1_0.html
 [14]: http://tools.ietf.org/html/rfc7636
 [15]: https://www.authlete.com/documents/article/pkce
