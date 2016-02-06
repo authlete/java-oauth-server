@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import com.authlete.common.api.DefaultApiFactory;
+import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.AuthorizationDecisionHandler;
 
 
@@ -159,7 +159,7 @@ public class AuthorizationDecisionEndpoint
         // interface and the implementation of AuthorizationDecisionHandlerSpi
         // interface which is specific to this server implementation.
         return new AuthorizationDecisionHandler(
-                DefaultApiFactory.getInstance(),
+                AuthleteApiFactory.getDefaultApi(),
                 new AuthorizationDecisionHandlerSpiImpl(parameters));
     }
 }

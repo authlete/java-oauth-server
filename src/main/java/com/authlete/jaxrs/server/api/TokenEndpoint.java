@@ -26,7 +26,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import com.authlete.common.api.DefaultApiFactory;
+import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.TokenRequestHandler;
 
 
@@ -110,6 +110,6 @@ public class TokenEndpoint
         // interface and the implementation of TokenRequestHandlerSpi
         // interface which is specific to this server implementation.
         return new TokenRequestHandler(
-                DefaultApiFactory.getInstance(), new TokenRequestHandlerSpiImpl());
+                AuthleteApiFactory.getDefaultApi(), new TokenRequestHandlerSpiImpl());
     }
 }

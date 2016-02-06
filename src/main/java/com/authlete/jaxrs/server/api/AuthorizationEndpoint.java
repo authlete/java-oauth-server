@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import com.authlete.common.api.DefaultApiFactory;
+import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.AuthorizationRequestHandler;
 
 
@@ -131,7 +131,7 @@ public class AuthorizationEndpoint
         // interface and the implementation of AuthorizationRequestHandlerSpi
         // interface which is specific to this server implementation.
         return new AuthorizationRequestHandler(
-                DefaultApiFactory.getInstance(),
+                AuthleteApiFactory.getDefaultApi(),
                 new AuthorizationRequestHandlerSpiImpl(request));
     }
 }

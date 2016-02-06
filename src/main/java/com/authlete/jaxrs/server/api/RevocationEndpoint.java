@@ -25,7 +25,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import com.authlete.common.api.DefaultApiFactory;
+import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.BaseRevocationEndpoint;
 
 
@@ -54,6 +54,6 @@ public class RevocationEndpoint extends BaseRevocationEndpoint
             MultivaluedMap<String, String> parameters)
     {
         // Handle the revocation request.
-        return handle(DefaultApiFactory.getInstance(), parameters, authorization);
+        return handle(AuthleteApiFactory.getDefaultApi(), parameters, authorization);
     }
 }

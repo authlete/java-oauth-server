@@ -20,7 +20,7 @@ package com.authlete.jaxrs.server.api;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-import com.authlete.common.api.DefaultApiFactory;
+import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.BaseConfigurationEndpoint;
 
 
@@ -78,6 +78,6 @@ public class ConfigurationEndpoint extends BaseConfigurationEndpoint
     public Response get()
     {
         // Handle the configuration request.
-        return handle(DefaultApiFactory.getInstance());
+        return handle(AuthleteApiFactory.getDefaultApi());
     }
 }
