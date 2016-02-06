@@ -63,6 +63,12 @@ API クレデンシャルズを取得する手順はとても簡単です。
 
         $ mvn jetty:run &
 
+`java-oauth-server` は `authlete.properties` を設定ファイルとして参照します。
+他のファイルを使用したい場合は、次のようにそのファイルの名前をシステムプロパティー
+`authlete.configuration.file` で指定してください。
+
+    $ mvn -Dauthlete.configuration.file=local.authlete.properties jetty:run &
+
 
 エンドポイント
 --------------

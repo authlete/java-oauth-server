@@ -64,6 +64,12 @@ How To Run
 
         $ mvn jetty:run &
 
+`java-oauth-server` refers to `authlete.properties` as a configuration file.
+If you want to use another different file, specify the name of the file by
+the system property `authlete.configuration.file` like the following.
+
+    $ mvn -Dauthlete.configuration.file=local.authlete.properties jetty:run &
+
 
 Endpoints
 ---------
