@@ -21,13 +21,12 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApiFactory;
-import com.authlete.jaxrs.TokenRequestHandler;
+import com.authlete.jaxrs.BaseTokenEndpoint;
 
 
 /**
@@ -42,7 +41,7 @@ import com.authlete.jaxrs.TokenRequestHandler;
  * @author Takahiko Kawasaki
  */
 @Path("/api/token")
-public class TokenEndpoint
+public class TokenEndpoint extends BaseTokenEndpoint
 {
     /**
      * The token endpoint for {@code POST} method.
@@ -75,41 +74,7 @@ public class TokenEndpoint
             MultivaluedMap<String, String> parameters)
     {
         // Handle the token request.
-        return handle(parameters, authorization);
-    }
-
-
-    /**
-     * Handle the token request.
-     */
-    private Response handle(MultivaluedMap<String, String> parameters, String authorization)
-    {
-        try
-        {
-            // Create an instance of TokenRequestHandler and delegate
-            // the task to process the request to the handler.
-            return createHandler().handle(parameters, authorization);
-        }
-        catch (WebApplicationException e)
-        {
-            // An error occurred in TokenRequestHandler.
-            e.printStackTrace();
-
-            // Convert the error to a Response.
-            return e.getResponse();
-        }
-    }
-
-
-    /**
-     * Create a handler to handle a token request.
-     */
-    private TokenRequestHandler createHandler()
-    {
-        // Create a handler with the default implementation of AuthleteApi
-        // interface and the implementation of TokenRequestHandlerSpi
-        // interface which is specific to this server implementation.
-        return new TokenRequestHandler(
-                AuthleteApiFactory.getDefaultApi(), new TokenRequestHandlerSpiImpl());
+        return handle(AuthleteApiFactory.getDefaultApi(),
+                new TokenRequestHandlerSpiImpl(), parameters, authorization);
     }
 }

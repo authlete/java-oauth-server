@@ -29,7 +29,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApiFactory;
-import com.authlete.jaxrs.AuthorizationDecisionHandler;
+import com.authlete.jaxrs.BaseAuthorizationDecisionEndpoint;
 
 
 /**
@@ -38,7 +38,7 @@ import com.authlete.jaxrs.AuthorizationDecisionHandler;
  * @author Takahiko Kawasaki
  */
 @Path("/api/authorization/decision")
-public class AuthorizationDecisionEndpoint
+public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndpoint
 {
     /**
      * Process a request from the form in the authorization page.
@@ -78,7 +78,9 @@ public class AuthorizationDecisionEndpoint
         String[] claimLocales = (String[])takeAttribute(session, "claimLocales");
 
         // Handle the end-user's decision.
-        return handle(parameters, ticket, claimNames, claimLocales);
+        return handle(AuthleteApiFactory.getDefaultApi(),
+                new AuthorizationDecisionHandlerSpiImpl(parameters),
+                ticket, claimNames, claimLocales);
     }
 
 
@@ -123,43 +125,5 @@ public class AuthorizationDecisionEndpoint
 
         // Return the value of the attribute.
         return value;
-    }
-
-
-    /**
-     * Handle the end-user's decision.
-     */
-    private Response handle(
-            MultivaluedMap<String, String> parameters,
-            String ticket, String[] claimNames, String[] claimLocales)
-    {
-        try
-        {
-            // Create an instance of AuthorizationDecisionHandler and
-            // delegate the task to process the request to the handler.
-            return createHandler(parameters).handle(ticket, claimNames, claimLocales);
-        }
-        catch (WebApplicationException e)
-        {
-            // An error occurred in AuthorizationDecisionHandler.
-            e.printStackTrace();
-
-            // Convert the error to a Response.
-            return e.getResponse();
-        }
-    }
-
-
-    /**
-     * Create a handler to handle the end-user's decision.
-     */
-    private AuthorizationDecisionHandler createHandler(MultivaluedMap<String, String> parameters)
-    {
-        // Create a handler with the default implementation of AuthleteApi
-        // interface and the implementation of AuthorizationDecisionHandlerSpi
-        // interface which is specific to this server implementation.
-        return new AuthorizationDecisionHandler(
-                AuthleteApiFactory.getDefaultApi(),
-                new AuthorizationDecisionHandlerSpiImpl(parameters));
     }
 }

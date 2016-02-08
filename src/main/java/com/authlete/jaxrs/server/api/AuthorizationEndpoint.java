@@ -22,14 +22,13 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import com.authlete.common.api.AuthleteApiFactory;
-import com.authlete.jaxrs.AuthorizationRequestHandler;
+import com.authlete.jaxrs.BaseAuthorizationEndpoint;
 
 
 /**
@@ -50,7 +49,7 @@ import com.authlete.jaxrs.AuthorizationRequestHandler;
  * @author Takahiko Kawasaki
  */
 @Path("/api/authorization")
-public class AuthorizationEndpoint
+public class AuthorizationEndpoint extends BaseAuthorizationEndpoint
 {
     /**
      * The authorization endpoint for {@code GET} method.
@@ -105,33 +104,7 @@ public class AuthorizationEndpoint
      */
     private Response handle(HttpServletRequest request, MultivaluedMap<String, String> parameters)
     {
-        try
-        {
-            // Create an instance of AuthorizationRequestHandler and
-            // delegate the task to process the request to the handler.
-            return createHandler(request).handle(parameters);
-        }
-        catch (WebApplicationException e)
-        {
-            // An error occurred in AuthorizationRequestHandler.
-            e.printStackTrace();
-
-            // Convert the error to a Response.
-            return e.getResponse();
-        }
-    }
-
-
-    /**
-     * Create a handler to handle an authorization request.
-     */
-    private AuthorizationRequestHandler createHandler(HttpServletRequest request)
-    {
-        // Create a handler with the default implementation of AuthleteApi
-        // interface and the implementation of AuthorizationRequestHandlerSpi
-        // interface which is specific to this server implementation.
-        return new AuthorizationRequestHandler(
-                AuthleteApiFactory.getDefaultApi(),
-                new AuthorizationRequestHandlerSpiImpl(request));
+        return handle(AuthleteApiFactory.getDefaultApi(),
+                new AuthorizationRequestHandlerSpiImpl(request), parameters);
     }
 }
