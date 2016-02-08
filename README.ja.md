@@ -9,7 +9,7 @@
 この実装は JAX-RS 2.0 API と [authlete-java-jaxrs][3] ライブラリを用いて書かれています。
 JAX-RS は _The Java API for RESTful Web Services_ です。 JAX-RS 2.0 API は
 [JSR 339][4] で標準化され、Java EE 7 に含まれています。 一方、authlete-java-jaxrs
-は、認可サーバー実装用のユーティリティークラス群を提供するオープンソースライブラリです。
+は、認可サーバーとリソースサーバーを実装するためのユーティリティークラス群を提供するオープンソースライブラリです。
 authlete-java-jaxrs は [authlete-java-common][5] ライブラリを使用しており、こちらは
 [Authlete Web API][6] とやりとりするためのオープンソースライブラリです。
 
