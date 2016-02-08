@@ -20,6 +20,12 @@ have a database server that stores authorization data (e.g. access tokens),
 settings of the authorization server itself and settings of client applications.
 This is achieved by using [Authlete][7] as a backend service.
 
+Access tokens issued by this authorization server can be used at a resource
+server which uses Authlete as a backend service. [java-resource-server][40]
+is such a resource server implementation. It supports a [userinfo endpoint][41]
+defined in [OpenID Connect Core 1.0][13] and includes an example implementation
+of a protected resource endpoint, too.
+
 
 License
 -------
@@ -176,6 +182,7 @@ See Also
 - [Authlete][7] - Authlete Home Page
 - [authlete-java-common][5] - Authlete Common Library for Java
 - [authlete-java-jaxrs][3] - Authlete Library for JAX-RS (Java)
+- [java-resource-server][40] - Resource Server Implementation
 
 
 Support
@@ -224,3 +231,5 @@ support@authlete.com
 [37]: http://openid.net/specs/openid-connect-session-1_0.html
 [38]: http://localhost:8080
 [39]: doc/CUSTOMIZATION.md
+[40]: https://github.com/authlete/java-resource-server
+[41]: http://openid.net/specs/openid-connect-core-1_0.html#UserInfo

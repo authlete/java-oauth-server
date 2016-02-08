@@ -17,6 +17,12 @@ authlete-java-jaxrs は [authlete-java-common][5] ライブラリを使用して
 や認可サーバー自体の設定、クライアントアプリケーション群の設定を保持するためのデータベースを用意する必要がないということです。
 これは、[Authlete][7] をバックエンドサービスとして利用することにより実現しています。
 
+この認可サーバーにより発行されたアクセストークンは、Authlete
+をバックエンドサービスとして利用しているリソースサーバーに対して使うことができます。
+[java-resource-server][40] はそのようなリソースサーバーの実装です。
+[OpenID Connect Core 1.0][13] で定義されている[ユーザー情報エンドポイント][41]をサポートし、
+保護リソースエンドポイントの実装例も含んでいます。
+
 
 ライセンス
 ----------
@@ -172,6 +178,7 @@ Authlete はユーザーアカウントを管理しないので、基本的に�
 - [Authlete][7] - Authlete ホームページ
 - [authlete-java-common][5] - Java 用 Authlete 共通ライブラリ
 - [authlete-java-jaxrs][3] - JAX-RS (Java) 用 Authlete ライブラリ
+- [java-resource-server][40] - リソースサーバーの実装
 
 
 サポート
@@ -220,3 +227,5 @@ support@authlete.com
 [37]: http://openid.net/specs/openid-connect-session-1_0.html
 [38]: http://localhost:8080
 [39]: doc/CUSTOMIZATION.ja.md
+[40]: https://github.com/authlete/java-resource-server
+[41]: http://openid.net/specs/openid-connect-core-1_0.html#UserInfo
