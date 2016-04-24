@@ -17,6 +17,7 @@
 package com.authlete.jaxrs.server.api;
 
 
+import com.authlete.common.dto.Property;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.server.db.UserDao;
 import com.authlete.jaxrs.spi.TokenRequestHandlerSpiAdapter;
@@ -50,5 +51,14 @@ class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
 
         // Return the subject (= unique identifier) of the user.
         return user.getSubject();
+    }
+
+
+    @Override
+    public Property[] getProperties()
+    {
+        // Properties returned from this method will be associated with an
+        // access token that will be issued as a result of the token request.
+        return null;
     }
 }

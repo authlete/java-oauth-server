@@ -18,6 +18,7 @@ package com.authlete.jaxrs.server.api;
 
 
 import javax.ws.rs.core.MultivaluedMap;
+import com.authlete.common.dto.Property;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.server.db.UserDao;
 import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpiAdapter;
@@ -143,5 +144,16 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
         // getUserClaim() is called only when getUserSubject() has returned
         // a non-null value. So, mUser is not null when the flow reaches here.
         return mUser.getClaim(claimName, languageTag);
+    }
+
+
+    @Override
+    public Property[] getProperties()
+    {
+        // Properties returned from this method will be associated with
+        // an access token (in the case of "Implicit" flow") and/or an
+        // authorization code (in the case of "Authorization Code" flow)
+        // that may be issued as a result of the authorization request.
+        return null;
     }
 }
