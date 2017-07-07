@@ -1,4 +1,6 @@
 .settings/
 target/
 local.authlete.properties
+.classpath
+.project
 
