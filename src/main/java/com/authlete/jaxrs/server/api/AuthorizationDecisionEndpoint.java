@@ -126,7 +126,7 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
 
     	// Look up the user in the session to see if they're already logged in
     	User sessionUser = (User) session.getAttribute("user");
-        System.err.println("User from session: " + sessionUser);
+//        System.err.println("User from session: " + sessionUser);
 
     	if (sessionUser != null) {
     		return sessionUser;
