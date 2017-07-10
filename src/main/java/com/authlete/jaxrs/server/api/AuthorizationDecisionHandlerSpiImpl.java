@@ -17,10 +17,12 @@
 package com.authlete.jaxrs.server.api;
 
 
+import java.util.Date;
+
 import javax.ws.rs.core.MultivaluedMap;
+
 import com.authlete.common.dto.Property;
 import com.authlete.common.types.User;
-import com.authlete.jaxrs.server.db.UserDao;
 import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpiAdapter;
 
 
@@ -71,7 +73,7 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
      * {@code password} in {@code parameters}.
      * </p>
      */
-    public AuthorizationDecisionHandlerSpiImpl(MultivaluedMap<String, String> parameters, User user)
+    public AuthorizationDecisionHandlerSpiImpl(MultivaluedMap<String, String> parameters, User user, Date userAuthenticatedAt)
     {
         // If the end-user clicked the "Authorize" button, "authorized"
         // is contained in the request.
@@ -92,9 +94,12 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
             return;
         }
 
-        // The implementation of the authorization page always requires login.
-        // Therefore, the time of the authentication is always "just now".
-        mUserAuthenticatedAt = System.currentTimeMillis() / 1000L;
+        // the authentication time is calculated externally and passed in
+        if (userAuthenticatedAt == null) {
+        	return;
+        }
+        
+        mUserAuthenticatedAt = userAuthenticatedAt.getTime() / 1000L;
 
         // The subject (= unique identifier) of the end-user.
         mUserSubject = mUser.getSubject();
