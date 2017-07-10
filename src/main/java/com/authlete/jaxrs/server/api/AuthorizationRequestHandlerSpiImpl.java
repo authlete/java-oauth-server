@@ -157,4 +157,61 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         // Create a response that has the viewable as its content.
         return Response.ok(viewable, MEDIA_TYPE_HTML).build();
     }
+
+
+	/* (non-Javadoc)
+	 * @see com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter#isUserAuthenticated()
+	 */
+	@Override
+	public boolean isUserAuthenticated() {
+        // Create an HTTP session.
+        HttpSession session = mRequest.getSession(true);
+ 
+        // get the user from the session if they exist
+        User user = (User) session.getAttribute("user");
+        
+        if (user != null) {
+        	return true;
+        } else {
+        	return false;
+        }
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter#getUserAuthenticatedAt()
+	 */
+	@Override
+	public long getUserAuthenticatedAt() {
+        // Create an HTTP session.
+        HttpSession session = mRequest.getSession(true);
+ 
+        // get the user from the session if they exist
+        Date authTime = (Date) session.getAttribute("authTime");
+        
+        if (authTime != null) {
+        	return authTime.getTime() / 1000L;
+        } else {
+        	return 0;
+        }
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter#getUserSubject()
+	 */
+	@Override
+	public String getUserSubject() {
+        // Create an HTTP session.
+        HttpSession session = mRequest.getSession(true);
+ 
+        // get the user from the session if they exist
+        User user = (User) session.getAttribute("user");
+        
+        if (user != null) {
+        	return user.getSubject();
+        } else {
+        	return null;
+        }
+	}
 }
