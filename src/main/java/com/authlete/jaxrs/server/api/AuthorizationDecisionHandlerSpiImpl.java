@@ -100,7 +100,7 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
         }
 
         // TODO: this should be passing in seconds to the API but we currently need to pass in milliseconds to get the correct behavior
-        mUserAuthenticatedAt = userAuthenticatedAt.getTime(); // / 1000L;
+        mUserAuthenticatedAt = userAuthenticatedAt.getTime() / 1000L;
 
         // The subject (= unique identifier) of the end-user.
         mUserSubject = mUser.getSubject();
