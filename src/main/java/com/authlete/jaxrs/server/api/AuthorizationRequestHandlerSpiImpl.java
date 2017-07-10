@@ -102,17 +102,21 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         User user = (User) session.getAttribute("user");
         Date authTime = (Date) session.getAttribute("authTime");
         
-        System.err.println("USER: " + user);
+        //System.err.println("USER: " + user);
+        //System.err.println("Auth Time: " + authTime);
+        
+        //System.err.println("AuthorizationResponse: " + info.summarize());
         
         if (user != null && authTime != null) {
         	
         	// see if the user should be prompted for login anyway
         	if (info.getPrompts() != null) {
 	        	List<Prompt> prompts = Arrays.asList(info.getPrompts());
-	        	if (prompts.contains("login")) {
+//	        	System.err.println("Prompts: " + prompts);
+	        	if (prompts.contains(Prompt.LOGIN)) {
 	        		// force a login by clearing out the current user
-	                System.err.println("XX Logged out from prompt");
-
+//	                System.err.println("XX Logged out from prompt");
+	                user = null;
 	        		session.removeAttribute("user");
 	        		session.removeAttribute("authTime");
 	        	}
@@ -131,8 +135,8 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         		
         		if (authAge > info.getMaxAge()) {
         			// session age is too old, clear out the current user
-	                System.err.println("XX Logged out from max_auth");
-
+//	                System.err.println("XX Logged out from max_auth");
+	                user = null;
             		session.removeAttribute("user");
             		session.removeAttribute("authTime");
         		}

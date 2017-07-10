@@ -136,7 +136,7 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
 	                parameters.getFirst("password"));
 	        
 	        if (loginUser != null) {
-	        	System.err.println("Logged in as: " + loginUser);
+//	        	System.err.println("Logged in as: " + loginUser);
 		        session.setAttribute("user", loginUser);
 		        session.setAttribute("authTime", new Date());
 	        }
