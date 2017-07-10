@@ -17,12 +17,21 @@
 package com.authlete.jaxrs.server.api;
 
 
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import org.glassfish.jersey.server.mvc.Viewable;
+
 import com.authlete.common.dto.AuthorizationResponse;
+import com.authlete.common.types.Prompt;
+import com.authlete.common.types.User;
 import com.authlete.jaxrs.AuthorizationPageModel;
 import com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter;
 
@@ -48,6 +57,7 @@ import com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter;
  */
 class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiAdapter
 {
+	
     /**
      * {@code "text/html;charset=UTF-8"}
      */
@@ -87,12 +97,54 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         session.setAttribute("ticket",       info.getTicket());
         session.setAttribute("claimNames",   info.getClaims());
         session.setAttribute("claimLocales", info.getClaimsLocales());
+        
+        // get the user from the session if they exist
+        User user = (User) session.getAttribute("user");
+        Date authTime = (Date) session.getAttribute("authTime");
+        
+        System.err.println("USER: " + user);
+        
+        if (user != null && authTime != null) {
+        	
+        	// see if the user should be prompted for login anyway
+        	if (info.getPrompts() != null) {
+	        	List<Prompt> prompts = Arrays.asList(info.getPrompts());
+	        	if (prompts.contains("login")) {
+	        		// force a login by clearing out the current user
+	                System.err.println("XX Logged out from prompt");
+
+	        		session.removeAttribute("user");
+	        		session.removeAttribute("authTime");
+	        	}
+        	}
+        	
+
+        	// check the auth age to make sure this session isn't too old
+        	
+        	// TODO: max_age == 0 effectively means "log in the user interactively now" but it's used here as 
+        	// a flag, we should fix this to use Integer instead of int probably
+        	if (info.getMaxAge() > 0) {
+        		Date now = new Date();
+        		
+        		// calculate number of seconds that have elapsed since login
+        		long authAge = (now.getTime() - authTime.getTime()) / 1000;
+        		
+        		if (authAge > info.getMaxAge()) {
+        			// session age is too old, clear out the current user
+	                System.err.println("XX Logged out from max_auth");
+
+            		session.removeAttribute("user");
+            		session.removeAttribute("authTime");
+        		}
+        	}
+        	
+        }
 
         // Prepare a model object which contains information needed to
         // render the authorization page. Feel free to create a subclass
         // of AuthorizationPageModel or define another different class
         // according to what you need in the authorization page.
-        AuthorizationPageModel model = new AuthorizationPageModel(info);
+        AuthorizationPageModel model = new AuthorizationPageModel(info, user);
 
         // Create a Viewable instance that represents the authorization
         // page. Viewable is a class provided by Jersey for MVC.

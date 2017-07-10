@@ -71,7 +71,7 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
      * {@code password} in {@code parameters}.
      * </p>
      */
-    public AuthorizationDecisionHandlerSpiImpl(MultivaluedMap<String, String> parameters)
+    public AuthorizationDecisionHandlerSpiImpl(MultivaluedMap<String, String> parameters, User user)
     {
         // If the end-user clicked the "Authorize" button, "authorized"
         // is contained in the request.
@@ -84,7 +84,7 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
         }
 
         // Look up an end-user who has the login credentials.
-        mUser = getUser(parameters);
+        mUser = user;
 
         // If nobody has the login credentials.
         if (mUser == null)
@@ -98,18 +98,6 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
 
         // The subject (= unique identifier) of the end-user.
         mUserSubject = mUser.getSubject();
-    }
-
-
-    /**
-     * Look up an end-user.
-     */
-    private static User getUser(MultivaluedMap<String, String> parameters)
-    {
-        // Look up an end-user who has the login credentials.
-        return UserDao.getByCredentials(
-                parameters.getFirst("loginId"),
-                parameters.getFirst("password"));
     }
 
 

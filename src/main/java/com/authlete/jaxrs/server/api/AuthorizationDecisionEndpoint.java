@@ -17,6 +17,8 @@
 package com.authlete.jaxrs.server.api;
 
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
@@ -29,7 +31,9 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.common.types.User;
 import com.authlete.jaxrs.BaseAuthorizationDecisionEndpoint;
+import com.authlete.jaxrs.server.db.UserDao;
 
 
 /**
@@ -77,9 +81,11 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         String[] claimNames   = (String[])takeAttribute(session, "claimNames");
         String[] claimLocales = (String[])takeAttribute(session, "claimLocales");
 
+        User user = getUser(session, parameters);
+        
         // Handle the end-user's decision.
         return handle(AuthleteApiFactory.getDefaultApi(),
-                new AuthorizationDecisionHandlerSpiImpl(parameters),
+                new AuthorizationDecisionHandlerSpiImpl(parameters, user),
                 ticket, claimNames, claimLocales);
     }
 
@@ -110,6 +116,35 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         throw new WebApplicationException(message, response);
     }
 
+
+    /**
+     * Look up an end-user.
+     */
+    private static User getUser(HttpSession session, MultivaluedMap<String, String> parameters)
+    {
+
+    	// Look up the user in the session to see if they're already logged in
+    	User sessionUser = (User) session.getAttribute("user");
+        System.err.println("User from session: " + sessionUser);
+
+    	if (sessionUser != null) {
+    		return sessionUser;
+    	} else {
+	        // Look up an end-user who has the login credentials.
+	        User loginUser = UserDao.getByCredentials(
+	                parameters.getFirst("loginId"),
+	                parameters.getFirst("password"));
+	        
+	        if (loginUser != null) {
+	        	System.err.println("Logged in as: " + loginUser);
+		        session.setAttribute("user", loginUser);
+		        session.setAttribute("authTime", new Date());
+	        }
+	        
+	        return loginUser;
+    	}
+    	
+    }
 
     /**
      * Get the value of an attribute from the given session and
