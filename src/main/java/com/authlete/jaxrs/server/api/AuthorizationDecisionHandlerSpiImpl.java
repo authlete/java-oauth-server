@@ -95,8 +95,9 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
         }
 
         // the authentication time is calculated externally and passed in
-        if (userAuthenticatedAt == null) {
-        	return;
+        if (userAuthenticatedAt == null)
+        {
+            return;
         }
 
         // TODO: this should be passing in seconds to the API but we currently need to pass in milliseconds to get the correct behavior
