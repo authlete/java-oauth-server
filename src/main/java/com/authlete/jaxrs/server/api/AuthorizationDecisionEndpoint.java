@@ -80,10 +80,9 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         String   ticket       = (String)  takeAttribute(session, "ticket");
         String[] claimNames   = (String[])takeAttribute(session, "claimNames");
         String[] claimLocales = (String[])takeAttribute(session, "claimLocales");
+        User user             = getUser(session, parameters);
+        Date authTime         = (Date) session.getAttribute("authTime");
 
-        User user = getUser(session, parameters);
-        Date authTime = (Date) session.getAttribute("authTime");
-        
         // Handle the end-user's decision.
         return handle(AuthleteApiFactory.getDefaultApi(),
                 new AuthorizationDecisionHandlerSpiImpl(parameters, user, authTime),
@@ -123,29 +122,32 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
      */
     private static User getUser(HttpSession session, MultivaluedMap<String, String> parameters)
     {
+        // Look up the user in the session to see if they're already logged in
+        User sessionUser = (User) session.getAttribute("user");
 
-    	// Look up the user in the session to see if they're already logged in
-    	User sessionUser = (User) session.getAttribute("user");
-//        System.err.println("User from session: " + sessionUser);
+        //System.err.println("User from session: " + sessionUser);
 
-    	if (sessionUser != null) {
-    		return sessionUser;
-    	} else {
-	        // Look up an end-user who has the login credentials.
-	        User loginUser = UserDao.getByCredentials(
-	                parameters.getFirst("loginId"),
-	                parameters.getFirst("password"));
-	        
-	        if (loginUser != null) {
-//	        	System.err.println("Logged in as: " + loginUser);
-		        session.setAttribute("user", loginUser);
-		        session.setAttribute("authTime", new Date());
-	        }
-	        
-	        return loginUser;
-    	}
-    	
+        if (sessionUser != null)
+        {
+            return sessionUser;
+        }
+        else
+        {
+            // Look up an end-user who has the login credentials.
+            User loginUser = UserDao.getByCredentials(parameters.getFirst("loginId"),
+                    parameters.getFirst("password"));
+
+            if (loginUser != null)
+            {
+                //System.err.println("Logged in as: " + loginUser);
+                session.setAttribute("user", loginUser);
+                session.setAttribute("authTime", new Date());
+            }
+
+            return loginUser;
+        }
     }
+
 
     /**
      * Get the value of an attribute from the given session and

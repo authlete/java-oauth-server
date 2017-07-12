@@ -17,7 +17,6 @@
 package com.authlete.jaxrs.server.api;
 
 
-
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -57,7 +56,6 @@ import com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter;
  */
 class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiAdapter
 {
-	
     /**
      * {@code "text/html;charset=UTF-8"}
      */
@@ -97,51 +95,58 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         session.setAttribute("ticket",       info.getTicket());
         session.setAttribute("claimNames",   info.getClaims());
         session.setAttribute("claimLocales", info.getClaimsLocales());
-        
+
         // get the user from the session if they exist
         User user = (User) session.getAttribute("user");
         Date authTime = (Date) session.getAttribute("authTime");
-        
+
         //System.err.println("USER: " + user);
         //System.err.println("Auth Time: " + authTime);
-        
         //System.err.println("AuthorizationResponse: " + info.summarize());
-        
-        if (user != null && authTime != null) {
-        	
-        	// see if the user should be prompted for login anyway
-        	if (info.getPrompts() != null) {
-	        	List<Prompt> prompts = Arrays.asList(info.getPrompts());
-//	        	System.err.println("Prompts: " + prompts);
-	        	if (prompts.contains(Prompt.LOGIN)) {
-	        		// force a login by clearing out the current user
-//	                System.err.println("XX Logged out from prompt");
-	                user = null;
-	        		session.removeAttribute("user");
-	        		session.removeAttribute("authTime");
-	        	}
-        	}
-        	
 
-        	// check the auth age to make sure this session isn't too old
-        	
-        	// TODO: max_age == 0 effectively means "log in the user interactively now" but it's used here as 
-        	// a flag, we should fix this to use Integer instead of int probably
-        	if (info.getMaxAge() > 0) {
-        		Date now = new Date();
-        		
-        		// calculate number of seconds that have elapsed since login
-        		long authAge = (now.getTime() - authTime.getTime()) / 1000;
-        		
-        		if (authAge > info.getMaxAge()) {
-        			// session age is too old, clear out the current user
-//	                System.err.println("XX Logged out from max_auth");
-	                user = null;
-            		session.removeAttribute("user");
-            		session.removeAttribute("authTime");
-        		}
-        	}
-        	
+        if (user != null && authTime != null)
+        {
+            // See if the user should be prompted for login anyway
+            if (info.getPrompts() != null)
+            {
+                List<Prompt> prompts = Arrays.asList(info.getPrompts());
+
+                // System.err.println("Prompts: " + prompts);
+
+                if (prompts.contains(Prompt.LOGIN))
+                {
+                    // force a login by clearing out the current user
+
+                    //System.err.println("XX Logged out from prompt");
+
+                    user = null;
+                    session.removeAttribute("user");
+                    session.removeAttribute("authTime");
+                }
+            }
+
+            // check the auth age to make sure this session isn't too old
+
+            // TODO: max_age == 0 effectively means "log in the user interactively now" but it's used here as
+            // a flag, we should fix this to use Integer instead of int probably
+            if (info.getMaxAge() > 0)
+            {
+                Date now = new Date();
+
+                // calculate number of seconds that have elapsed since login
+                long authAge = (now.getTime() - authTime.getTime()) / 1000;
+
+                if (authAge > info.getMaxAge())
+                {
+                    // session age is too old, clear out the current user
+
+                    //System.err.println("XX Logged out from max_auth");
+
+                    user = null;
+                    session.removeAttribute("user");
+                    session.removeAttribute("authTime");
+                }
+            }
         }
 
         // Prepare a model object which contains information needed to
@@ -159,59 +164,71 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
     }
 
 
-	/* (non-Javadoc)
-	 * @see com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter#isUserAuthenticated()
-	 */
-	@Override
-	public boolean isUserAuthenticated() {
+    /* (non-Javadoc)
+     * @see com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter#isUserAuthenticated()
+     */
+    @Override
+    public boolean isUserAuthenticated()
+    {
         // Create an HTTP session.
         HttpSession session = mRequest.getSession(true);
- 
+
         // get the user from the session if they exist
         User user = (User) session.getAttribute("user");
-        
-        if (user != null) {
-        	return true;
-        } else {
-        	return false;
+
+        if (user != null)
+        {
+            return true;
         }
-	}
+        else
+        {
+            return false;
+        }
+    }
 
 
-	/* (non-Javadoc)
-	 * @see com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter#getUserAuthenticatedAt()
-	 */
-	@Override
-	public long getUserAuthenticatedAt() {
+    /* (non-Javadoc)
+     * @see com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter#getUserAuthenticatedAt()
+     */
+    @Override
+    public long getUserAuthenticatedAt()
+    {
         // Create an HTTP session.
         HttpSession session = mRequest.getSession(true);
- 
+
         // get the user from the session if they exist
         Date authTime = (Date) session.getAttribute("authTime");
-        
-        if (authTime != null) {
-        	return authTime.getTime() / 1000L;
-        } else {
-        	return 0;
+
+        if (authTime != null)
+        {
+            return authTime.getTime() / 1000L;
         }
-	}
+        else
+        {
+            return 0;
+        }
+    }
 
 
-	/* (non-Javadoc)
-	 * @see com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter#getUserSubject()
-	 */
-	@Override
-	public String getUserSubject() {
+    /* (non-Javadoc)
+     * @see com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter#getUserSubject()
+     */
+    @Override
+    public String getUserSubject()
+    {
         // Create an HTTP session.
         HttpSession session = mRequest.getSession(true);
- 
+
         // get the user from the session if they exist
         User user = (User) session.getAttribute("user");
-        
-        if (user != null) {
-        	return user.getSubject();
-        } else {
-        	return null;
+
+        if (user != null)
+        {
+            return user.getSubject();
         }
-	}
+        else
+        {
+            return null;
+        }
+    }
 }
