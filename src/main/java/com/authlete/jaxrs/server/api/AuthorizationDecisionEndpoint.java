@@ -122,7 +122,7 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
      */
     private static User getUser(HttpSession session, MultivaluedMap<String, String> parameters)
     {
-        // Look up the user in the session to see if they're already logged in
+        // Look up the user in the session to see if they're already logged in.
         User sessionUser = (User) session.getAttribute("user");
 
         //System.err.println("User from session: " + sessionUser);

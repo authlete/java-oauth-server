@@ -94,13 +94,14 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
             return;
         }
 
-        // the authentication time is calculated externally and passed in
+        // The authentication time is calculated externally and passed in.
         if (userAuthenticatedAt == null)
         {
             return;
         }
 
-        // TODO: this should be passing in seconds to the API but we currently need to pass in milliseconds to get the correct behavior
+        // TODO: This should be passing in seconds to the API but we currently
+        // need to pass in milliseconds to get the correct behavior.
         mUserAuthenticatedAt = userAuthenticatedAt.getTime() / 1000L;
 
         // The subject (= unique identifier) of the end-user.
@@ -119,8 +120,7 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
     @Override
     public long getUserAuthenticatedAt()
     {
-        // The time when the end-user was authenticated in seconds
-        // since Unix epoch (1970-01-01).
+        // The time when the end-user was authenticated in seconds since Unix epoch (1970-01-01).
         return mUserAuthenticatedAt;
     }
 
@@ -136,8 +136,8 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
     @Override
     public Object getUserClaim(String claimName, String languageTag)
     {
-        // getUserClaim() is called only when getUserSubject() has returned
-        // a non-null value. So, mUser is not null when the flow reaches here.
+        // getUserClaim() is called only when getUserSubject() has returned a
+        // non-null value. So, mUser is not null when the flow reaches here.
         return mUser.getClaim(claimName, languageTag);
     }
 
