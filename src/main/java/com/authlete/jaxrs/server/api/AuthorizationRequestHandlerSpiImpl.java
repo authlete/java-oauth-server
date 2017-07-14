@@ -96,8 +96,8 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         session.setAttribute("claimNames",   info.getClaims());
         session.setAttribute("claimLocales", info.getClaimsLocales());
 
-        // get the user from the session if they exist
-        User user = (User) session.getAttribute("user");
+        // Get the user from the session if they exist.
+        User user     = (User) session.getAttribute("user");
         Date authTime = (Date) session.getAttribute("authTime");
 
         //System.err.println("USER: " + user);
@@ -106,16 +106,16 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
 
         if (user != null && authTime != null)
         {
-            // See if the user should be prompted for login anyway
+            // See if the user should be prompted for login anyway.
             if (info.getPrompts() != null)
             {
                 List<Prompt> prompts = Arrays.asList(info.getPrompts());
 
-                // System.err.println("Prompts: " + prompts);
+                //System.err.println("Prompts: " + prompts);
 
                 if (prompts.contains(Prompt.LOGIN))
                 {
-                    // force a login by clearing out the current user
+                    // Force a login by clearing out the current user.
 
                     //System.err.println("XX Logged out from prompt");
 
@@ -125,20 +125,21 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
                 }
             }
 
-            // check the auth age to make sure this session isn't too old
+            // Check the auth age to make sure this session isn't too old.
 
-            // TODO: max_age == 0 effectively means "log in the user interactively now" but it's used here as
-            // a flag, we should fix this to use Integer instead of int probably
+            // TODO: max_age == 0 effectively means "log in the user interactively
+            // now" but it's used here as a flag, we should fix this to use Integer
+            // instead of int probably.
             if (info.getMaxAge() > 0)
             {
                 Date now = new Date();
 
-                // calculate number of seconds that have elapsed since login
+                // Calculate number of seconds that have elapsed since login.
                 long authAge = (now.getTime() - authTime.getTime()) / 1000;
 
                 if (authAge > info.getMaxAge())
                 {
-                    // session age is too old, clear out the current user
+                    // Session age is too old, clear out the current user.
 
                     //System.err.println("XX Logged out from max_auth");
 
@@ -164,16 +165,13 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
     }
 
 
-    /* (non-Javadoc)
-     * @see com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter#isUserAuthenticated()
-     */
     @Override
     public boolean isUserAuthenticated()
     {
         // Create an HTTP session.
         HttpSession session = mRequest.getSession(true);
 
-        // get the user from the session if they exist
+        // Get the user from the session if they exist.
         User user = (User) session.getAttribute("user");
 
         if (user != null)
@@ -187,16 +185,13 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
     }
 
 
-    /* (non-Javadoc)
-     * @see com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter#getUserAuthenticatedAt()
-     */
     @Override
     public long getUserAuthenticatedAt()
     {
         // Create an HTTP session.
         HttpSession session = mRequest.getSession(true);
 
-        // get the user from the session if they exist
+        // Get the user from the session if they exist.
         Date authTime = (Date) session.getAttribute("authTime");
 
         if (authTime != null)
@@ -210,16 +205,13 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
     }
 
 
-    /* (non-Javadoc)
-     * @see com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter#getUserSubject()
-     */
     @Override
     public String getUserSubject()
     {
         // Create an HTTP session.
         HttpSession session = mRequest.getSession(true);
 
-        // get the user from the session if they exist
+        // Get the user from the session if they exist.
         User user = (User) session.getAttribute("user");
 
         if (user != null)

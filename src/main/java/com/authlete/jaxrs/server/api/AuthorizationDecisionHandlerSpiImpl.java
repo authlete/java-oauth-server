@@ -94,13 +94,14 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
             return;
         }
 
-        // the authentication time is calculated externally and passed in
+        // The authentication time is calculated externally and passed in.
         if (userAuthenticatedAt == null)
         {
             return;
         }
 
-        // TODO: this should be passing in seconds to the API but we currently need to pass in milliseconds to get the correct behavior
+        // TODO: This should be passing in seconds to the API but we currently
+        // need to pass in milliseconds to get the correct behavior.
         mUserAuthenticatedAt = userAuthenticatedAt.getTime() / 1000L;
 
         // The subject (= unique identifier) of the end-user.
