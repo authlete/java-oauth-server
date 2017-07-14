@@ -137,8 +137,8 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
     @Override
     public Object getUserClaim(String claimName, String languageTag)
     {
-        // getUserClaim() is called only when getUserSubject() has returned a
-        // non-null value. So, mUser is not null when the flow reaches here.
+        // getUserClaim() is called only when getUserSubject() has returned
+        // a non-null value. So, mUser is not null when the flow reaches here.
         return mUser.getClaim(claimName, languageTag);
     }
 
