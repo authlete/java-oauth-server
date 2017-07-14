@@ -120,7 +120,8 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
     @Override
     public long getUserAuthenticatedAt()
     {
-        // The time when the end-user was authenticated in seconds since Unix epoch (1970-01-01).
+        // The time when the end-user was authenticated in seconds
+        // since Unix epoch (1970-01-01).
         return mUserAuthenticatedAt;
     }
 
