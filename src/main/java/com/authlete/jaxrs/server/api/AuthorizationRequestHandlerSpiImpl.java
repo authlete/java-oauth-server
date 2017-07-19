@@ -96,59 +96,11 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         session.setAttribute("claimNames",   info.getClaims());
         session.setAttribute("claimLocales", info.getClaimsLocales());
 
+        // Clear the current user information in the session if necessary.
+        clearCurrentUserInfoInSessionIfNecessary(info, session);
+
         // Get the user from the session if they exist.
-        User user     = (User) session.getAttribute("user");
-        Date authTime = (Date) session.getAttribute("authTime");
-
-        //System.err.println("USER: " + user);
-        //System.err.println("Auth Time: " + authTime);
-        //System.err.println("AuthorizationResponse: " + info.summarize());
-
-        if (user != null && authTime != null)
-        {
-            // See if the user should be prompted for login anyway.
-            if (info.getPrompts() != null)
-            {
-                List<Prompt> prompts = Arrays.asList(info.getPrompts());
-
-                //System.err.println("Prompts: " + prompts);
-
-                if (prompts.contains(Prompt.LOGIN))
-                {
-                    // Force a login by clearing out the current user.
-
-                    //System.err.println("XX Logged out from prompt");
-
-                    user = null;
-                    session.removeAttribute("user");
-                    session.removeAttribute("authTime");
-                }
-            }
-
-            // Check the auth age to make sure this session isn't too old.
-
-            // TODO: max_age == 0 effectively means "log in the user interactively
-            // now" but it's used here as a flag, we should fix this to use Integer
-            // instead of int probably.
-            if (info.getMaxAge() > 0)
-            {
-                Date now = new Date();
-
-                // Calculate number of seconds that have elapsed since login.
-                long authAge = (now.getTime() - authTime.getTime()) / 1000;
-
-                if (authAge > info.getMaxAge())
-                {
-                    // Session age is too old, clear out the current user.
-
-                    //System.err.println("XX Logged out from max_auth");
-
-                    user = null;
-                    session.removeAttribute("user");
-                    session.removeAttribute("authTime");
-                }
-            }
-        }
+        User user = (User) session.getAttribute("user");
 
         // Prepare a model object which contains information needed to
         // render the authorization page. Feel free to create a subclass
@@ -174,14 +126,9 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         // Get the user from the session if they exist.
         User user = (User) session.getAttribute("user");
 
-        if (user != null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        // If the user information exists in the session, the user is already
+        // authenticated; Otherwise, the user is not authenticated.
+        return user != null;
     }
 
 
@@ -194,14 +141,12 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         // Get the user from the session if they exist.
         Date authTime = (Date) session.getAttribute("authTime");
 
-        if (authTime != null)
-        {
-            return authTime.getTime() / 1000L;
-        }
-        else
+        if (authTime == null)
         {
             return 0;
         }
+
+        return authTime.getTime() / 1000L;
     }
 
 
@@ -214,13 +159,88 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         // Get the user from the session if they exist.
         User user = (User) session.getAttribute("user");
 
-        if (user != null)
-        {
-            return user.getSubject();
-        }
-        else
+        if (user == null)
         {
             return null;
         }
+
+        return user.getSubject();
+    }
+
+
+    private void clearCurrentUserInfoInSessionIfNecessary(AuthorizationResponse info, HttpSession session)
+    {
+        // Get the user from the session if they exist.
+        User user     = (User) session.getAttribute("user");
+        Date authTime = (Date) session.getAttribute("authTime");
+
+        //System.err.println("USER: " + user);
+        //System.err.println("Auth Time: " + authTime);
+        //System.err.println("AuthorizationResponse: " + info.summarize());
+
+        if (user == null || authTime == null)
+        {
+            // The information about the user does not exist in the session.
+            return;
+        }
+
+        // Check 'prompts'.
+        checkPrompts(info, session);
+
+        // Check 'authentication age'.
+        checkAuthenticationAge(info, session, authTime);
+    }
+
+
+    private void checkPrompts(AuthorizationResponse info, HttpSession session)
+    {
+        if (info.getPrompts() == null)
+        {
+            return;
+        }
+
+        List<Prompt> prompts = Arrays.asList(info.getPrompts());
+
+        //System.err.println("Prompts: " + prompts);
+
+        if (prompts.contains(Prompt.LOGIN))
+        {
+            // Force a login by clearing out the current user.
+            clearCurrentUserInfoInSession(session);
+
+            //System.err.println("XX Logged out from prompt");
+        };
+    }
+
+
+    private void checkAuthenticationAge(AuthorizationResponse info, HttpSession session, Date authTime)
+    {
+        // TODO: max_age == 0 effectively means "log in the user interactively
+        // now" but it's used here as a flag, we should fix this to use Integer
+        // instead of int probably.
+        if (info.getMaxAge() <= 0)
+        {
+            return;
+        }
+
+        Date now = new Date();
+
+        // Calculate number of seconds that have elapsed since login.
+        long authAge = (now.getTime() - authTime.getTime()) / 1000L;
+
+        if (authAge > info.getMaxAge())
+        {
+            // Session age is too old, clear out the current user.
+            clearCurrentUserInfoInSession(session);
+
+            //System.err.println("XX Logged out from max_auth");
+        };
+    }
+
+
+    private void clearCurrentUserInfoInSession(HttpSession session)
+    {
+        session.removeAttribute("user");
+        session.removeAttribute("authTime");
     }
 }

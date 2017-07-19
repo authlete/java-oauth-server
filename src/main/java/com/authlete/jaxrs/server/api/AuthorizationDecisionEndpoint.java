@@ -107,6 +107,7 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
 
         // A session does not exist. Make a response of "400 Bad Request".
         String message = "A session does not exist.";
+
         Response response = Response
                 .status(Status.BAD_REQUEST)
                 .entity(message)
@@ -131,21 +132,19 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         {
             return sessionUser;
         }
-        else
+
+        // Look up an end-user who has the login credentials.
+        User loginUser = UserDao.getByCredentials(parameters.getFirst("loginId"),
+                parameters.getFirst("password"));
+
+        if (loginUser != null)
         {
-            // Look up an end-user who has the login credentials.
-            User loginUser = UserDao.getByCredentials(parameters.getFirst("loginId"),
-                    parameters.getFirst("password"));
-
-            if (loginUser != null)
-            {
-                //System.err.println("Logged in as: " + loginUser);
-                session.setAttribute("user", loginUser);
-                session.setAttribute("authTime", new Date());
-            }
-
-            return loginUser;
+            //System.err.println("Logged in as: " + loginUser);
+            session.setAttribute("user", loginUser);
+            session.setAttribute("authTime", new Date());
         }
+
+        return loginUser;
     }
 
 
