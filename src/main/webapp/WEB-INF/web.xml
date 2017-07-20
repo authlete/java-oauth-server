@@ -29,6 +29,7 @@
         com.authlete.jaxrs.server.api.AuthorizationDecisionEndpoint,
         com.authlete.jaxrs.server.api.AuthorizationEndpoint,
         com.authlete.jaxrs.server.api.ConfigurationEndpoint,
+        com.authlete.jaxrs.server.api.IntrospectionEndpoint,
         com.authlete.jaxrs.server.api.JwksEndpoint,
         com.authlete.jaxrs.server.api.RevocationEndpoint,
         com.authlete.jaxrs.server.api.TokenEndpoint,
