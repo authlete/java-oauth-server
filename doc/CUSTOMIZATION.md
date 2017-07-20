@@ -335,6 +335,19 @@ class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
 ```
 
 
+Introspection Endpoint
+----------------------
+
+The implementation of the introspection endpoint is in
+<code>[IntrospectionEndpoint.java][34]</code>.
+
+[RFC 7662][35] (OAuth 2.0 Token Introspection) requires that the endpoint
+be protected in some way or other. The implementation of the protection in
+<code>IntrospectionEndpoint.java</code> is for demonstration purpose only,
+and it is not suitable for commercial use. Therefore, modify the code
+accordingly.
+
+
 See Also
 --------
 
@@ -385,3 +398,5 @@ support@authlete.com
 [31]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationDecisionHandlerSpi.html
 [32]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationDecisionHandlerSpiImpl.java
 [33]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationDecisionHandlerSpiAdapter.html
+[34]: ../src/main/java/com/authlete/jaxrs/server/api/IntrospectionEndpoint.java
+[35]: http://tools.ietf.org/html/rfc7662

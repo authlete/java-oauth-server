@@ -88,6 +88,7 @@ API クレデンシャルズを取得する手順はとても簡単です。
 | JWK Set エンドポイント | `/api/jwks`                         |
 | 設定エンドポイント     | `/.well-known/openid-configuration` |
 | 取り消しエンドポイント | `/api/revocation`                   |
+| イントロスペクションエンドポイント | `/api/introspection`    |
 
 認可エンドポイントとトークンエンドポイントは、[RFC 6749][1]、[OpenID Connect Core 1.0][13]、
 [OAuth 2.0 Multiple Response Type Encoding Practices][33]、[RFC 7636][14] ([PKCE][15])、
@@ -103,6 +104,9 @@ JWK Set エンドポイントは、クライアントアプリケーションが
 
 取り消しエンドポイントはアクセストークンやリフレッシュトークンを取り消すための
 Web API です。 その動作は [RFC 7009][21] で定義されています。
+
+イントロスペクションエンドポイントはアクセストークンやリフレッシュトークンの情報を取得するための
+Web API です。 その動作は [RFC 7662][32] で定義されています。
 
 
 認可リクエストの例

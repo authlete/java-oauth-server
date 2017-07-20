@@ -89,6 +89,7 @@ This implementation exposes endpoints as listed in the table below.
 | JWK Set Endpoint       | `/api/jwks`                         |
 | Configuration Endpoint | `/.well-known/openid-configuration` |
 | Revocation Endpoint    | `/api/revocation`                   |
+| Introspection Endpoint | `/api/introspection`                |
 
 The authorization endpoint and the token point accept parameters described
 in [RFC 6749][1], [OpenID Connect Core 1.0][13],
@@ -104,6 +105,9 @@ OpenID Provider in the JSON format defined in [OpenID Connect Discovery 1.0][35]
 
 The revocation endpoint is a Web API to revoke access tokens and refresh
 tokens. Its behavior is defined in [RFC 7009][21].
+
+The introspection endpoint is a Web API to get information about access
+tokens and refresh tokens. Its behavior is defined in [RFC 7662][32].
 
 
 Authorization Request Example
