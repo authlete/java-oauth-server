@@ -66,16 +66,25 @@ How To Run
 
         $ vi authlete.properties
 
-3. Start the authorization server on [http://localhost:8080][38].
+3. Make sure that you have installed [maven][42] and set `JAVA_HOME` properly.
+
+4. Start the authorization server on [http://localhost:8080][38].
 
         $ mvn jetty:run &
+
+#### Run With Docker
+
+If you would prefer to use Docker, just hit the following command after the step 2.
+
+    $ docker-compose up
+
+#### Configuration File
 
 `java-oauth-server` refers to `authlete.properties` as a configuration file.
 If you want to use another different file, specify the name of the file by
 the system property `authlete.configuration.file` like the following.
 
     $ mvn -Dauthlete.configuration.file=local.authlete.properties jetty:run &
-
 
 Endpoints
 ---------
@@ -237,3 +246,4 @@ support@authlete.com
 [39]: doc/CUSTOMIZATION.md
 [40]: https://github.com/authlete/java-resource-server
 [41]: http://openid.net/specs/openid-connect-core-1_0.html#UserInfo
+[42]: https://maven.apache.org/
