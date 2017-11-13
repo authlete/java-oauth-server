@@ -65,16 +65,25 @@ API クレデンシャルズを取得する手順はとても簡単です。
 
         $ vi authlete.properties
 
-3. [http://localhost:8080][38] で認可サーバーを起動します。
+3. [maven][42] がインストールされていること、 `JAVA_HOME` が適切に設定されていることを確認します。
+
+4. [http://localhost:8080][38] で認可サーバーを起動します。
 
         $ mvn jetty:run &
+
+#### Docker を利用する
+
+Docker を利用する場合は, ステップ 2 の後に以下のコマンドを実行してください.
+
+    $ docker-compose up
+
+#### 設定ファイル
 
 `java-oauth-server` は `authlete.properties` を設定ファイルとして参照します。
 他のファイルを使用したい場合は、次のようにそのファイルの名前をシステムプロパティー
 `authlete.configuration.file` で指定してください。
 
     $ mvn -Dauthlete.configuration.file=local.authlete.properties jetty:run &
-
 
 エンドポイント
 --------------
@@ -233,3 +242,4 @@ support@authlete.com
 [39]: doc/CUSTOMIZATION.ja.md
 [40]: https://github.com/authlete/java-resource-server
 [41]: http://openid.net/specs/openid-connect-core-1_0.html#UserInfo
+[42]: https://maven.apache.org/
