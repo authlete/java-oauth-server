@@ -1,7 +1,7 @@
 FROM maven:3.5.2-jdk-8
 EXPOSE 8080
 
-RUN mkdir /authlete && mkdir /authlete/app
+RUN mkdir -p /authlete/app
 
 ADD . /authlete/app
 
