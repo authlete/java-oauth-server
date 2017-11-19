@@ -1,6 +1,7 @@
 .settings/
 target/
-local.authlete.properties
+.DS_Store
 .classpath
 .project
+local.authlete.properties
 nohup.out
