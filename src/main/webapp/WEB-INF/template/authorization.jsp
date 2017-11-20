@@ -1,7 +1,7 @@
 <!doctype html>
 <!--<%
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2016-2017 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@
       <p>Do you grant authorization to the application?</p>
 
       <form id="authorization-form" action="/api/authorization/decision" method="POST">
-		<c:if test="${model.user == null}">
+        <c:if test="${model.user == null}">
         <div id="login-fields" class="indent">
           <div id="login-prompt">Input Login ID and password.</div>
           <input type="text" id="loginId" name="loginId" placeholder="Login ID"
@@ -88,10 +88,10 @@
           <input type="password" id="password" name="password" placeholder="Password"
                  class="font-default" required>
         </div>
-	    </c:if>
-	    <c:if test="${model.user != null}">
-		<div id="login-user"><i>Logged in as <c:out value="${model.user.subject}" /></i></div>
-	    </c:if>
+        </c:if>
+        <c:if test="${model.user != null}">
+        <div id="login-user"><i>Logged in as <c:out value="${model.user.subject}" /></i></div>
+        </c:if>
         <div id="authorization-form-buttons">
           <input type="submit" name="authorized" id="authorize-button" value="Authorize" class="font-default"/>
           <input type="submit" name="denied"     id="deny-button"      value="Deny"      class="font-default"/>

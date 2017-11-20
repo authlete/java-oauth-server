@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2016-2017 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         clearCurrentUserInfoInSessionIfNecessary(info, session);
 
         // Get the user from the session if they exist.
-        User user = (User) session.getAttribute("user");
+        User user = (User)session.getAttribute("user");
 
         // Prepare a model object which contains information needed to
         // render the authorization page. Feel free to create a subclass
@@ -124,7 +124,7 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         HttpSession session = mRequest.getSession(true);
 
         // Get the user from the session if they exist.
-        User user = (User) session.getAttribute("user");
+        User user = (User)session.getAttribute("user");
 
         // If the user information exists in the session, the user is already
         // authenticated; Otherwise, the user is not authenticated.
@@ -139,7 +139,7 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         HttpSession session = mRequest.getSession(true);
 
         // Get the user from the session if they exist.
-        Date authTime = (Date) session.getAttribute("authTime");
+        Date authTime = (Date)session.getAttribute("authTime");
 
         if (authTime == null)
         {
@@ -157,7 +157,7 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         HttpSession session = mRequest.getSession(true);
 
         // Get the user from the session if they exist.
-        User user = (User) session.getAttribute("user");
+        User user = (User)session.getAttribute("user");
 
         if (user == null)
         {
@@ -171,12 +171,8 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
     private void clearCurrentUserInfoInSessionIfNecessary(AuthorizationResponse info, HttpSession session)
     {
         // Get the user from the session if they exist.
-        User user     = (User) session.getAttribute("user");
-        Date authTime = (Date) session.getAttribute("authTime");
-
-        //System.err.println("USER: " + user);
-        //System.err.println("Auth Time: " + authTime);
-        //System.err.println("AuthorizationResponse: " + info.summarize());
+        User user     = (User)session.getAttribute("user");
+        Date authTime = (Date)session.getAttribute("authTime");
 
         if (user == null || authTime == null)
         {
@@ -201,14 +197,10 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
 
         List<Prompt> prompts = Arrays.asList(info.getPrompts());
 
-        //System.err.println("Prompts: " + prompts);
-
         if (prompts.contains(Prompt.LOGIN))
         {
             // Force a login by clearing out the current user.
             clearCurrentUserInfoInSession(session);
-
-            //System.err.println("XX Logged out from prompt");
         };
     }
 
@@ -232,8 +224,6 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         {
             // Session age is too old, clear out the current user.
             clearCurrentUserInfoInSession(session);
-
-            //System.err.println("XX Logged out from max_auth");
         };
     }
 

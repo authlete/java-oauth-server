@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2016-2017 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         String[] claimNames   = (String[])takeAttribute(session, "claimNames");
         String[] claimLocales = (String[])takeAttribute(session, "claimLocales");
         User user             = getUser(session, parameters);
-        Date authTime         = (Date) session.getAttribute("authTime");
+        Date authTime         = (Date)session.getAttribute("authTime");
 
         // Handle the end-user's decision.
         return handle(AuthleteApiFactory.getDefaultApi(),
@@ -126,8 +126,6 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         // Look up the user in the session to see if they're already logged in.
         User sessionUser = (User) session.getAttribute("user");
 
-        //System.err.println("User from session: " + sessionUser);
-
         if (sessionUser != null)
         {
             return sessionUser;
@@ -139,7 +137,6 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
 
         if (loginUser != null)
         {
-            //System.err.println("Logged in as: " + loginUser);
             session.setAttribute("user", loginUser);
             session.setAttribute("authTime", new Date());
         }
