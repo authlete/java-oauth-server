@@ -11,7 +11,7 @@ This implementation is written using JAX-RS 2.0 API and [authlete-java-jaxrs][3]
 library. JAX-RS is _The Java API for RESTful Web Services_. JAX-RS 2.0 API has
 been standardized by [JSR 339][4] and it is included in Java EE 7. On the other
 hand, authlete-java-jaxrs library is an open source library which provides utility
-classes for developers to implement an authorization server a resource server.
+classes for developers to implement an authorization server and a resource server.
 authlete-java-jaxrs in turn uses [authlete-java-common][5] library which is
 another open source library to communicate with [Authlete Web APIs][6].
 
@@ -100,7 +100,7 @@ This implementation exposes endpoints as listed in the table below.
 | Revocation Endpoint    | `/api/revocation`                   |
 | Introspection Endpoint | `/api/introspection`                |
 
-The authorization endpoint and the token point accept parameters described
+The authorization endpoint and the token endpoint accept parameters described
 in [RFC 6749][1], [OpenID Connect Core 1.0][13],
 [OAuth 2.0 Multiple Response Type Encoding Practices][33], [RFC 7636][14]
 ([PKCE][15]) and other specifications.
