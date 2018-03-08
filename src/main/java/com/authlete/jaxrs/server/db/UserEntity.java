@@ -146,7 +146,7 @@ public class UserEntity implements User
                 return address;
 
             case StandardClaims.PHONE_NUMBER:
-                // "phone_number" claim. This claim can be requested by included "phone"
+                // "phone_number" claim. This claim can be requested by including "phone"
                 // in "scope" parameter of an authorization request.
                 return phoneNumber;
 
