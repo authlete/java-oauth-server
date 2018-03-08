@@ -138,7 +138,7 @@ is not a part of JAX-RS 2.0 API.
 If you want to customize the authorization page, change the implementation
 of `generateAuthorizationPage()` method and/or the template of the
 authorization page (`authorization.jsp`). See the [JavaDoc][7] of
-authlete-java-common library for details about `AtuhorizationResponse`
+authlete-java-common library for details about `AuthorizationResponse`
 class.
 
 
