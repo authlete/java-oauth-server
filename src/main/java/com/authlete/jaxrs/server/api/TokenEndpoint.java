@@ -17,11 +17,6 @@
 package com.authlete.jaxrs.server.api;
 
 
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
@@ -32,8 +27,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-
-import org.apache.commons.codec.binary.Base64;
 
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.BaseTokenEndpoint;
@@ -53,9 +46,6 @@ import com.authlete.jaxrs.BaseTokenEndpoint;
 @Path("/api/token")
 public class TokenEndpoint extends BaseTokenEndpoint
 {
-    
-    // headers for certificate path with proxy-forwarded certificate information; the first entry is the client's certificate itself
-    private String[] clientCertificatePathHeaders = {"X-Ssl-Cert", "X-Ssl-Cert-Chain-1", "X-Ssl-Cert-Chain-2", "X-Ssl-Cert-Chain-3", "X-Ssl-Cert-Chain-4"};
     
     /**
      * The token endpoint for {@code POST} method.
@@ -88,71 +78,11 @@ public class TokenEndpoint extends BaseTokenEndpoint
             MultivaluedMap<String, String> parameters,
             @Context HttpServletRequest request)
     {
-        String[] clientCertificates = extractClientCertificates(request);
+        String[] clientCertificates = extractClientCertificateChain(request);
         
         // Handle the token request.
         return handle(AuthleteApiFactory.getDefaultApi(),
                 new TokenRequestHandlerSpiImpl(), parameters, authorization, clientCertificates);
     }
 
-    private String[] extractClientCertificates(HttpServletRequest request)
-    {
-        // try to get the certificates from the servlet context directly
-        X509Certificate[] certs = (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
-        
-        if (certs == null || certs.length == 0)
-        {
-            // we didn't find any certificates in the servlet request, try extracting them from the headers instead
-            List<String> headerCerts = new ArrayList<>();
-            
-            for (String headerName : clientCertificatePathHeaders)
-            {
-                String header = request.getHeader(headerName);
-                if (header != null)
-                {
-                    headerCerts.add(header);
-                }
-            }
-
-            if (headerCerts.isEmpty())
-            {
-                return null;
-            }
-            else
-            {
-                return headerCerts.toArray(new String[] {});
-            }
-        }
-        else 
-        {
-            String[] pemEncoded = new String[certs.length];
-            
-            // used for encoding certificates
-            Base64 base64 = new Base64(Base64.PEM_CHUNK_SIZE, "\n".getBytes());
-            
-            try
-            {
-                for (int i = 0; i < certs.length; i++)
-                {
-                    // encode each certificate in PEM format
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("-----BEGIN CERTIFICATE-----\n");
-                    sb.append(base64.encode(certs[i].getEncoded()));
-                    sb.append("\n-----END CERTIFICATE-----\n");
-
-                    pemEncoded[i] = sb.toString();
-                    
-                }
-            } catch (CertificateEncodingException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                return null;
-            }
-            
-            return pemEncoded;
-            
-        }
-        
-    }
 }
