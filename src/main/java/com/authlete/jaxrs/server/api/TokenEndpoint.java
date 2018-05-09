@@ -17,14 +17,17 @@
 package com.authlete.jaxrs.server.api;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.BaseTokenEndpoint;
 
@@ -43,6 +46,7 @@ import com.authlete.jaxrs.BaseTokenEndpoint;
 @Path("/api/token")
 public class TokenEndpoint extends BaseTokenEndpoint
 {
+    
     /**
      * The token endpoint for {@code POST} method.
      *
@@ -71,10 +75,14 @@ public class TokenEndpoint extends BaseTokenEndpoint
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response post(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            MultivaluedMap<String, String> parameters)
+            MultivaluedMap<String, String> parameters,
+            @Context HttpServletRequest request)
     {
+        String[] clientCertificates = extractClientCertificateChain(request);
+        
         // Handle the token request.
         return handle(AuthleteApiFactory.getDefaultApi(),
-                new TokenRequestHandlerSpiImpl(), parameters, authorization);
+                new TokenRequestHandlerSpiImpl(), parameters, authorization, clientCertificates);
     }
+
 }
