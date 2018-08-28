@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2017 Authlete, Inc.
+ * Copyright (C) 2016-2018 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,11 @@ package com.authlete.jaxrs.server.api;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.glassfish.jersey.server.mvc.Viewable;
-
 import com.authlete.common.dto.AuthorizationResponse;
 import com.authlete.common.types.Prompt;
 import com.authlete.common.types.User;
@@ -92,9 +89,10 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
 
         // Store some variables into the session so that they can be
         // referred to later in AuthorizationDecisionEndpoint.
-        session.setAttribute("ticket",       info.getTicket());
-        session.setAttribute("claimNames",   info.getClaims());
-        session.setAttribute("claimLocales", info.getClaimsLocales());
+        session.setAttribute("ticket",        info.getTicket());
+        session.setAttribute("claimNames",    info.getClaims());
+        session.setAttribute("claimLocales",  info.getClaimsLocales());
+        session.setAttribute("idTokenClaims", info.getIdTokenClaims());
 
         // Clear the current user information in the session if necessary.
         clearCurrentUserInfoInSessionIfNecessary(info, session);

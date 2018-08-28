@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2017 Authlete, Inc.
+ * Copyright (C) 2016-2018 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.authlete.jaxrs.server.api;
 
 
 import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
@@ -77,15 +76,17 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
 
         // Retrieve some variables from the session. See the implementation
         // of AuthorizationRequestHandlerSpiImpl.getAuthorizationPage().
-        String   ticket       = (String)  takeAttribute(session, "ticket");
-        String[] claimNames   = (String[])takeAttribute(session, "claimNames");
-        String[] claimLocales = (String[])takeAttribute(session, "claimLocales");
-        User user             = getUser(session, parameters);
-        Date authTime         = (Date)session.getAttribute("authTime");
+        String   ticket        = (String)  takeAttribute(session, "ticket");
+        String[] claimNames    = (String[])takeAttribute(session, "claimNames");
+        String[] claimLocales  = (String[])takeAttribute(session, "claimLocales");
+        String   idTokenClaims = (String)  takeAttribute(session, "idTokenClaims");
+        User user              = getUser(session, parameters);
+        Date authTime          = (Date)session.getAttribute("authTime");
 
         // Handle the end-user's decision.
         return handle(AuthleteApiFactory.getDefaultApi(),
-                new AuthorizationDecisionHandlerSpiImpl(parameters, user, authTime),
+                new AuthorizationDecisionHandlerSpiImpl(
+                        parameters, user, authTime, idTokenClaims),
                 ticket, claimNames, claimLocales);
     }
 

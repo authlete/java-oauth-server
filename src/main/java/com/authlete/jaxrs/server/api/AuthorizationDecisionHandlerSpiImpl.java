@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2016-2018 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package com.authlete.jaxrs.server.api;
 
 
 import java.util.Date;
-
+import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
-
 import com.authlete.common.dto.Property;
 import com.authlete.common.types.User;
+import com.authlete.common.util.Utils;
 import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpiAdapter;
 
 
@@ -66,6 +66,14 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
 
 
     /**
+     * The value of the "id_token" property in the "claims" request parameter
+     * (or in the "claims" property in the request object) contained in the
+     * original authorization request.
+     */
+    private Map<String, Object> mIdTokenClaims;
+
+
+    /**
      * Constructor with a request from the form in the authorization page.
      *
      * <p>
@@ -73,7 +81,9 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
      * {@code password} in {@code parameters}.
      * </p>
      */
-    public AuthorizationDecisionHandlerSpiImpl(MultivaluedMap<String, String> parameters, User user, Date userAuthenticatedAt)
+    public AuthorizationDecisionHandlerSpiImpl(
+            MultivaluedMap<String, String> parameters, User user,
+            Date userAuthenticatedAt, String idTokenClaims)
     {
         // If the end-user clicked the "Authorize" button, "authorized"
         // is contained in the request.
@@ -106,6 +116,12 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
 
         // The subject (= unique identifier) of the end-user.
         mUserSubject = mUser.getSubject();
+
+        // The value of the "id_token" property in the "claims" request parameter
+        // (or in the "claims" property in the request object) contained in the
+        // original authorization request. See '5.5. Requesting Claims using the
+        // "claims" Request Parameter' in OpenID Connect Core 1.0 for details.
+        mIdTokenClaims = parseJson(idTokenClaims);
     }
 
 
@@ -137,6 +153,16 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
     @Override
     public Object getUserClaim(String claimName, String languageTag)
     {
+        // First, check if the claim is a custom one.
+        Object value = getCustomClaim(claimName, languageTag);
+
+        // If the value for the custom claim was obtained.
+        if (value != null)
+        {
+            // Return the value of the custom claim.
+            return value;
+        }
+
         // getUserClaim() is called only when getUserSubject() has returned
         // a non-null value. So, mUser is not null when the flow reaches here.
         return mUser.getClaim(claimName, languageTag);
@@ -151,5 +177,105 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
         // authorization code (in the case of "Authorization Code" flow)
         // that may be issued as a result of the authorization request.
         return null;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> parseJson(String json)
+    {
+        if (json == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            return (Map<String, Object>)Utils.fromJson(json, Map.class);
+        }
+        catch (Exception e)
+        {
+            // Failed to parse the input as JSON.
+            return null;
+        }
+    }
+
+
+    private Object getCustomClaim(String claimName, String languageTag)
+    {
+        // Special behavior for Open Banking Profile.
+        if ("openbanking_intent_id".equals(claimName))
+        {
+            // The Open Banking Profile requires that an authorization
+            // request contains the "openbanking_intent_id" claim and
+            // the authorization server embeds the value of the claim
+            // in an ID token.
+            return getValueFromIdTokenClaims(claimName);
+        }
+
+        return null;
+    }
+
+
+    private Object getValueFromIdTokenClaims(String claimName)
+    {
+        // Try to extract the entry for the claim from the "id_token"
+        // property in the "claims" (which was contained in the original
+        // authorization request).
+        Map<String, Object> entry = getEntryFromIdTokenClaims(claimName);
+
+        // If an entry for the claim is not available.
+        if (entry == null)
+        {
+            // The value of the claim is not available.
+            return null;
+        }
+
+        // This method expects that the entry has a "value" property.
+        return entry.get("value");
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> getEntryFromIdTokenClaims(String claimName)
+    {
+        // If the original authorization request does not include
+        // the "id_token" property in the "claims" request parameter
+        // (or in the "claims" property in the request object).
+        if (mIdTokenClaims == null)
+        {
+            // No entry for the claim.
+            return null;
+        }
+
+        // Extract the entry for the claim from the "id_token" property.
+        Object entry = mIdTokenClaims.get(claimName);
+
+        // If the claim is not included.
+        if (entry == null)
+        {
+            // No entry for the claim.
+            return null;
+        }
+
+        // The expected format of a claim in the "id_token" property is
+        // as follows. See '5.5. Requesting Claims using the "claims"
+        // Request Parameter' in OpenID Connect Core 1.0 for details.
+        //
+        //   "claim_name" : {
+        //       "essential": <boolean>,   // Optional
+        //       "value":     <value>,     // Optional
+        //       "values":    [<values>]   // Optional
+        //   }
+        //
+        // Therefore, 'entry' should be able to be parsed as Map.
+
+        if (!(entry instanceof Map))
+        {
+            // The format of the claim is invalid.
+            return null;
+        }
+
+        // Found the entry for the claim.
+        return (Map<String, Object>)entry;
     }
 }
