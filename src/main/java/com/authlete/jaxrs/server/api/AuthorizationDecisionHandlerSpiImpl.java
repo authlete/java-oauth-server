@@ -74,6 +74,12 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
 
 
     /**
+     * Requested ACRs.
+     */
+    private String[] mAcrs;
+
+
+    /**
      * Constructor with a request from the form in the authorization page.
      *
      * <p>
@@ -83,7 +89,7 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
      */
     public AuthorizationDecisionHandlerSpiImpl(
             MultivaluedMap<String, String> parameters, User user,
-            Date userAuthenticatedAt, String idTokenClaims)
+            Date userAuthenticatedAt, String idTokenClaims, String[] acrs)
     {
         // If the end-user clicked the "Authorize" button, "authorized"
         // is contained in the request.
@@ -122,6 +128,9 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
         // original authorization request. See '5.5. Requesting Claims using the
         // "claims" Request Parameter' in OpenID Connect Core 1.0 for details.
         mIdTokenClaims = parseJson(idTokenClaims);
+
+        // The requested ACRs.
+        mAcrs = acrs;
     }
 
 
@@ -177,6 +186,34 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
         // authorization code (in the case of "Authorization Code" flow)
         // that may be issued as a result of the authorization request.
         return null;
+    }
+
+
+    @Override
+    public String getAcr()
+    {
+        // Note that this is a dummy implementation. Regardless of whatever
+        // the actual authentication was, this implementation returns the
+        // first element of the requested ACRs if it is available.
+        //
+        // Of course, this implementation is not suitable for commercial use.
+
+        if (mAcrs == null || mAcrs.length == 0)
+        {
+            return null;
+        }
+
+        // The first element of the requested ACRs.
+        String acr = mAcrs[0];
+
+        if (acr == null || acr.length() == 0)
+        {
+            return null;
+        }
+
+        // Return the first element of the requested ACRs. Again,
+        // this implementation is not suitable for commercial use.
+        return acr;
     }
 
 

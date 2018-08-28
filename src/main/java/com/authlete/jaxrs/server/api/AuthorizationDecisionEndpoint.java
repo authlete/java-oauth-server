@@ -80,13 +80,14 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         String[] claimNames    = (String[])takeAttribute(session, "claimNames");
         String[] claimLocales  = (String[])takeAttribute(session, "claimLocales");
         String   idTokenClaims = (String)  takeAttribute(session, "idTokenClaims");
+        String[] acrs          = (String[])takeAttribute(session, "acrs");
         User user              = getUser(session, parameters);
         Date authTime          = (Date)session.getAttribute("authTime");
 
         // Handle the end-user's decision.
         return handle(AuthleteApiFactory.getDefaultApi(),
                 new AuthorizationDecisionHandlerSpiImpl(
-                        parameters, user, authTime, idTokenClaims),
+                        parameters, user, authTime, idTokenClaims, acrs),
                 ticket, claimNames, claimLocales);
     }
 
