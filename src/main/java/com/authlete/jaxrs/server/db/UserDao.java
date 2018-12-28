@@ -40,6 +40,42 @@ public class UserDao
 
 
     /**
+     * Condition for user search.
+     */
+    private static interface SearchCondition
+    {
+        boolean check(UserEntity ue);
+    }
+
+
+    /**
+     * Get a user who meets the condition.
+     *
+     * @param condition
+     *         The condition for searching a user.
+     *
+     * @return
+     *         A user who meets the condition.
+     */
+    private static User get(SearchCondition condition)
+    {
+        // For each user.
+        for (UserEntity ue : sUserDB)
+        {
+            // If the condition is satisfied.
+            if (condition.check(ue))
+            {
+                // Found the user who meets the condition.
+                return ue;
+            }
+        }
+
+        // Not found any user who meets the condition.
+        return null;
+    }
+
+
+    /**
      * Get a user entity by a pair of login ID and password.
      *
      * @param loginId
@@ -53,20 +89,60 @@ public class UserDao
      *         {@code null} is returned if there is no user who has
      *         the login credentials.
      */
-    public static User getByCredentials(String loginId, String password)
+    public static User getByCredentials(final String loginId, final String password)
     {
-        // For each user.
-        for (UserEntity ue : sUserDB)
-        {
-            // If the login credentials are valid.
-            if (ue.getLoginId().equals(loginId) && ue.getPassword().equals(password))
+        return get(new SearchCondition() {
+            @Override
+            public boolean check(UserEntity ue)
             {
-                // Found the user who has the login credentials.
-                return ue;
+                // Check if the user's credentials are the target ones.
+                return ue.getLoginId().equals(loginId) && ue.getPassword().equals(password);
             }
-        }
+        });
+    }
 
-        // Not found any user who has the login credentials.
-        return null;
+
+    public static User getBySubject(final String subject)
+    {
+        return get(new SearchCondition() {
+            @Override
+            public boolean check(UserEntity ue)
+            {
+                // Check if the user's subject is the target one.
+                return ue.getSubject().equals(subject);
+            }
+        });
+    }
+
+
+    public static User getByEmail(final String email)
+    {
+        return get(new SearchCondition() {
+            @Override
+            public boolean check(UserEntity ue)
+            {
+                // Get the user's "email" claim.
+                String e = (String)ue.getClaim("email", null);
+
+                // Check if the user's email is the target one.
+                return e != null && e.equals(email);
+            }
+        });
+    }
+
+
+    public static User getByPhoneNumber(final String phoneNumber)
+    {
+        return get(new SearchCondition() {
+            @Override
+            public boolean check(UserEntity ue)
+            {
+                // Get the user's "phone_number" claim.
+                String ph = (String)ue.getClaim("phone_number", null);
+
+                // Check if the user's phone number is the target one.
+                return ph != null && ph.equals(phoneNumber);
+            }
+        });
     }
 }

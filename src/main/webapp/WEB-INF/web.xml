@@ -8,6 +8,16 @@
   id="java-oauth-server"
   version="3.0">
 
+<!--   <servlet>
+    <servlet-name>jersey-serlvet</servlet-name>
+    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+      <init-param>
+        <param-name>javax.ws.rs.Application</param-name>
+        <param-value>com.authlete.jaxrs.server.CustomApplication</param-value>
+      </init-param>
+      <load-on-startup>1</load-on-startup>
+  </servlet> -->
+
   <filter>
     <filter-name>API</filter-name>
 
@@ -28,6 +38,8 @@
       <param-value>
         com.authlete.jaxrs.server.api.AuthorizationDecisionEndpoint,
         com.authlete.jaxrs.server.api.AuthorizationEndpoint,
+        com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationEndpoint,
+        com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationCallbackEndpoint,
         com.authlete.jaxrs.server.api.ConfigurationEndpoint,
         com.authlete.jaxrs.server.api.IntrospectionEndpoint,
         com.authlete.jaxrs.server.api.JwksEndpoint,
@@ -37,6 +49,8 @@
         org.glassfish.jersey.server.mvc.jsp.JspMvcFeature
       </param-value>
     </init-param>
+    
+    
 
     <init-param>
         <param-name>jersey.config.server.response.setStatusOverSendError</param-name>

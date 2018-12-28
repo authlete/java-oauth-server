@@ -46,7 +46,6 @@ import com.authlete.jaxrs.BaseTokenEndpoint;
 @Path("/api/token")
 public class TokenEndpoint extends BaseTokenEndpoint
 {
-    
     /**
      * The token endpoint for {@code POST} method.
      *
@@ -79,7 +78,7 @@ public class TokenEndpoint extends BaseTokenEndpoint
             @Context HttpServletRequest request)
     {
         String[] clientCertificates = extractClientCertificateChain(request);
-        
+
         // Handle the token request.
         return handle(AuthleteApiFactory.getDefaultApi(),
                 new TokenRequestHandlerSpiImpl(), parameters, authorization, clientCertificates);
