@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,9 +31,18 @@ import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.BaseBackchannelAuthenticationEndpoint;
 
 
+/**
+ *  An implementation of backchannel authentication endpoint of CIBA (Client Initiated
+ *  Backchannel Authentication).
+ *
+ * @author Hideki Ikeda
+ */
 @Path("/api/backchannel/authentication")
 public class BackchannelAuthenticationEndpoint extends BaseBackchannelAuthenticationEndpoint
 {
+    /**
+     * The backchannel authentication endpoint.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response post(

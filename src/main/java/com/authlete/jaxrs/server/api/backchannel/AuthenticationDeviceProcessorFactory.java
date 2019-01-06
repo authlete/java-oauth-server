@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2019 Authlete, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the
+ * License.
+ */
 package com.authlete.jaxrs.server.api.backchannel;
 
 
@@ -6,9 +22,50 @@ import com.authlete.common.types.User;
 import com.authlete.jaxrs.server.ad.type.Mode;
 
 
+/**
+ * The factory class that creates a processor that communicates with Authlete's
+ * CIBA authentication device simulator for end-user authentication and authorization.
+ *
+ * @author Hideki Ikeda
+ */
 public class AuthenticationDeviceProcessorFactory
 {
-    public static AuthenticationDeviceProcessor create(Mode mode, String ticket, User user, String[] requestedAcrs, Scope[] requestedScopes, String[] requestedClaimNames, String bindingMessage)
+    /**
+     * Create a processor that communicates with Authlete's CIBA authentication
+     * device simulator for end-user authentication and authorization.
+     *
+     * @param mode
+     *         The mode communication with the authentication device simulator.
+     *
+     * @param ticket
+     *         A ticket that was issued by Authlete's {@code /api/backchannel/authentication}
+     *         API.
+     *
+     * @param user
+     *         An end-user to be authenticated and asked to authorize the client
+     *         application.
+     *
+     * @param clientName
+     *         The name of the client application.
+     *
+     * @param acrs
+     *         The requested ACRs.
+     *
+     * @param scopes
+     *         The requested scopes.
+     *
+     * @param claimNames
+     *         The names of the requested claims.
+     *
+     * @param bindingMessage
+     *         The binding message to be shown to the end-user on the authentication
+     *         device.
+     *
+     * @return
+     *         A processor that communicates with Authlete's CIBA authentication
+     *         device simulator for end-user authentication and authorization.
+     */
+    public static AuthenticationDeviceProcessor create(Mode mode, String ticket, User user, String clientName, String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage)
     {
         if (mode == null)
         {
@@ -18,21 +75,20 @@ public class AuthenticationDeviceProcessorFactory
         switch (mode)
         {
             case SYNC:
-                return new SyncAuthenticationDeviceProcessor(
-                        ticket, user, requestedAcrs, requestedScopes, requestedClaimNames, bindingMessage);
+                // Create a processor that communicates with the authentication device in synchronous mode.
+                return new SyncAuthenticationDeviceProcessor(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage);
 
             case ASYNC:
-                return new AsyncAuthenticationDeviceProcessor(
-                        ticket, user, requestedAcrs, requestedScopes, requestedClaimNames, bindingMessage);
+                // Create a processor that communicates with the authentication device in asynchronous mode.
+                return new AsyncAuthenticationDeviceProcessor(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage);
 
             case POLL:
-                return new PollAuthenticationDeviceProcessor(
-                        ticket, user, requestedAcrs, requestedScopes, requestedClaimNames, bindingMessage);
+                // Create a processor that communicates with the authentication device in poll mode.
+                return new PollAuthenticationDeviceProcessor(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage);
 
             default:
-                // Unsupported mode. This never happens.
-                throw new RuntimeException("Unsupported mode.");
+                // Undefined authentication device mode. This never happens.
+                throw new RuntimeException("Undefined authentication device mode.");
         }
     }
-
 }

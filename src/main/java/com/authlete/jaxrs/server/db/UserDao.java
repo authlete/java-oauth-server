@@ -33,9 +33,9 @@ public class UserDao
      */
     private static final UserEntity[] sUserDB = {
             new UserEntity("1001", "john", "john", "John Smith", "john@example.com",
-                    new Address().setCountry("USA"), "+1 (425) 555-1212"),
+                    new Address().setCountry("USA"), "+1 (425) 555-1212", "675325"),
             new UserEntity("1002", "jane", "jane", "Jane Smith", "jane@example.com",
-                    new Address().setCountry("Chile"), "+56 (2) 687 2400")
+                    new Address().setCountry("Chile"), "+56 (2) 687 2400", "264209")
     };
 
 
@@ -102,6 +102,17 @@ public class UserDao
     }
 
 
+    /**
+     * Get a user by a subject.
+     *
+     * @param subject
+     *         The subject of a user.
+     *
+     * @return
+     *         A user entity that has the subject.
+     *         {@code null} is returned if there is no user who has
+     *         the subject.
+     */
     public static User getBySubject(final String subject)
     {
         return get(new SearchCondition() {
@@ -115,6 +126,17 @@ public class UserDao
     }
 
 
+    /**
+     * Get a user by an email address.
+     *
+     * @param email
+     *         An email address.
+     *
+     * @return
+     *         A user entity that has the email address.
+     *         {@code null} is returned if there is no user who has
+     *         the email address.
+     */
     public static User getByEmail(final String email)
     {
         return get(new SearchCondition() {
@@ -131,6 +153,17 @@ public class UserDao
     }
 
 
+    /**
+     * Get a user by a phone number.
+     *
+     * @param phoneNumber
+     *         A phone number.
+     *
+     * @return
+     *         A user entity that has the phone number.
+     *         {@code null} is returned if there is no user who has
+     *         the phone number.
+     */
     public static User getByPhoneNumber(final String phoneNumber)
     {
         return get(new SearchCondition() {

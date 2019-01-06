@@ -72,11 +72,17 @@ public class UserEntity implements User
 
 
     /**
+     * The code of the user.
+     */
+    private String code;
+
+
+    /**
      * Constructor with initial values.
      */
     public UserEntity(
             String subject, String loginId, String password, String name,
-            String email, Address address, String phoneNumber)
+            String email, Address address, String phoneNumber, String code)
     {
         this.subject     = subject;
         this.loginId     = loginId;
@@ -85,6 +91,7 @@ public class UserEntity implements User
         this.email       = email;
         this.address     = address;
         this.phoneNumber = phoneNumber;
+        this.code        = code;
     }
 
 
@@ -152,6 +159,27 @@ public class UserEntity implements User
 
             default:
                 // Unsupported claim.
+                return null;
+        }
+    }
+
+
+    @Override
+    public Object getAttribute(String attributeName)
+    {
+        if (attributeName == null)
+        {
+            return null;
+        }
+
+        switch (attributeName)
+        {
+            case "code":
+                // The code of the user.
+                return code;
+
+            default:
+                // Unsupported attribute.
                 return null;
         }
     }

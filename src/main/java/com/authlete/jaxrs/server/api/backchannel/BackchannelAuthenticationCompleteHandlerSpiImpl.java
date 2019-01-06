@@ -1,14 +1,58 @@
+/*
+ * Copyright (C) 2019 Authlete, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the
+ * License.
+ */
 package com.authlete.jaxrs.server.api.backchannel;
 
 
+import java.net.URI;
 import java.util.Date;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import com.authlete.common.dto.BackchannelAuthenticationCompleteRequest.Result;
+import com.authlete.common.dto.BackchannelAuthenticationCompleteResponse;
 import com.authlete.common.types.User;
-import com.authlete.jaxrs.spi.BackchannelAuthenticationCompleteHandlerSpiAdapter;
+import com.authlete.jaxrs.spi.BackchannelAuthenticationCompleteRequestHandlerSpiAdapter;
 
 
-public class BackchannelAuthenticationCompleteHandlerSpiImpl extends BackchannelAuthenticationCompleteHandlerSpiAdapter
+/**
+ * Implementation of {@link com.authlete.jaxrs.spi.BackchannelAuthenticationCompleteRequestHandlerSpi
+ * BackchannelAuthenticationCompleteRequestHandlerSpi} interface which needs to
+ * be given to the constructor of {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+ * BackchannelAuthenticationCompleteRequestHandler}.
+ *
+ * <p>
+ * Note: The current implementation does not implement {@link #getAcr()} method.
+ * </p>
+ *
+ * @author Hideki Ikeda
+ */
+public class BackchannelAuthenticationCompleteHandlerSpiImpl extends BackchannelAuthenticationCompleteRequestHandlerSpiAdapter
 {
+    /**
+     * The JAX-RS client which sends a notification to a consumption device.
+     */
+    Client sJaxRsClient = ClientBuilder.newClient();
+
+
     /**
      * The result of end-user authentication and authorization.
      */
@@ -108,5 +152,86 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
     public Object getUserClaim(String claimName)
     {
         return mUser.getClaim(claimName, null);
+    }
+
+
+    @Override
+    public void sendNotification(BackchannelAuthenticationCompleteResponse info)
+    {
+        // The URL of the client's notification endpoint.
+        URI clientNotificationEndpointUri = info.getClientNotificationEndpoint();
+
+        // The token that is needed for client authentication at the consumption
+        // device's notification endpoint.
+        String notificationToken = info.getClientNotificationToken();
+
+        // The notification content (JSON) to send to the consumption device.
+        String notificationContent = info.getResponseContent();
+
+        // The response from the consumption device.
+        Response response;
+
+        try
+        {
+            // Send the notification to the consumption device..
+            response = sJaxRsClient.target(clientNotificationEndpointUri).request()
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + notificationToken)
+                    .post(Entity.json(notificationContent))
+                    ;
+        }
+        catch (Throwable t)
+        {
+            // Failed to send the notification to the consumption device.
+            throw internalServerError("Failed to send the notificaiton to the consumption device", t);
+        }
+
+        // The status of the response from the consumption device.
+        Status status = Status.fromStatusCode(response.getStatusInfo().getStatusCode());
+
+        // TODO: CIBA specification does not specify how to deal with responses
+        // returned from the consumption device in case of error push notification.
+        // Then, even in case of error push notification, the current implementation
+        // treats the responses as in the case of successful push notification.
+
+        // Check if the "HTTP 200 OK" or "HTTP 204 No Content".
+        if (status == Status.OK || status == Status.NO_CONTENT)
+        {
+            // In this case, the request was successfully processed by the consumption
+            // device since the spec says as follows.
+            //
+            //   CIBA Core spec, 10.2. Ping Callback and 10.3. Push Callback
+            //     For valid requests, the Client Notification Endpoint SHOULD
+            //     respond with an HTTP 204 No Content.  The OP SHOULD also accept
+            //     HTTP 200 OK and any body in the response SHOULD be ignored.
+            //
+            return;
+        }
+
+        if (status.getFamily() == Status.Family.REDIRECTION)
+        {
+            // HTTP 3xx code. This case must be ignored since the spec says
+            // as follows.
+            //
+            //   CIBA Core spec, 10.2. Ping Callback, 10.3. Push Callback
+            //     The Client MUST NOT return an HTTP 3xx code.  The OP MUST
+            //     NOT follow redirects.
+            //
+            return;
+        }
+    }
+
+
+    private WebApplicationException internalServerError(String message, Throwable cause)
+    {
+        // Append the message of the cause.
+        message += ": " + cause.getMessage();
+
+        Response response = Response
+                .status(Status.INTERNAL_SERVER_ERROR)
+                .entity(message)
+                .type(MediaType.TEXT_PLAIN)
+                .build();
+
+        return new WebApplicationException(message, response);
     }
 }

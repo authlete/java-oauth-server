@@ -1,19 +1,32 @@
+/*
+ * Copyright (C) 2019 Authlete, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the
+ * License.
+ */
 package com.authlete.jaxrs.server.ad;
 
 
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static org.glassfish.jersey.client.ClientProperties.CONNECT_TIMEOUT;
 import static org.glassfish.jersey.client.ClientProperties.READ_TIMEOUT;
-
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-
+import javax.ws.rs.client.ResponseProcessingException;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.moxy.json.MoxyJsonFeature;
-
-import com.authlete.common.dto.AuthorizationRequest;
 import com.authlete.jaxrs.server.ServerConfig;
 import com.authlete.jaxrs.server.ad.dto.AsyncAuthenticationRequest;
 import com.authlete.jaxrs.server.ad.dto.AsyncAuthenticationResponse;
@@ -22,6 +35,11 @@ import com.authlete.jaxrs.server.ad.dto.SyncAuthenticationRequest;
 import com.authlete.jaxrs.server.ad.dto.SyncAuthenticationResponse;
 
 
+/**
+ * A class to communicate with Authlete's CIBA authentication device simulator.
+ *
+ * @author Hideki Ikeda
+ */
 public class AuthenticationDevice
 {
     private static final class DEFAULT
@@ -29,7 +47,7 @@ public class AuthenticationDevice
         private static class SYNC
         {
             private static final String AUTHENTICATION_ENDPOINT_PATH = "/sync";
-            private static final int AUTHENTICATION_TIMEOUT = 30; // sec
+            private static final int AUTHENTICATION_TIMEOUT = 10; // sec
             private static final int AUTHENTICATION_CONNECT_TIMEOUT = 10000; // millisec
             private static final int AUTHENTICATION_READ_TIMEOUT = 60000; // millisec
         }
@@ -37,7 +55,7 @@ public class AuthenticationDevice
         private static class ASYNC
         {
             private static final String AUTHENTICATION_ENDPOINT_PATH = "/async";
-            private static final int AUTHENTICATION_TIMEOUT = 30;
+            private static final int AUTHENTICATION_TIMEOUT = 10;
             private static final int AUTHENTICATION_CONNECT_TIMEOUT = 10000;
             private static final int AUTHENTICATION_READ_TIMEOUT = 60000;
         }
@@ -46,7 +64,7 @@ public class AuthenticationDevice
         {
             private static final String AUTHENTICATION_ENDPOINT_PATH = "/poll";
             private static final String AUTHENTICATION_RESULT_ENDPOINT_PATH = "/result";
-            private static final int AUTHENTICATION_TIMEOUT = 30;
+            private static final int AUTHENTICATION_TIMEOUT = 10;
             private static final int AUTHENTICATION_CONNECT_TIMEOUT = 10;
             private static final int AUTHENTICATION_READ_TIMEOUT = 10;
         }
@@ -272,6 +290,9 @@ public class AuthenticationDevice
 
     /**
      * Get the singleton instance of this class.
+     *
+     * @return
+     *         The instance of this class.
      */
     public static AuthenticationDevice getInstance()
     {
@@ -280,11 +301,33 @@ public class AuthenticationDevice
 
 
     /**
-     * This can throw some exceptions. => write docs.
+     * Communicate with the authentication device simulator in sync mode.
+     *
+     * @param subject
+     *         The subject of the end-user to be authenticated and asked to authorize
+     *         the client application.
+     *
+     * @param message
+     *         The message to be shown to the end-user on the authentication device.
+     *
+     * @return
+     *         A response from the authentication device.
+     *
+     * @throws ResponseProcessingException
+     *         in case processing of a received HTTP response fails (e.g. in a filter
+     *         or during conversion of the response entity data to an instance
+     *         of a particular Java type).
+     *
+     * @throws ProcessingException
+     *         in case the request processing or subsequent I/O operation fails.
+     *
+     * @throws WebApplicationException
+     *         in case the response status code of the response returned by the
+     *         server is not {@link javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
+     *         successful} and the specified response type is not {@link javax.ws.rs.core.Response}.
      */
     public SyncAuthenticationResponse syncAuth(String subject, String message)
     {
-        // TODO: Build a message more properly.
         // A request to be sent to the authentication device.
         SyncAuthenticationRequest request = new SyncAuthenticationRequest()
             .setWorkspace(mWorkspace)
@@ -292,7 +335,6 @@ public class AuthenticationDevice
             .setMessage(message)
             .setTimeout(mSyncAuthenticationTimeout);
 
-        // TODO: need utf8?
         // Send the request to the authentication device as a HTTP Post request.
         return mSyncAuthClient
             .target(mBaseUrl)
@@ -302,6 +344,32 @@ public class AuthenticationDevice
     }
 
 
+    /**
+     * Communicate with the authentication device simulator in async mode.
+     *
+     * @param subject
+     *         The subject of the end-user to be authenticated and asked to authorize
+     *         the client application.
+     *
+     * @param message
+     *         The message to be shown to the end-user on the authentication device.
+     *
+     * @return
+     *         A response from the authentication device.
+     *
+     * @throws ResponseProcessingException
+     *         in case processing of a received HTTP response fails (e.g. in a filter
+     *         or during conversion of the response entity data to an instance
+     *         of a particular Java type).
+     *
+     * @throws ProcessingException
+     *         in case the request processing or subsequent I/O operation fails.
+     *
+     * @throws WebApplicationException
+     *         in case the response status code of the response returned by the
+     *         server is not {@link javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
+     *         successful} and the specified response type is not {@link javax.ws.rs.core.Response}.
+     */
     public AsyncAuthenticationResponse asyncAuth(String subject, String message)
     {
         AsyncAuthenticationRequest request = new AsyncAuthenticationRequest()
@@ -310,7 +378,6 @@ public class AuthenticationDevice
             .setMessage(message)
             .setTimeout(mSyncAuthenticationTimeout);
 
-        // TODO: need utf8?
         // Send the request to the authentication device as a HTTP Post request.
         return mAsyncAuthClient
             .target(mBaseUrl)
@@ -320,8 +387,35 @@ public class AuthenticationDevice
     }
 
 
+    /**
+     * Communicate with the authentication device simulator in poll mode.
+     *
+     * @param subject
+     *         The subject of the end-user to be authenticated and asked to authorize
+     *         the client application.
+     *
+     * @param message
+     *         The message to be shown to the end-user on the authentication device.
+     *
+     * @return
+     *         A response from the authentication device.
+     *
+     * @throws ResponseProcessingException
+     *         in case processing of a received HTTP response fails (e.g. in a filter
+     *         or during conversion of the response entity data to an instance
+     *         of a particular Java type).
+     *
+     * @throws ProcessingException
+     *         in case the request processing or subsequent I/O operation fails.
+     *
+     * @throws WebApplicationException
+     *         in case the response status code of the response returned by the
+     *         server is not {@link javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
+     *         successful} and the specified response type is not {@link javax.ws.rs.core.Response}.
+     */
     public PollAuthenticationResponse pollAuth(String subject, String message)
     {
+        // TODO: Implement this.
         return null;
     }
 }

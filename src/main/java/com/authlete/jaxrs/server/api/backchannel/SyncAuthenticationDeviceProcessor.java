@@ -8,11 +8,49 @@ import com.authlete.jaxrs.server.ad.AuthenticationDevice;
 import com.authlete.jaxrs.server.ad.dto.SyncAuthenticationResponse;
 
 
+/**
+ * A processor that communicates with Authlete's CIBA authentication device simulator
+ * in synchronous mode.
+ *
+ * @author Hideki Ikeda
+ */
 public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceProcessor
 {
-    public SyncAuthenticationDeviceProcessor(String ticket, User user, String[] requestedAcrs, Scope[] requestedScopes, String[] requestedClaimNames, String bindingMessage)
+    /**
+     * Construct a processor that communicates with Authlete's CIBA  authentication
+     * device simulator in synchronous mode.
+     *
+     * @param ticket
+     *         A ticket that was issued by Authlete's {@code /api/backchannel/authentication}
+     *         API.
+     *
+     * @param user
+     *         An end-user to be authenticated and asked to authorize the client
+     *         application.
+     *
+     * @param clientName
+     *         The name of the client application.
+     *
+     * @param acrs
+     *         The requested ACRs.
+     *
+     * @param scopes
+     *         The requested scopes.
+     *
+     * @param claimNames
+     *         The names of the requested claims.
+     *
+     * @param bindingMessage
+     *         The binding message to be shown to the end-user on the authentication
+     *         device.
+     *
+     * @return
+     *         A processor that communicates with Authlete's CIBA authentication
+     *         device simulator in synchronous mode.
+     */
+    public SyncAuthenticationDeviceProcessor(String ticket, User user, String clientName, String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage)
     {
-        super(ticket, user, requestedAcrs, requestedScopes, requestedClaimNames, bindingMessage);
+        super(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage);
     }
 
 
@@ -30,7 +68,6 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
         }
         catch (Throwable t)
         {
-            t.printStackTrace();
             // An unexpected error occurred when communicating with the authentication
             // device.
             completeWithError();
@@ -42,7 +79,7 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
 
         if (result == null)
         {
-            // The result returned from the authentication deivce is empty.
+            // The result returned from the authentication device is empty.
             // This should never happen.
             completeWithError();
             return;
@@ -51,28 +88,23 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
         switch (result)
         {
             case allow:
-                System.out.println("AD 'allow'");
                 // The user authorized the client.
                 completeWithAuthorized(new Date());
                 return;
 
             case deny:
-                System.out.println("AD 'deny'");
                 // The user denied the client.
                 completeWithAccessDenied();
                 return;
 
             case timeout:
-                System.out.println("AD 'timeout'");
                 // Timeout occurred while the authentication device was authenticating
-                // the user.
+                // the end-user.
                 completeWithError();
                 return;
 
             default:
-                System.out.println("AD 'default'");
                 // An unknown result returned from the authentication device.
-                // This should never happen.
                 completeWithError();
                 return;
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,9 @@ package com.authlete.jaxrs.server.api.backchannel;
 
 import java.util.Date;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -31,26 +29,29 @@ import javax.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.dto.BackchannelAuthenticationCompleteRequest.Result;
 import com.authlete.common.types.User;
-import com.authlete.jaxrs.BackchannelAuthenticationCompleteHandler;
+import com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler;
 import com.authlete.jaxrs.server.ad.dto.AsyncAuthenticationCallbackRequest;
 
 
+/**
+ * The callback endpoint for Authlete's CIBA authentication device simulator used
+ * in asynchronous mode to notify the authorization server of the result of end-user
+ * authentication and authorization.
+ *
+ * @see com.authlete.jaxrs.server.api.backchannel.AsyncAuthenticationDeviceProcessor AsyncAuthenticationDeviceProcessor
+ *
+ * @author Hideki Ikeda
+ */
 @Path("/api/backchannel/authentication/callback")
 public class BackchannelAuthenticationCallbackEndpoint
 {
     /**
-     * success
-     *   -200
-     *
-     * WebApplicationException
-     *   -400      => bad request parameter
-     *   -500      => authelte api failure, cd communication failure
+     * The callback endpoint for Authlete's CIBA authentication device simulator
+     * used in asynchronous mode.
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response post(
-            @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            AsyncAuthenticationCallbackRequest request)
+    public Response post(AsyncAuthenticationCallbackRequest request)
     {
         try
         {
@@ -58,12 +59,10 @@ public class BackchannelAuthenticationCallbackEndpoint
         }
         catch (WebApplicationException e)
         {
-            e.printStackTrace();
             throw e;
         }
         catch (Throwable t)
         {
-            t.printStackTrace();
             throw internalServerError("unexpected error", t);
         }
     }
@@ -98,7 +97,7 @@ public class BackchannelAuthenticationCallbackEndpoint
         log(ticket, user, acrs, claimNames);
 
         // Complete the authentication and authorization process.
-        new BackchannelAuthenticationCompleteHandler(
+        new BackchannelAuthenticationCompleteRequestHandler(
                 AuthleteApiFactory.getDefaultApi(),
                 new BackchannelAuthenticationCompleteHandlerSpiImpl(result, user, authTime, acrs)
             )
