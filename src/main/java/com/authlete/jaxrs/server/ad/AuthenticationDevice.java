@@ -52,36 +52,22 @@ public class AuthenticationDevice
 
 
     /**
-     * Default values.
-     */
-    private static final int DEFAULT_SYNC_AUTHENTICATION_TIMEOUT          = 10;    // 10 seconds.
-    private static final int DEFAULT_SYNC_AUTHENTICATION_CONNECT_TIMEOUT  = 10000; // 10000 milliseconds.
-    private static final int DEFAULT_SYNC_AUTHENTICATION_READ_TIMEOUT     = 60000; // 60000 milliseconds.
-    private static final int DEFAULT_ASYNC_AUTHENTICATION_TIMEOUT         = 10;    // 10 seconds.
-    private static final int DEFAULT_ASYNC_AUTHENTICATION_CONNECT_TIMEOUT = 10000; // 10000 milliseconds.
-    private static final int DEFAULT_ASYNC_AUTHENTICATION_READ_TIMEOUT    = 10000; // 10000 milliseconds.
-    private static final int DEFAULT_POLL_AUTHENTICATION_TIMEOUT          = 10;    // 10 seconds.
-    private static final int DEFAULT_POLL_AUTHENTICATION_CONNECT_TIMEOUT  = 10000; // 10000 milliseconds.
-    private static final int DEFAULT_POLL_AUTHENTICATION_READ_TIMEOUT     = 10000; // 10000 milliseconds.
-
-
-    /**
      * Parameters required to communicate with the authentication device.
      */
-    private static final String sBaseUrl                        = ServerConfig.getAdBaseUrl();
-    private static final String sWorkspace                      = ServerConfig.getAdWorkspace();
-    private static final int sSyncAuthenticationTimeout         = ServerConfig.getAdSyncAuthenticationTimeout() == 0 ? DEFAULT_SYNC_AUTHENTICATION_TIMEOUT : ServerConfig.getAdSyncAuthenticationTimeout();
-    private static final int sSyncAuthenticationConnectTimeout  = ServerConfig.getAdSyncAuthenticationConnectTimeout() == 0 ? DEFAULT_SYNC_AUTHENTICATION_CONNECT_TIMEOUT : ServerConfig.getAdSyncAuthenticationConnectTimeout();
-    private static final int sSyncAuthenticationReadTimeout     = ServerConfig.getAdSyncAuthenticationReadTimeout() == 0 ? DEFAULT_SYNC_AUTHENTICATION_READ_TIMEOUT : ServerConfig.getAdSyncAuthenticationReadTimeout();
-    private static final int sAsyncAuthenticationTimeout        = ServerConfig.getAdAsyncAuthenticationTimeout() == 0 ? DEFAULT_ASYNC_AUTHENTICATION_TIMEOUT : ServerConfig.getAdAsyncAuthenticationTimeout();
-    private static final int sAsyncAuthenticationConnectTimeout = ServerConfig.getAdAsyncAuthenticationConnectTimeout() == 0 ? DEFAULT_ASYNC_AUTHENTICATION_CONNECT_TIMEOUT : ServerConfig.getAdAsyncAuthenticationConnectTimeout();
-    private static final int sAsyncAuthenticationReadTimeout    = ServerConfig.getAdAsyncAuthenticationReadTimeout() == 0 ? DEFAULT_ASYNC_AUTHENTICATION_READ_TIMEOUT : ServerConfig.getAdAsyncAuthenticationReadTimeout();
-    private static final int sPollAuthenticationTimeout         = ServerConfig.getAdPollAuthenticationTimeout() == 0 ? DEFAULT_POLL_AUTHENTICATION_TIMEOUT : ServerConfig.getAdPollAuthenticationTimeout();
-    private static final int sPollAuthenticationConnectTimeout  = ServerConfig.getAdPollAuthenticationConnectTimeout() == 0 ? DEFAULT_POLL_AUTHENTICATION_CONNECT_TIMEOUT : ServerConfig.getAdPollAuthenticationConnectTimeout();
-    private static final int sPollAuthenticationReadTimeout     = ServerConfig.getAdPollAuthenticationReadTimeout() == 0 ? DEFAULT_POLL_AUTHENTICATION_READ_TIMEOUT : ServerConfig.getAdPollAuthenticationReadTimeout();;
-    private static final Client sSyncAuthClient                 = createClient(sSyncAuthenticationReadTimeout, sSyncAuthenticationConnectTimeout);
-    private static final Client sAsyncAuthClient                = createClient(sAsyncAuthenticationReadTimeout, sAsyncAuthenticationConnectTimeout);
-    private static final Client sPollAuthClient                 = createClient(sPollAuthenticationReadTimeout, sPollAuthenticationConnectTimeout);
+    private static final String sBaseUrl                 = ServerConfig.getAdBaseUrl();
+    private static final String sWorkspace               = ServerConfig.getAdWorkspace();
+    private static final int sSyncAuthenticationTimeout  = ServerConfig.getAdSyncAuthenticationTimeout();
+    private static final int sSyncConnectTimeout         = ServerConfig.getAdSyncConnectTimeout();
+    private static final int sSyncReadTimeout            = ServerConfig.getAdSyncReadTimeout();
+    private static final int sAsyncAuthenticationTimeout = ServerConfig.getAdAsyncAuthenticationTimeout();
+    private static final int sAsyncConnectTimeout        = ServerConfig.getAdAsyncConnectTimeout();
+    private static final int sAsyncReadTimeout           = ServerConfig.getAdAsyncReadTimeout();
+    private static final int sPollAuthenticationTimeout  = ServerConfig.getAdPollAuthenticationTimeout();
+    private static final int sPollConnectTimeout         = ServerConfig.getAdPollConnectTimeout();
+    private static final int sPollReadTimeout            = ServerConfig.getAdPollReadTimeout();;
+    private static final Client sSyncClient              = createClient(sSyncReadTimeout, sSyncConnectTimeout);
+    private static final Client sAsyncClient             = createClient(sAsyncReadTimeout, sAsyncConnectTimeout);
+    private static final Client sPollClient              = createClient(sPollReadTimeout, sPollConnectTimeout);
 
 
     private static Client createClient(int readTimeout, int connectTimeout)
@@ -101,7 +87,7 @@ public class AuthenticationDevice
 
 
     /**
-     * Communicate with the authentication device simulator in sync mode.
+     * Send a request to the authentication device simulator in sync mode.
      *
      * @param subject
      *         The subject of the end-user to be authenticated and asked to authorize
@@ -136,7 +122,7 @@ public class AuthenticationDevice
             .setTimeout(sSyncAuthenticationTimeout);
 
         // Send the request to the authentication device as a HTTP Post request.
-        return sSyncAuthClient
+        return sSyncClient
             .target(sBaseUrl)
             .path(SYNC_AUTHENTICATION_ENDPOINT_PATH)
             .request(APPLICATION_JSON_TYPE)
@@ -145,7 +131,7 @@ public class AuthenticationDevice
 
 
     /**
-     * Communicate with the authentication device simulator in async mode.
+     * Send a request to the authentication device simulator in async mode.
      *
      * @param subject
      *         The subject of the end-user to be authenticated and asked to authorize
@@ -179,7 +165,7 @@ public class AuthenticationDevice
             .setTimeout(sAsyncAuthenticationTimeout);
 
         // Send the request to the authentication device as a HTTP Post request.
-        return sAsyncAuthClient
+        return sAsyncClient
             .target(sBaseUrl)
             .path(ASYNC_AUTHENTICATION_ENDPOINT_PATH)
             .request(APPLICATION_JSON_TYPE)
@@ -188,7 +174,7 @@ public class AuthenticationDevice
 
 
     /**
-     * Communicate with the authentication device simulator in poll mode.
+     * Send a request to the authentication device simulator in poll mode.
      *
      * @param subject
      *         The subject of the end-user to be authenticated and asked to authorize

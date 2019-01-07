@@ -39,10 +39,6 @@ import com.authlete.jaxrs.spi.BackchannelAuthenticationCompleteRequestHandlerSpi
  * be given to the constructor of {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
  * BackchannelAuthenticationCompleteRequestHandler}.
  *
- * <p>
- * Note: The current implementation does not implement {@link #getAcr()} method.
- * </p>
- *
  * @author Hideki Ikeda
  */
 public class BackchannelAuthenticationCompleteHandlerSpiImpl extends BackchannelAuthenticationCompleteRequestHandlerSpiAdapter
@@ -176,8 +172,7 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
             // Send the notification to the consumption device..
             response = sJaxRsClient.target(clientNotificationEndpointUri).request()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + notificationToken)
-                    .post(Entity.json(notificationContent))
-                    ;
+                    .post(Entity.json(notificationContent));
         }
         catch (Throwable t)
         {
