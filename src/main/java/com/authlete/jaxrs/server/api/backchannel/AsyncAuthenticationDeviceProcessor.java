@@ -90,7 +90,7 @@ public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDevice
         {
             // Communicate with the authentication device to authenticate the user and
             // authorize the client's request.
-            response = AuthenticationDevice.getInstance().asyncAuth(mUser.getSubject(), buildMessage());
+            response = AuthenticationDevice.asyncAuth(mUser.getSubject(), buildMessage());
         }
         catch (Throwable t)
         {

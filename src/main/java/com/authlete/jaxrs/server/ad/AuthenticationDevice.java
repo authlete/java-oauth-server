@@ -42,108 +42,49 @@ import com.authlete.jaxrs.server.ad.dto.SyncAuthenticationResponse;
  */
 public class AuthenticationDevice
 {
-    private static final class DEFAULT
-    {
-        private static class SYNC
-        {
-            private static final String AUTHENTICATION_ENDPOINT_PATH = "/sync";
-            private static final int AUTHENTICATION_TIMEOUT = 10; // sec
-            private static final int AUTHENTICATION_CONNECT_TIMEOUT = 10000; // millisec
-            private static final int AUTHENTICATION_READ_TIMEOUT = 60000; // millisec
-        }
-
-        private static class ASYNC
-        {
-            private static final String AUTHENTICATION_ENDPOINT_PATH = "/async";
-            private static final int AUTHENTICATION_TIMEOUT = 10;
-            private static final int AUTHENTICATION_CONNECT_TIMEOUT = 10000;
-            private static final int AUTHENTICATION_READ_TIMEOUT = 60000;
-        }
-
-        private static class POLL
-        {
-            private static final String AUTHENTICATION_ENDPOINT_PATH = "/poll";
-            private static final String AUTHENTICATION_RESULT_ENDPOINT_PATH = "/result";
-            private static final int AUTHENTICATION_TIMEOUT = 10;
-            private static final int AUTHENTICATION_CONNECT_TIMEOUT = 10;
-            private static final int AUTHENTICATION_READ_TIMEOUT = 10;
-        }
-    }
+    /**
+     * Authlete CIBA authentication simlulator's API Endpoint path.
+     */
+    private static final String SYNC_AUTHENTICATION_ENDPOINT_PATH        = "/api/authenticate/sync";
+    private static final String ASYNC_AUTHENTICATION_ENDPOINT_PATH       = "/api/authenticate/async";
+    private static final String POLL_AUTHENTICATION_ENDPOINT_PATH        = "/api/authenticate/poll";
+    private static final String POLL_AUTHENTICATION_RESULT_ENDPOINT_PATH = "/api/authenticate/result";
 
 
-    private static final class InstanceHolder
-    {
-        private static final AuthenticationDevice INSTANCE = new AuthenticationDevice();
-    }
+    /**
+     * Default values.
+     */
+    private static final int DEFAULT_SYNC_AUTHENTICATION_TIMEOUT          = 10;    // 10 seconds.
+    private static final int DEFAULT_SYNC_AUTHENTICATION_CONNECT_TIMEOUT  = 10000; // 10000 milliseconds.
+    private static final int DEFAULT_SYNC_AUTHENTICATION_READ_TIMEOUT     = 60000; // 60000 milliseconds.
+    private static final int DEFAULT_ASYNC_AUTHENTICATION_TIMEOUT         = 10;    // 10 seconds.
+    private static final int DEFAULT_ASYNC_AUTHENTICATION_CONNECT_TIMEOUT = 10000; // 10000 milliseconds.
+    private static final int DEFAULT_ASYNC_AUTHENTICATION_READ_TIMEOUT    = 10000; // 10000 milliseconds.
+    private static final int DEFAULT_POLL_AUTHENTICATION_TIMEOUT          = 10;    // 10 seconds.
+    private static final int DEFAULT_POLL_AUTHENTICATION_CONNECT_TIMEOUT  = 10000; // 10000 milliseconds.
+    private static final int DEFAULT_POLL_AUTHENTICATION_READ_TIMEOUT     = 10000; // 10000 milliseconds.
 
 
-    private final String mWorkspace;
-    private final String mBaseUrl;
-    private final Client mSyncAuthClient;
-    private final String mSyncAuthenticationEndpointPath;
-    private final int mSyncAuthenticationTimeout;
-    private final int mSyncAuthenticationConnectTimeout;
-    private final int mSyncAuthenticationReadTimeout;
-    private final Client mAsyncAuthClient;
-    private final String mAsyncAuthenticationEndpointPath;
-    private final int mAsyncAuthenticationTimeout;
-    private final int mAsyncAuthenticationConnectTimeout;
-    private final int mAsyncAuthenticationReadTimeout;
-    private final Client mPollAuthClient;
-    private final String mPollAuthenticationEndpointPath;
-    private final String mPollAuthenticationResultEndpointPath;
-    private final int mPollAuthenticationTimeout;
-    private final int mPollAuthenticationConnectTimeout;
-    private final int mPollAuthenticationReadTimeout;
-
-    // basic credentials?
+    /**
+     * Parameters required to communicate with the authentication device.
+     */
+    private static final String sBaseUrl                        = ServerConfig.getAdBaseUrl();
+    private static final String sWorkspace                      = ServerConfig.getAdWorkspace();
+    private static final int sSyncAuthenticationTimeout         = ServerConfig.getAdSyncAuthenticationTimeout() == 0 ? DEFAULT_SYNC_AUTHENTICATION_TIMEOUT : ServerConfig.getAdSyncAuthenticationTimeout();
+    private static final int sSyncAuthenticationConnectTimeout  = ServerConfig.getAdSyncAuthenticationConnectTimeout() == 0 ? DEFAULT_SYNC_AUTHENTICATION_CONNECT_TIMEOUT : ServerConfig.getAdSyncAuthenticationConnectTimeout();
+    private static final int sSyncAuthenticationReadTimeout     = ServerConfig.getAdSyncAuthenticationReadTimeout() == 0 ? DEFAULT_SYNC_AUTHENTICATION_READ_TIMEOUT : ServerConfig.getAdSyncAuthenticationReadTimeout();
+    private static final int sAsyncAuthenticationTimeout        = ServerConfig.getAdAsyncAuthenticationTimeout() == 0 ? DEFAULT_ASYNC_AUTHENTICATION_TIMEOUT : ServerConfig.getAdAsyncAuthenticationTimeout();
+    private static final int sAsyncAuthenticationConnectTimeout = ServerConfig.getAdAsyncAuthenticationConnectTimeout() == 0 ? DEFAULT_ASYNC_AUTHENTICATION_CONNECT_TIMEOUT : ServerConfig.getAdAsyncAuthenticationConnectTimeout();
+    private static final int sAsyncAuthenticationReadTimeout    = ServerConfig.getAdAsyncAuthenticationReadTimeout() == 0 ? DEFAULT_ASYNC_AUTHENTICATION_READ_TIMEOUT : ServerConfig.getAdAsyncAuthenticationReadTimeout();
+    private static final int sPollAuthenticationTimeout         = ServerConfig.getAdPollAuthenticationTimeout() == 0 ? DEFAULT_POLL_AUTHENTICATION_TIMEOUT : ServerConfig.getAdPollAuthenticationTimeout();
+    private static final int sPollAuthenticationConnectTimeout  = ServerConfig.getAdPollAuthenticationConnectTimeout() == 0 ? DEFAULT_POLL_AUTHENTICATION_CONNECT_TIMEOUT : ServerConfig.getAdPollAuthenticationConnectTimeout();
+    private static final int sPollAuthenticationReadTimeout     = ServerConfig.getAdPollAuthenticationReadTimeout() == 0 ? DEFAULT_POLL_AUTHENTICATION_READ_TIMEOUT : ServerConfig.getAdPollAuthenticationReadTimeout();;
+    private static final Client sSyncAuthClient                 = createClient(sSyncAuthenticationReadTimeout, sSyncAuthenticationConnectTimeout);
+    private static final Client sAsyncAuthClient                = createClient(sAsyncAuthenticationReadTimeout, sAsyncAuthenticationConnectTimeout);
+    private static final Client sPollAuthClient                 = createClient(sPollAuthenticationReadTimeout, sPollAuthenticationConnectTimeout);
 
 
-    private AuthenticationDevice()
-    {
-        mWorkspace                        = ServerConfig.getAdWorkspace();
-        mBaseUrl                          = ServerConfig.getAdBaseUrl();
-
-        mSyncAuthenticationEndpointPath   = determineSyncAuthenticationEndpointPath();
-        mSyncAuthenticationTimeout        = determineSyncAuthenticationTimeout();
-        mSyncAuthenticationConnectTimeout = determineSyncAuthenticationConnectTimeout();
-        mSyncAuthenticationReadTimeout    = determineSyncAuthenticationReadTimeout();
-        mSyncAuthClient                   = createSyncClient();
-
-        mAsyncAuthenticationEndpointPath   = determineAsyncAuthenticationEndpointPath();
-        mAsyncAuthenticationTimeout        = determineAsyncAuthenticationTimeout();
-        mAsyncAuthenticationConnectTimeout = determineAsyncAuthenticationConnectTimeout();
-        mAsyncAuthenticationReadTimeout    = determineAsyncAuthenticationReadTimeout();
-        mAsyncAuthClient                   = createAsyncClient();
-
-        mPollAuthenticationEndpointPath       = determinePollAuthenticationEndpointPath();
-        mPollAuthenticationResultEndpointPath = determinePollAuthenticationResultEndpointPath();
-        mPollAuthenticationTimeout            = determinePollAuthenticationTimeout();
-        mPollAuthenticationConnectTimeout     = determinePollAuthenticationConnectTimeout();
-        mPollAuthenticationReadTimeout        = determinePollAuthenticationReadTimeout();
-        mPollAuthClient                       = createPollClient();
-    }
-
-
-    private Client createSyncClient()
-    {
-        return createClient(mSyncAuthenticationReadTimeout, mSyncAuthenticationConnectTimeout);
-    }
-
-
-    private Client createAsyncClient()
-    {
-        return createClient(mAsyncAuthenticationReadTimeout, mAsyncAuthenticationConnectTimeout);
-    }
-
-
-    private Client createPollClient()
-    {
-        return createClient(mPollAuthenticationReadTimeout, mPollAuthenticationConnectTimeout);
-    }
-
-
-    private Client createClient(int readTimeout, int connectTimeout)
+    private static Client createClient(int readTimeout, int connectTimeout)
     {
         // Client configuration
         ClientConfig config = new ClientConfig();
@@ -156,147 +97,6 @@ public class AuthenticationDevice
 
         // The client that synchronously communicates with the authentication device.
         return ClientBuilder.newClient(config);
-    }
-
-
-    private String determineSyncAuthenticationEndpointPath()
-    {
-        return determineStringParameter(
-            ServerConfig.getAdSyncAuthenticationEndpointPath(),
-            DEFAULT.SYNC.AUTHENTICATION_ENDPOINT_PATH
-        );
-    }
-
-
-    private int determineSyncAuthenticationTimeout()
-    {
-        return determineIntParameter(
-            ServerConfig.getAdSyncAuthenticationTimeout(),
-            DEFAULT.SYNC.AUTHENTICATION_TIMEOUT
-        );
-    }
-
-
-    private int determineSyncAuthenticationConnectTimeout()
-    {
-        return determineIntParameter(
-            ServerConfig.getAdSyncAuthenticationConnectTimeout(),
-            DEFAULT.SYNC.AUTHENTICATION_CONNECT_TIMEOUT
-        );
-    }
-
-
-    private int determineSyncAuthenticationReadTimeout()
-    {
-        return determineIntParameter(
-            ServerConfig.getAdSyncAuthenticationReadTimeout(),
-            DEFAULT.SYNC.AUTHENTICATION_READ_TIMEOUT
-        );
-    }
-
-
-    private String determineAsyncAuthenticationEndpointPath()
-    {
-        return determineStringParameter(
-            ServerConfig.getAdSyncAuthenticationEndpointPath(),
-            DEFAULT.ASYNC.AUTHENTICATION_ENDPOINT_PATH
-        );
-    }
-
-
-    private int determineAsyncAuthenticationTimeout()
-    {
-        return determineIntParameter(
-            ServerConfig.getAdAsyncAuthenticationTimeout(),
-            DEFAULT.ASYNC.AUTHENTICATION_TIMEOUT
-        );
-    }
-
-
-    private int determineAsyncAuthenticationConnectTimeout()
-    {
-        return determineIntParameter(
-            ServerConfig.getAdAsyncAuthenticationConnectTimeout(),
-            DEFAULT.ASYNC.AUTHENTICATION_CONNECT_TIMEOUT
-        );
-    }
-
-
-    private int determineAsyncAuthenticationReadTimeout()
-    {
-        return determineIntParameter(
-            ServerConfig.getAdAsyncAuthenticationReadTimeout(),
-            DEFAULT.ASYNC.AUTHENTICATION_READ_TIMEOUT
-        );
-    }
-
-
-    private String determinePollAuthenticationEndpointPath()
-    {
-        return determineStringParameter(
-            ServerConfig.getAdPollAuthenticationEndpointPath(),
-            DEFAULT.POLL.AUTHENTICATION_ENDPOINT_PATH
-        );
-    }
-
-
-    private String determinePollAuthenticationResultEndpointPath()
-    {
-        return determineStringParameter(
-            ServerConfig.getAdPollAuthenticationResultEndpointPath(),
-            DEFAULT.POLL.AUTHENTICATION_RESULT_ENDPOINT_PATH
-        );
-    }
-
-
-    private int determinePollAuthenticationTimeout()
-    {
-        return determineIntParameter(
-            ServerConfig.getAdPollAuthenticationTimeout(),
-            DEFAULT.POLL.AUTHENTICATION_TIMEOUT
-        );
-    }
-
-
-    private int determinePollAuthenticationConnectTimeout()
-    {
-        return determineIntParameter(
-            ServerConfig.getAdPollAuthenticationConnectTimeout(),
-            DEFAULT.POLL.AUTHENTICATION_CONNECT_TIMEOUT
-        );
-    }
-
-
-    private int determinePollAuthenticationReadTimeout()
-    {
-        return determineIntParameter(
-            ServerConfig.getAdPollAuthenticationReadTimeout(),
-            DEFAULT.POLL.AUTHENTICATION_READ_TIMEOUT
-        );
-    }
-
-
-    private String determineStringParameter(String value, String defaultValue)
-    {
-        return value == null ? defaultValue : value;
-    }
-
-
-    private int determineIntParameter(int value, int defaultValue)
-    {
-        return value == 0 ? defaultValue : value;
-    }
-
-
-    /**
-     * Get the singleton instance of this class.
-     *
-     * @return
-     *         The instance of this class.
-     */
-    public static AuthenticationDevice getInstance()
-    {
-        return InstanceHolder.INSTANCE;
     }
 
 
@@ -326,19 +126,19 @@ public class AuthenticationDevice
      *         server is not {@link javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
      *         successful} and the specified response type is not {@link javax.ws.rs.core.Response}.
      */
-    public SyncAuthenticationResponse syncAuth(String subject, String message)
+    public static SyncAuthenticationResponse syncAuth(String subject, String message)
     {
         // A request to be sent to the authentication device.
         SyncAuthenticationRequest request = new SyncAuthenticationRequest()
-            .setWorkspace(mWorkspace)
+            .setWorkspace(sWorkspace)
             .setUser(subject)
             .setMessage(message)
-            .setTimeout(mSyncAuthenticationTimeout);
+            .setTimeout(sSyncAuthenticationTimeout);
 
         // Send the request to the authentication device as a HTTP Post request.
-        return mSyncAuthClient
-            .target(mBaseUrl)
-            .path(mSyncAuthenticationEndpointPath)
+        return sSyncAuthClient
+            .target(sBaseUrl)
+            .path(SYNC_AUTHENTICATION_ENDPOINT_PATH)
             .request(APPLICATION_JSON_TYPE)
             .post(Entity.entity(request, APPLICATION_JSON_TYPE.withCharset("UTF-8")), SyncAuthenticationResponse.class);
     }
@@ -370,18 +170,18 @@ public class AuthenticationDevice
      *         server is not {@link javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
      *         successful} and the specified response type is not {@link javax.ws.rs.core.Response}.
      */
-    public AsyncAuthenticationResponse asyncAuth(String subject, String message)
+    public static AsyncAuthenticationResponse asyncAuth(String subject, String message)
     {
         AsyncAuthenticationRequest request = new AsyncAuthenticationRequest()
-            .setWorkspace(mWorkspace)
+            .setWorkspace(sWorkspace)
             .setUser(subject)
             .setMessage(message)
-            .setTimeout(mSyncAuthenticationTimeout);
+            .setTimeout(sAsyncAuthenticationTimeout);
 
         // Send the request to the authentication device as a HTTP Post request.
-        return mAsyncAuthClient
-            .target(mBaseUrl)
-            .path(mAsyncAuthenticationEndpointPath)
+        return sAsyncAuthClient
+            .target(sBaseUrl)
+            .path(ASYNC_AUTHENTICATION_ENDPOINT_PATH)
             .request(APPLICATION_JSON_TYPE)
             .post(Entity.entity(request, APPLICATION_JSON_TYPE.withCharset("UTF-8")), AsyncAuthenticationResponse.class);
     }

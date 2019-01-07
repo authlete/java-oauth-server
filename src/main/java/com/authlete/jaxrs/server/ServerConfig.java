@@ -26,7 +26,7 @@ public class ServerConfig
     static
     {
         sAdWorkspace = "authlete-hide/test-all";
-        sAdBaseUrl   = "https://cibasim.authlete.com/api/authenticate";
+        sAdBaseUrl   = "https://cibasim.authlete.com";
 
         sAdSyncAuthenticationEndpointPath    = null;
         sAdSyncAuthenticationTimeout         = 0;
