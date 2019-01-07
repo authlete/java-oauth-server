@@ -28,49 +28,19 @@ public enum Result
     /**
      * The result showing that an end-user authorized a client application's request.
      */
-    allow((short)1, "allow"),
+    allow,
 
 
     /**
      * The result showing that an end-user denied a client application's request.
      */
-    deny((short)2, "deny"),
+    deny,
 
 
     /**
      * The result showing that timeout occurred during end-user authentication and
      * authorization process.
      */
-    timeout((short)3, "timeout")
+    timeout
     ;
-
-
-    private final short mValue;
-    private final String mString;
-
-
-    private Result(short value, String string)
-    {
-        mValue = value;
-        mString = string;
-    }
-
-
-    /**
-     * Get the value of the result.
-     *
-     * @return
-     *         The value of the result.
-     */
-    public short getValue()
-    {
-        return mValue;
-    }
-
-
-    @Override
-    public String toString()
-    {
-        return mString;
-    }
 }

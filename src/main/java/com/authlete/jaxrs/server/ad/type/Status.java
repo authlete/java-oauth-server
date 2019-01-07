@@ -30,50 +30,20 @@ public enum Status
      * The status showing that end-user authentication and authorization is being
      * processed.
      */
-    active((short)1, "active"),
+    active,
 
 
     /**
      * The status showing that end-user authentication and authorization process
      * has completed.
      */
-    complete((short)2, "complete"),
+    complete,
 
 
     /**
      * The status showing that timeout occurred during end-user authentication
      * and authorization process
      */
-    timeout((short)3, "timeout")
+    timeout
     ;
-
-
-    private final short mValue;
-    private final String mString;
-
-
-    private Status(short value, String string)
-    {
-        mValue = value;
-        mString = string;
-    }
-
-
-    /**
-     * Get the value of the status.
-     *
-     * @return
-     *         The value of the status.
-     */
-    public short getValue()
-    {
-        return mValue;
-    }
-
-
-    @Override
-    public String toString()
-    {
-        return mString;
-    }
 }
