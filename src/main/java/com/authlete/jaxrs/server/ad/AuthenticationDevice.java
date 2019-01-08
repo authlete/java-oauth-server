@@ -60,17 +60,17 @@ public class AuthenticationDevice
     /**
      * Parameters required to communicate with the authentication device simulator.
      */
-    private static final String sBaseUrl                 = ServerConfig.getAdBaseUrl();
-    private static final String sWorkspace               = ServerConfig.getAdWorkspace();
-    private static final int sSyncAuthenticationTimeout  = ServerConfig.getAdSyncAuthenticationTimeout();
-    private static final int sSyncConnectTimeout         = ServerConfig.getAdSyncConnectTimeout();
-    private static final int sSyncReadTimeout            = ServerConfig.getAdSyncReadTimeout();
-    private static final int sAsyncAuthenticationTimeout = ServerConfig.getAdAsyncAuthenticationTimeout();
-    private static final int sAsyncConnectTimeout        = ServerConfig.getAdAsyncConnectTimeout();
-    private static final int sAsyncReadTimeout           = ServerConfig.getAdAsyncReadTimeout();
-    private static final int sPollAuthenticationTimeout  = ServerConfig.getAdPollAuthenticationTimeout();
-    private static final int sPollConnectTimeout         = ServerConfig.getAdPollConnectTimeout();
-    private static final int sPollReadTimeout            = ServerConfig.getAdPollReadTimeout();;
+    private static final String sBaseUrl                 = ServerConfig.getAuthleteAdBaseUrl();
+    private static final String sWorkspace               = ServerConfig.getAuthleteAdWorkspace();
+    private static final int sSyncAuthenticationTimeout  = ServerConfig.getAuthleteAdSyncAuthenticationTimeout();
+    private static final int sSyncConnectTimeout         = ServerConfig.getAuthleteAdSyncConnectTimeout();
+    private static final int sSyncReadTimeout            = ServerConfig.getAuthleteAdSyncReadTimeout();
+    private static final int sAsyncAuthenticationTimeout = ServerConfig.getAuthleteAdAsyncAuthenticationTimeout();
+    private static final int sAsyncConnectTimeout        = ServerConfig.getAuthleteAdAsyncConnectTimeout();
+    private static final int sAsyncReadTimeout           = ServerConfig.getAuthleteAdAsyncReadTimeout();
+    private static final int sPollAuthenticationTimeout  = ServerConfig.getAuthleteAdPollAuthenticationTimeout();
+    private static final int sPollConnectTimeout         = ServerConfig.getAuthleteAdPollConnectTimeout();
+    private static final int sPollReadTimeout            = ServerConfig.getAuthleteAdPollReadTimeout();;
     private static final Client sSyncClient              = createClient(sSyncReadTimeout, sSyncConnectTimeout);
     private static final Client sAsyncClient             = createClient(sAsyncReadTimeout, sAsyncConnectTimeout);
     private static final Client sPollClient              = createClient(sPollReadTimeout, sPollConnectTimeout);

@@ -36,48 +36,48 @@ public class ServerConfig
     /**
      * Property keys.
      */
-    private static final String AD_BASE_URL_KEY                     = "ad.base_url";
-    private static final String AD_WORKSPACE_KEY                    = "ad.workspace";
-    private static final String AD_SYNC_AUTHENTICATION_TIMEOUT_KEY  = "ad.sync.authentication_timeout";
-    private static final String AD_SYNC_CONNECT_TIMEOUT_KEY         = "ad.sync.connect_timeout";
-    private static final String AD_SYNC_READ_TIMEOUT_KEY            = "ad.sync.read_timeout";
-    private static final String AD_ASYNC_AUTHENTICATION_TIMEOUT_KEY = "ad.async.authentication_timeout";
-    private static final String AD_ASYNC_CONNECT_TIMEOUT_KEY        = "ad.async.connect_timeout";
-    private static final String AD_ASYNC_READ_TIMEOUT_KEY           = "ad.async.read_timeout";
-    private static final String AD_POLL_AUTHENTICATION_TIMEOUT_KEY  = "ad.poll.authentication.timeout";
-    private static final String AD_POLL_CONNECT_TIMEOUT_KEY         = "ad.poll.connect_timeout";
-    private static final String AD_POLL_READ_TIMEOUT_KEY            = "ad.poll.read_timeout";
+    private static final String AUTHLETE_AD_BASE_URL_KEY                     = "authlete.ad.base_url";
+    private static final String AUTHLETE_AD_WORKSPACE_KEY                    = "authlete.ad.workspace";
+    private static final String AUTHLETE_AD_SYNC_AUTHENTICATION_TIMEOUT_KEY  = "authlete.ad.sync.authentication_timeout";
+    private static final String AUTHLETE_AD_SYNC_CONNECT_TIMEOUT_KEY         = "authlete.ad.sync.connect_timeout";
+    private static final String AUTHLETE_AD_SYNC_READ_TIMEOUT_KEY            = "authlete.ad.sync.read_timeout";
+    private static final String AUTHLETE_AD_ASYNC_AUTHENTICATION_TIMEOUT_KEY = "authlete.ad.async.authentication_timeout";
+    private static final String AUTHLETE_AD_ASYNC_CONNECT_TIMEOUT_KEY        = "authlete.ad.async.connect_timeout";
+    private static final String AUTHLETE_AD_ASYNC_READ_TIMEOUT_KEY           = "authlete.ad.async.read_timeout";
+    private static final String AUTHLETE_AD_POLL_AUTHENTICATION_TIMEOUT_KEY  = "authlete.ad.poll.authentication.timeout";
+    private static final String AUTHLETE_AD_POLL_CONNECT_TIMEOUT_KEY         = "authlete.ad.poll.connect_timeout";
+    private static final String AUTHLETE_AD_POLL_READ_TIMEOUT_KEY            = "authlete.ad.poll.read_timeout";
 
 
     /**
      * Default configuration values.
      */
-    private static final String DEFAULT_BASE_URL                  = "https://cibasim.authlete.com";
-    private static final int DEFAULT_SYNC_AUTHENTICATION_TIMEOUT  = 10;    // 10 seconds.
-    private static final int DEFAULT_SYNC_CONNECT_TIMEOUT         = 10000; // 10000 milliseconds.
-    private static final int DEFAULT_SYNC_READ_TIMEOUT            = 60000; // 60000 milliseconds.
-    private static final int DEFAULT_ASYNC_AUTHENTICATION_TIMEOUT = 10;    // 10 seconds.
-    private static final int DEFAULT_ASYNC_CONNECT_TIMEOUT        = 10000; // 10000 milliseconds.
-    private static final int DEFAULT_ASYNC_READ_TIMEOUT           = 10000; // 10000 milliseconds.
-    private static final int DEFAULT_POLL_AUTHENTICATION_TIMEOUT  = 10;    // 10 seconds.
-    private static final int DEFAULT_POLL_CONNECT_TIMEOUT         = 10000; // 10000 milliseconds.
-    private static final int DEFAULT_POLL_READ_TIMEOUT            = 10000; // 10000 milliseconds.
+    private static final String DEFAULT_AUTHLETE_AD_BASE_URL                  = "https://cibasim.authlete.com";
+    private static final int DEFAULT_AUTHLETE_AD_SYNC_AUTHENTICATION_TIMEOUT  = 10;    // 10 seconds.
+    private static final int DEFAULT_AUTHLETE_AD_SYNC_CONNECT_TIMEOUT         = 10000; // 10000 milliseconds.
+    private static final int DEFAULT_AUTHLETE_AD_SYNC_READ_TIMEOUT            = 60000; // 60000 milliseconds.
+    private static final int DEFAULT_AUTHLETE_AD_ASYNC_AUTHENTICATION_TIMEOUT = 10;    // 10 seconds.
+    private static final int DEFAULT_AUTHLETE_AD_ASYNC_CONNECT_TIMEOUT        = 10000; // 10000 milliseconds.
+    private static final int DEFAULT_AUTHLETE_AD_ASYNC_READ_TIMEOUT           = 10000; // 10000 milliseconds.
+    private static final int DEFAULT_AUTHLETE_AD_POLL_AUTHENTICATION_TIMEOUT  = 10;    // 10 seconds.
+    private static final int DEFAULT_AUTHLETE_AD_POLL_CONNECT_TIMEOUT         = 10000; // 10000 milliseconds.
+    private static final int DEFAULT_AUTHLETE_AD_POLL_READ_TIMEOUT            = 10000; // 10000 milliseconds.
 
 
     /**
      * Determined configuration values.
      */
-    private static final String AD_BASE_URL                  = sProperties.getString(AD_BASE_URL_KEY, DEFAULT_BASE_URL);
-    private static final String AD_WORKSPACE                 = sProperties.getString(AD_WORKSPACE_KEY);
-    private static final int AD_SYNC_AUTHENTICATION_TIMEOUT  = sProperties.getInt(AD_SYNC_AUTHENTICATION_TIMEOUT_KEY, DEFAULT_SYNC_AUTHENTICATION_TIMEOUT);
-    private static final int AD_SYNC_CONNECT_TIMEOUT         = sProperties.getInt(AD_SYNC_CONNECT_TIMEOUT_KEY, DEFAULT_SYNC_CONNECT_TIMEOUT);
-    private static final int AD_SYNC_READ_TIMEOUT            = sProperties.getInt(AD_SYNC_READ_TIMEOUT_KEY, DEFAULT_SYNC_READ_TIMEOUT);
-    private static final int AD_ASYNC_AUTHENTICATION_TIMEOUT = sProperties.getInt(AD_ASYNC_AUTHENTICATION_TIMEOUT_KEY, DEFAULT_ASYNC_AUTHENTICATION_TIMEOUT);
-    private static final int AD_ASYNC_CONNECT_TIMEOUT        = sProperties.getInt(AD_ASYNC_CONNECT_TIMEOUT_KEY, DEFAULT_ASYNC_CONNECT_TIMEOUT);
-    private static final int AD_ASYNC_READ_TIMEOUT           = sProperties.getInt(AD_ASYNC_READ_TIMEOUT_KEY, DEFAULT_ASYNC_READ_TIMEOUT);
-    private static final int AD_POLL_AUTHENTICATION_TIMEOUT  = sProperties.getInt(AD_POLL_AUTHENTICATION_TIMEOUT_KEY, DEFAULT_POLL_AUTHENTICATION_TIMEOUT);
-    private static final int AD_POLL_CONNECT_TIMEOUT         = sProperties.getInt(AD_POLL_CONNECT_TIMEOUT_KEY, DEFAULT_POLL_CONNECT_TIMEOUT);
-    private static final int AD_POLL_READ_TIMEOUT            = sProperties.getInt(AD_POLL_READ_TIMEOUT_KEY, DEFAULT_POLL_READ_TIMEOUT);
+    private static final String AUTHLETE_AD_BASE_URL                  = sProperties.getString(AUTHLETE_AD_BASE_URL_KEY, DEFAULT_AUTHLETE_AD_BASE_URL);
+    private static final String AUTHLETE_AD_WORKSPACE                 = sProperties.getString(AUTHLETE_AD_WORKSPACE_KEY);
+    private static final int AUTHLETE_AD_SYNC_AUTHENTICATION_TIMEOUT  = sProperties.getInt(AUTHLETE_AD_SYNC_AUTHENTICATION_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_SYNC_AUTHENTICATION_TIMEOUT);
+    private static final int AUTHLETE_AD_SYNC_CONNECT_TIMEOUT         = sProperties.getInt(AUTHLETE_AD_SYNC_CONNECT_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_SYNC_CONNECT_TIMEOUT);
+    private static final int AUTHLETE_AD_SYNC_READ_TIMEOUT            = sProperties.getInt(AUTHLETE_AD_SYNC_READ_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_SYNC_READ_TIMEOUT);
+    private static final int AUTHLETE_AD_ASYNC_AUTHENTICATION_TIMEOUT = sProperties.getInt(AUTHLETE_AD_ASYNC_AUTHENTICATION_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_ASYNC_AUTHENTICATION_TIMEOUT);
+    private static final int AUTHLETE_AD_ASYNC_CONNECT_TIMEOUT        = sProperties.getInt(AUTHLETE_AD_ASYNC_CONNECT_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_ASYNC_CONNECT_TIMEOUT);
+    private static final int AUTHLETE_AD_ASYNC_READ_TIMEOUT           = sProperties.getInt(AUTHLETE_AD_ASYNC_READ_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_ASYNC_READ_TIMEOUT);
+    private static final int AUTHLETE_AD_POLL_AUTHENTICATION_TIMEOUT  = sProperties.getInt(AUTHLETE_AD_POLL_AUTHENTICATION_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_POLL_AUTHENTICATION_TIMEOUT);
+    private static final int AUTHLETE_AD_POLL_CONNECT_TIMEOUT         = sProperties.getInt(AUTHLETE_AD_POLL_CONNECT_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_POLL_CONNECT_TIMEOUT);
+    private static final int AUTHLETE_AD_POLL_READ_TIMEOUT            = sProperties.getInt(AUTHLETE_AD_POLL_READ_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_POLL_READ_TIMEOUT);
 
 
     /**
@@ -90,9 +90,9 @@ public class ServerConfig
      *
      * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete CIBA authentication device simulator API</a>
      */
-    public static String getAdBaseUrl()
+    public static String getAuthleteAdBaseUrl()
     {
-        return AD_BASE_URL;
+        return AUTHLETE_AD_BASE_URL;
     }
 
 
@@ -108,9 +108,9 @@ public class ServerConfig
      *
      * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete CIBA authentication device simulator API</a>
      */
-    public static String getAdWorkspace()
+    public static String getAuthleteAdWorkspace()
     {
-        return AD_WORKSPACE;
+        return AUTHLETE_AD_WORKSPACE;
     }
 
 
@@ -136,9 +136,9 @@ public class ServerConfig
      *
      * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">/api/authenticate/sync API</a>
      */
-    public static int getAdSyncAuthenticationTimeout()
+    public static int getAuthleteAdSyncAuthenticationTimeout()
     {
-        return AD_SYNC_AUTHENTICATION_TIMEOUT;
+        return AUTHLETE_AD_SYNC_AUTHENTICATION_TIMEOUT;
     }
 
 
@@ -158,9 +158,9 @@ public class ServerConfig
      *
      * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">/api/authenticate/sync API</a>
      */
-    public static int getAdSyncConnectTimeout()
+    public static int getAuthleteAdSyncConnectTimeout()
     {
-        return AD_SYNC_CONNECT_TIMEOUT;
+        return AUTHLETE_AD_SYNC_CONNECT_TIMEOUT;
     }
 
 
@@ -180,9 +180,9 @@ public class ServerConfig
      *
      * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">/api/authenticate/sync API</a>
      */
-    public static int getAdSyncReadTimeout()
+    public static int getAuthleteAdSyncReadTimeout()
     {
-        return AD_SYNC_READ_TIMEOUT;
+        return AUTHLETE_AD_SYNC_READ_TIMEOUT;
     }
 
 
@@ -208,9 +208,9 @@ public class ServerConfig
      *
      * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">/api/authenticate/async API</a>
      */
-    public static int getAdAsyncAuthenticationTimeout()
+    public static int getAuthleteAdAsyncAuthenticationTimeout()
     {
-        return AD_ASYNC_AUTHENTICATION_TIMEOUT;
+        return AUTHLETE_AD_ASYNC_AUTHENTICATION_TIMEOUT;
     }
 
 
@@ -230,9 +230,9 @@ public class ServerConfig
      *
      * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">/api/authenticate/async API</a>
      */
-    public static int getAdAsyncConnectTimeout()
+    public static int getAuthleteAdAsyncConnectTimeout()
     {
-        return AD_ASYNC_CONNECT_TIMEOUT;
+        return AUTHLETE_AD_ASYNC_CONNECT_TIMEOUT;
     }
 
 
@@ -252,9 +252,9 @@ public class ServerConfig
      *
      * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">/api/authenticate/async API</a>
      */
-    public static int getAdAsyncReadTimeout()
+    public static int getAuthleteAdAsyncReadTimeout()
     {
-        return AD_ASYNC_READ_TIMEOUT;
+        return AUTHLETE_AD_ASYNC_READ_TIMEOUT;
     }
 
 
@@ -280,9 +280,9 @@ public class ServerConfig
      *
      * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">/api/authenticate/poll API</a>
      */
-    public static int getAdPollAuthenticationTimeout()
+    public static int getAuthleteAdPollAuthenticationTimeout()
     {
-        return AD_POLL_AUTHENTICATION_TIMEOUT;
+        return AUTHLETE_AD_POLL_AUTHENTICATION_TIMEOUT;
     }
 
 
@@ -302,9 +302,9 @@ public class ServerConfig
      *
      * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">/api/authenticate/poll API</a>
      */
-    public static int getAdPollConnectTimeout()
+    public static int getAuthleteAdPollConnectTimeout()
     {
-        return AD_POLL_CONNECT_TIMEOUT;
+        return AUTHLETE_AD_POLL_CONNECT_TIMEOUT;
     }
 
 
@@ -324,8 +324,8 @@ public class ServerConfig
      *
      * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">/api/authenticate/poll API</a>
      */
-    public static int getAdPollReadTimeout()
+    public static int getAuthleteAdPollReadTimeout()
     {
-        return AD_POLL_READ_TIMEOUT;
+        return AUTHLETE_AD_POLL_READ_TIMEOUT;
     }
 }
