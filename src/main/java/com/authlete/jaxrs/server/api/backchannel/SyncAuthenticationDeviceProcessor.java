@@ -9,9 +9,17 @@ import com.authlete.jaxrs.server.ad.dto.SyncAuthenticationResponse;
 
 
 /**
- * A processor that communicates with Authlete's CIBA authentication device simulator
- * in synchronous mode.
+ * A processor that communicates with {@link <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a>} for end-user authentication
+ * and authorization in synchronous mode.
  *
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device
+ *      simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete
+ *      CIBA authentication device simulator API</a>
+ *
+ * @author Hideki Ikeda
  * @author Hideki Ikeda
  */
 public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceProcessor

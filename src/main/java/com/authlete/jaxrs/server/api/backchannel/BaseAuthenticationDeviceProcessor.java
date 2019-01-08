@@ -28,8 +28,18 @@ import com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler;
 
 
 /**
- * A base class for processors that communicate with Authlete authentication device
- * simulator for end-user authentication and authorization.
+ * A base class for processors that communicate with {@link <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a>} for end-user authentication
+ * and authorization.
+ *
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device
+ *      simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete
+ *      CIBA authentication device simulator API</a>
+ *
+ * @see com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationCallbackEndpoint
+ * BackchannelAuthenticationCallbackEndpoint
  *
  * @author Hideki Ikeda
  */
@@ -152,7 +162,8 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
 
     /**
-     * Build a message to be shown to the end-user on the authentication device.
+     * Build a simple message to be shown to the end-user on the authentication
+     * device.
      *
      * @return
      *         A message to be shown to the end-user on the authentication device.

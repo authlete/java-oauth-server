@@ -34,11 +34,26 @@ import com.authlete.jaxrs.server.ad.dto.AsyncAuthenticationCallbackRequest;
 
 
 /**
- * The callback endpoint for Authlete's CIBA authentication device simulator used
- * in asynchronous mode to notify the authorization server of the result of end-user
- * authentication and authorization.
+ * The endpoint called back from {@link <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a>} when the authentication device
+ * simulator is used in asynchronous mode.
  *
- * @see com.authlete.jaxrs.server.api.backchannel.AsyncAuthenticationDeviceProcessor AsyncAuthenticationDeviceProcessor
+ * <p>
+ * Note that it is assumed that the authorization server has made a request to the
+ * authentication device simulator for end-user authentication and authorization
+ * in {@link AsyncAuthenticationDeviceProcessor} before this endpoint is called
+ * back from the authentication device simulator. The result of the end-user
+ * authentication and authorization is expected to be contained in the request to
+ * this endpoint.
+ * </p>
+ *
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device
+ *      simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/">Authlete
+ *      CIBA authentication device simulator API</a>
+ *
+ * @see AsyncAuthenticationDeviceProcessor
  *
  * @author Hideki Ikeda
  */
@@ -70,18 +85,12 @@ public class BackchannelAuthenticationCallbackEndpoint
 
     private Response doProcess(AsyncAuthenticationCallbackRequest request)
     {
-        System.out.println("Callbacked");
-
         // Get the result of end-user authentication and authorization.
         Result result = getResult(request);
-
-        System.out.println("result: " + result);
 
         // Get the ID of the request that this authorization server made to the
         // authentication device in AsyncAuthenticationDeviceProcessor.
         String requestId = getRequestId(request);
-
-        System.out.println("requestId: " + requestId);
 
         // Retrieve information that was stored in AsyncAuthenticationDeviceProcessor.
         AuthInfo authInfo = getAuthInfo(requestId);
@@ -92,9 +101,6 @@ public class BackchannelAuthenticationCallbackEndpoint
         String[] claimNames = authInfo.getClaimNames();
         String[] acrs       = authInfo.getAcrs();
         Date authTime       = (result == Result.AUTHORIZED) ? new Date() : null;
-
-        // Debug code.
-        log(ticket, user, acrs, claimNames);
 
         // Complete the authentication and authorization process.
         new BackchannelAuthenticationCompleteRequestHandler(
@@ -111,22 +117,12 @@ public class BackchannelAuthenticationCallbackEndpoint
     }
 
 
-    private void log(String ticket, User user, String[] requestedAcrs, String[] requestedClaimNames)
-    {
-        System.out.println("user: " + user.getSubject());
-        System.out.println("ticket: " + ticket);
-        if (requestedAcrs != null) { System.out.println("requestedAcrs[0]: " + requestedAcrs[0]); }
-        if (requestedClaimNames != null) { System.out.println("requestedClaimNames[0]: " + requestedClaimNames[0]); }
-    }
-
-
     private Result getResult(AsyncAuthenticationCallbackRequest request)
     {
         com.authlete.jaxrs.server.ad.type.Result result = request.getResult();
 
         if (result == null)
         {
-            System.out.println("result was null.");
             // Invalid result.
             throw badRequest("The result must not be empty.");
         }
@@ -162,7 +158,6 @@ public class BackchannelAuthenticationCallbackEndpoint
 
         if (requestId == null || requestId.length() == 0)
         {
-            System.out.println("request Id was null.");
             // The request ID is empty.
             throw badRequest("The request ID must not be empty.");
         }

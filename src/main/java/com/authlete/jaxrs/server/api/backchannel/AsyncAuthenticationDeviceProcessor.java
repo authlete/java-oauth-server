@@ -24,27 +24,32 @@ import com.authlete.jaxrs.server.ad.dto.AsyncAuthenticationResponse;
 
 
 /**
- * A processor that communicates with Authlete's CIBA authentication device simulator
- * in asynchronous mode.
+ * A processor that communicates with {@link <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a>} for end-user authentication
+ * and authorization in asynchronous mode.
  *
  * <p>
  * Note that this processor does not receive the result of end-user authentication
  * and authorization in {@link #process()} method. Instead, the result is obtained
- * in the {@link com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationCallbackEndpoint
- * BackchannelAuthenticationCallbackEndpoint} when the endpoint is called back by
- * the authentication device simulator.
+ * in the {@link BackchannelAuthenticationCallbackEndpoint} when the endpoint is
+ * called back by the authentication device simulator.
  * </p>
  *
- * @see com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationCallbackEndpoint
- * BackchannelAuthenticationCallbackEndpoint
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device
+ *      simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete
+ *      CIBA authentication device simulator API</a>
+ *
+ * @see BackchannelAuthenticationCallbackEndpoint
  *
  * @author Hideki Ikeda
  */
 public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceProcessor
 {
     /**
-     * Construct a processor that communicates with Authlete's CIBA authentication
-     * device simulator in asynchronous mode.
+     * Construct a processor that communicates with the authentication device simulator
+     * for end-user authentication and authorization in asynchronous mode.
      *
      * @param ticket
      *         A ticket that was issued by Authlete's {@code /api/backchannel/authentication}
@@ -71,8 +76,8 @@ public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDevice
      *         device.
      *
      * @return
-     *         A processor that communicates with Authlete's CIBA authentication
-     *         device simulator in asynchronous mode.
+     *         A processor that communicates with the authentication device simulator
+     *         for end-user authentication and authorization in asynchronous mode.
      */
     public AsyncAuthenticationDeviceProcessor(String ticket, User user, String clientName, String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage)
     {
@@ -88,8 +93,8 @@ public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDevice
 
         try
         {
-            // Communicate with the authentication device to authenticate the user and
-            // authorize the client's request.
+            // Communicate with the authentication device for end-user authentication
+            // and authorization.
             response = AuthenticationDevice.asyncAuth(mUser.getSubject(), buildMessage());
         }
         catch (Throwable t)
@@ -103,10 +108,8 @@ public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDevice
         // OK. The communication between this authorization server and the authentication
         // device has been successfully done.
 
-        // The ID of the request that was sent to the authentication device.
+        // The ID of the request sent to the authentication device above.
         String requestId = response.getRequestId();
-
-        System.out.println("obtained request ID: " + requestId);
 
         // Check the request ID.
         if (requestId == null || requestId.length() == 0)
@@ -125,11 +128,8 @@ public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDevice
         // required to complete the process (e.g. ticket, claim names, etc...) at
         // the BackchannelAuthenticationCallbackEndpoint.
 
-        // Information about this process.
-        AuthInfo info = new AuthInfo(mTicket, mUser, mClaimNames, mAcrs);
-
-        // Store the information into the holder for later use.
+        // Store the information required to complete the process for later use.
         // See BackchannelAuthenticationCallbackEndpoint for more details.
-        AuthInfoHolder.put(requestId, info);
+        AuthInfoHolder.put(requestId, new AuthInfo(mTicket, mUser, mClaimNames, mAcrs));
     }
 }

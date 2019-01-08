@@ -81,10 +81,14 @@ public class ServerConfig
 
 
     /**
-     * Get the base URL for Authlete's CIBA authentication device simulator API.
+     * Get the base URL of <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
+     * Authlete CIBA authentication device simulator API</a>.
      *
      * @return
-     *         The base URL for Authlete's CIBA authentication device simulator API.
+     *         The base URL of <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
+     *         Authlete CIBA authentication device simulator API</a>.
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete CIBA authentication device simulator API</a>
      */
     public static String getAdBaseUrl()
     {
@@ -94,11 +98,15 @@ public class ServerConfig
 
     /**
      * Get the workspace for which end-user authentication and authorization is
-     * performed on Authlete's CIBA authentication device simulator.
+     * performed on {@link <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>}.
      *
      * @return
      *         The workspace for which end-user authentication and authorization is
-     *         performed on Authlete's CIBA authentication device simulator.
+     *         performed on {@link <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>}.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete CIBA authentication device simulator API</a>
      */
     public static String getAdWorkspace()
     {
@@ -107,9 +115,10 @@ public class ServerConfig
 
 
     /**
-     * Get the authentication timeout value (in seconds) used when the authorization
-     * server makes a request to to {@code /api/authenticate/sync} endpoint of
-     * Authlete's CIBA authentication device simulator.
+     * Get the authentication/authorization timeout value (in seconds) used when
+     * the authorization server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">
+     * /api/authenticate/sync API</a>} of {@link <a href="https://cibasim.authlete.com">
+     * Authlete CIBA authentication device simulator</a>}.
      *
      * <p>
      * The authentication device simulator waits for this timeout value to get
@@ -117,9 +126,15 @@ public class ServerConfig
      * </p>
      *
      * @return
-     *         The authentication timeout value (in seconds) used when the authorization
-     *         server makes a request to to {@code /api/authenticate/sync} endpoint
-     *         of Authlete's CIBA authentication device simulator.
+     *         The authentication/authorization timeout value (in seconds) used
+     *         when the authorization server makes a request to {@link
+     *         <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">
+     *         /api/authenticate/sync API</a>} of {@link <a href="https://cibasim.authlete.com">
+     *         Authlete CIBA authentication device simulator</a>}.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">/api/authenticate/sync API</a>
      */
     public static int getAdSyncAuthenticationTimeout()
     {
@@ -129,13 +144,19 @@ public class ServerConfig
 
     /**
      * Get the connect timeout value (in milliseconds) used when the authorization
-     * server makes a request to to {@code /api/authenticate/sync} endpoint of
-     * Authlete's CIBA authentication device simulator.
+     * server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">
+     * /api/authenticate/sync API</a>} of {@link <a href="https://cibasim.authlete.com">
+     * Authlete CIBA authentication device simulator</a>}.
      *
      * @return
      *         The connect timeout value (in milliseconds) used when the authorization
-     *         server makes a request to to {@code /api/authenticate/sync} endpoint
-     *         of Authlete's CIBA authentication device simulator.
+     *         server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">
+     *         /api/authenticate/sync API</a>} of {@link <a href="https://cibasim.authlete.com">
+     *         Authlete CIBA authentication device simulator</a>}.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">/api/authenticate/sync API</a>
      */
     public static int getAdSyncConnectTimeout()
     {
@@ -145,13 +166,19 @@ public class ServerConfig
 
     /**
      * Get the read timeout value (in milliseconds) used when the authorization
-     * server makes a request to {@code /api/authenticate/sync} endpoint of Authlete's
-     * CIBA authentication device simulator.
+     * server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">
+     * /api/authenticate/sync API</a>} of {@link <a href="https://cibasim.authlete.com">
+     * Authlete CIBA authentication device simulator</a>}.
      *
      * @return
      *         The read timeout value (in milliseconds) used when the authorization
-     *         server makes a request to {@code /api/authenticate/sync} endpoint
-     *         of Authlete's CIBA authentication device simulator.
+     *         server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">
+     *         /api/authenticate/sync API</a>} of {@link <a href="https://cibasim.authlete.com">
+     *         Authlete CIBA authentication device simulator</a>}.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">/api/authenticate/sync API</a>
      */
     public static int getAdSyncReadTimeout()
     {
@@ -160,19 +187,26 @@ public class ServerConfig
 
 
     /**
-     * Get the authentication timeout value (in seconds) used when the authorization
-     * server makes a request to {@code /api/authenticate/async} endpoint of Authlete's
-     * CIBA authentication device simulator.
+     * Get the authentication/authorization timeout value (in seconds) used when
+     * the authorization server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     * /api/authenticate/async API</a>} of {@link <a href="https://cibasim.authlete.com">
+     * Authlete CIBA authentication device simulator</a>}.
      *
      * <p>
-     * The authentication device waits for this timeout value to get authorization
-     * decision from an end-user.
+     * The authentication device simulator waits for this timeout value to get
+     * authorization decision from an end-user.
      * </p>
      *
      * @return
-     *         The authentication timeout value (in seconds) used when the authorization
-     *         server makes a request to {@code /api/authenticate/async} endpoint
-     *         of Authlete's CIBA authentication device simulator.
+     *         The authentication/authorization timeout value (in seconds) used
+     *         when the authorization server makes a request to {@link
+     *         <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     *         /api/authenticate/async API</a>} of {@link <a href="https://cibasim.authlete.com">
+     *         Authlete CIBA authentication device simulator</a>}.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">/api/authenticate/async API</a>
      */
     public static int getAdAsyncAuthenticationTimeout()
     {
@@ -182,13 +216,19 @@ public class ServerConfig
 
     /**
      * Get the connect timeout value (in milliseconds) used when the authorization
-     * server makes a request to {@code /api/authenticate/async} endpoint of Authlete's
-     * CIBA authentication device simulator.
+     * server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     * /api/authenticate/async API</a>} of {@link <a href="https://cibasim.authlete.com">
+     * Authlete CIBA authentication device simulator</a>}.
      *
      * @return
      *         The connect timeout value (in milliseconds) used when the authorization
-     *         server makes a request to {@code /api/authenticate/async} endpoint
-     *         of Authlete's CIBA authentication device simulator.
+     *         server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     *         /api/authenticate/async API</a>} of {@link <a href="https://cibasim.authlete.com">
+     *         Authlete CIBA authentication device simulator</a>}.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">/api/authenticate/async API</a>
      */
     public static int getAdAsyncConnectTimeout()
     {
@@ -198,13 +238,19 @@ public class ServerConfig
 
     /**
      * Get the read timeout value (in milliseconds) used when the authorization
-     * server makes a request to {@code /api/authenticate/async} endpoint of
-     * Authlete's CIBA authentication device simulator.
+     * server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     * /api/authenticate/async API</a>} of {@link <a href="https://cibasim.authlete.com">
+     * Authlete CIBA authentication device simulator</a>}.
      *
      * @return
      *         The read timeout value (in milliseconds) used when the authorization
-     *         server makes a request to {@code /api/authenticate/async} endpoint
-     *         of Authlete's CIBA authentication device simulator.
+     *         server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     *         /api/authenticate/async API</a>} of {@link <a href="https://cibasim.authlete.com">
+     *         Authlete CIBA authentication device simulator</a>}.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">/api/authenticate/async API</a>
      */
     public static int getAdAsyncReadTimeout()
     {
@@ -213,19 +259,26 @@ public class ServerConfig
 
 
     /**
-     * Get the authentication timeout value (in seconds) used when the authorization
-     * server makes a request to {@code /api/authenticate/poll} endpoint of Authlete's
-     * CIBA authentication device simulator.
+     * Get the authentication/authorization timeout value (in seconds) used when
+     * the authorization server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
+     * /api/authenticate/poll API</a>} of {@link <a href="https://cibasim.authlete.com">
+     * Authlete CIBA authentication device simulator</a>}.
      *
      * <p>
-     * The authentication device waits for this timeout value to get authorization
-     * decision from an end-user.
+     * The authentication device simulator waits for this timeout value to get
+     * authorization decision from an end-user.
      * </p>
      *
      * @return
-     *         The authentication timeout value (in seconds) used when the authorization
-     *         server makes a request to {@code /api/authenticate/poll} endpoint
-     *         of Authlete's CIBA authentication device simulator.
+     *         The authentication/authorization timeout value (in seconds) used
+     *         when the authorization server makes a request to {@link
+     *         <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
+     *         /api/authenticate/poll API</a>} of {@link <a href="https://cibasim.authlete.com">
+     *         Authlete CIBA authentication device simulator</a>}.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">/api/authenticate/poll API</a>
      */
     public static int getAdPollAuthenticationTimeout()
     {
@@ -235,13 +288,19 @@ public class ServerConfig
 
     /**
      * Get the connect timeout value (in milliseconds) used when the authorization
-     * server makes a request to {@code /api/authenticate/poll} endpont of Authlete's
-     * CIBA authentication device simulator
+     * server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
+     * /api/authenticate/poll API</a>} of {@link <a href="https://cibasim.authlete.com">
+     * Authlete CIBA authentication device simulator</a>}.
      *
      * @return
      *         The connect timeout value (in milliseconds) used when the authorization
-     *         server makes a request to {@code /api/authenticate/poll} endpoint
-     *         of Authlete's CIBA authentication device simulator.
+     *         server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
+     *         /api/authenticate/poll API</a>} of {@link <a href="https://cibasim.authlete.com">
+     *         Authlete CIBA authentication device simulator</a>}.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">/api/authenticate/poll API</a>
      */
     public static int getAdPollConnectTimeout()
     {
@@ -251,13 +310,19 @@ public class ServerConfig
 
     /**
      * Get the read timeout value (in milliseconds) used when the authorization
-     * server makes a request to {@code /api/authenticate/poll} endpoint of Authlete's
-     * CIBA authentication device simulator.
+     * server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
+     * /api/authenticate/poll API</a>} of {@link <a href="https://cibasim.authlete.com">
+     * Authlete CIBA authentication device simulator</a>}.
      *
      * @return
      *         The read timeout value (in milliseconds) used when the authorization
-     *         server makes a request to {@code /api/authenticate/poll} endpoint
-     *         of Authlete's CIBA authentication device simulator.
+     *         server makes a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
+     *         /api/authenticate/poll API</a>} of {@link <a href="https://cibasim.authlete.com">
+     *         Authlete CIBA authentication device simulator</a>}.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">/api/authenticate/poll API</a>
      */
     public static int getAdPollReadTimeout()
     {

@@ -21,13 +21,16 @@ import java.io.Serializable;
 
 
 /**
- * A base class for request to Authlete's CIBA authentication device simlator's
- * APIs.
- *
- * @author Hideki Ikeda
+ * A base class for a request to an {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
+ * Authlete CIBA authentication device simulator API</a>}.
  *
  * @param <T>
  *         Request type.
+ *
+ * @see {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
+ *      Authlete CIBA authentication device simulator API</a>}
+ *
+ * @author Hideki Ikeda
  */
 public class BaseAuthenticationRequest<T extends BaseAuthenticationRequest<T>> implements Serializable
 {
@@ -41,10 +44,12 @@ public class BaseAuthenticationRequest<T extends BaseAuthenticationRequest<T>> i
 
 
     /**
-     * Get the workspace on the authentication device simulator.
+     * Get the workspace for which end-user authentication and authorization is
+     * performed.
      *
      * @return
-     *         The workspace on the authentication device simulator.
+     *         The workspace for which end-user authentication and authorization
+     *         is performed.
      */
     public String getWorkspace()
     {
@@ -53,10 +58,12 @@ public class BaseAuthenticationRequest<T extends BaseAuthenticationRequest<T>> i
 
 
     /**
-     * Set the workspace on the authentication device simulator.
+     * Set the workspace for which end-user authentication and authorization is
+     * performed.
      *
      * @param workspace
-     *         The workspace on the authentication device simulator.
+     *         The workspace for which end-user authentication and authorization
+     *         is performed.
      *
      * @return
      *         {@code this} object.
@@ -71,12 +78,12 @@ public class BaseAuthenticationRequest<T extends BaseAuthenticationRequest<T>> i
 
 
     /**
-     * Get the ID of a user to be authenticated and asked to authorize the client
-     * application.
+     * Get the ID of an end-user to be authenticated and asked to authorize the
+     * client application.
      *
      * @return
-     *         The ID of a user to be authenticated and asked to authorize the
-     *         client application.
+     *         The ID of an end-user to be authenticated and asked to authorize
+     *         the client application.
      */
     public String getUser()
     {
@@ -85,12 +92,12 @@ public class BaseAuthenticationRequest<T extends BaseAuthenticationRequest<T>> i
 
 
     /**
-     * Set the ID of a user to be authenticated and asked to authorize the client
-     * application.
+     * Set the ID of an end-user to be authenticated and asked to authorize the
+     * client application.
      *
      * @param user
-     *         The ID of a user to be authenticated and asked to authorize the
-     *         client application.
+     *         The ID of an end-user to be authenticated and asked to authorize
+     *         the client application.
      *
      * @return
      *         {@code this} object.
@@ -135,10 +142,15 @@ public class BaseAuthenticationRequest<T extends BaseAuthenticationRequest<T>> i
 
 
     /**
-     * Get the value of timeout for end-user authentication and authorization.
+     * Get the authentication/authorization timeout value in seconds.
+     *
+     * <p>
+     * The authentication device waits for this timeout value to get authorization
+     * decision from an end-user.
+     * </p>
      *
      * @return
-     *         The value of timeout for end-user authentication and authorization.
+     *         The authentication/authorization timeout value in seconds.
      */
     public int getTimeout()
     {
@@ -147,10 +159,15 @@ public class BaseAuthenticationRequest<T extends BaseAuthenticationRequest<T>> i
 
 
     /**
-     * Set the value of timeout for end-user authentication and authorization.
+     * Set the authentication/authorization timeout value in seconds.
      *
-     * @param message
-     *         The value of timeout for end-user authentication and authorization.
+     * <p>
+     * The authentication device waits for this timeout value to get authorization
+     * decision from an end-user.
+     * </p>
+     *
+     * @param timeout
+     *         The authentication/authorization timeout value in seconds.
      *
      * @return
      *         {@code this} object.

@@ -18,8 +18,15 @@ package com.authlete.jaxrs.server.ad.dto;
 
 
 /**
- * A class representing a request to Authlete's CIBA authentication device simulator's
- * {@code /api/authenticate/async} API.
+ * A class representing a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+ * /api/authenticate/async API</a>} of {@link <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a>}.
+ *
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication
+ *      device simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+ *      /api/authenticate/async API</a>
  *
  * @author Hideki Ikeda
  */
@@ -44,13 +51,17 @@ public class AsyncAuthenticationRequest extends BaseAuthenticationRequest<AsyncA
 
 
     /**
-     * Set the value of {@code state} request parameter. Arbitrary data can be set
-     * to this request parameter and the data will be sent to the callback endpoint
-     * with the result of end-user authentication and authorization.
+     * Set the value of {@code state} request parameter.
+     *
+     * <p>
+     * Arbitrary data can be set to this request parameter and the data will be
+     * sent to the callback endpoint with the result of end-user authentication
+     * and authorization.
+     * </p>
      *
      * @param state
-     *         Arbitrary data that will be passed to the callback endpoint with
-     *         the result of end-user authentication and authorization.
+     *         Arbitrary data that will be sent to the callback endpoint with the
+     *         result of end-user authentication and authorization.
      *
      * @return
      *         {@code this} object.

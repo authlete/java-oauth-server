@@ -22,8 +22,15 @@ import com.authlete.common.types.User;
 
 
 /**
- * A processor that communicates with Authlete's CIBA authentication device simulator
- * in poll mode.
+ * A processor that communicates with {@link <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a>} for end-user authentication
+ * and authorization in poll mode.
+ *
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device
+ *      simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete
+ *      CIBA authentication device simulator API</a>
  *
  * @author Hideki Ikeda
  */

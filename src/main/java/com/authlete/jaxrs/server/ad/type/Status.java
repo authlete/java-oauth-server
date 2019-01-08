@@ -18,11 +18,17 @@ package com.authlete.jaxrs.server.ad.type;
 
 
 /**
- * The status of end-user authentication and authorization on Authlete's CIBA
- * authentication device when it is used in poll mode.
+ * Status of end-user authentication and authorization on {@link
+ * <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>}
+ * when it is used in poll mode.
+ *
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device
+ *      simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete
+ *      CIBA authentication device simulator API</a>
  *
  * @author Hideki Ikeda
- *
  */
 public enum Status
 {

@@ -18,8 +18,14 @@ package com.authlete.jaxrs.server.ad.type;
 
 
 /**
- * Result of end-user authentication and authorization returned from Authlete's
- * CIBA authentication device simulator.
+ * Result of end-user authentication and authorization returned from {@link
+ * <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>}
+ *
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device
+ *      simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete
+ *      CIBA authentication device simulator API</a>
  *
  * @author Hideki Ikeda
  */

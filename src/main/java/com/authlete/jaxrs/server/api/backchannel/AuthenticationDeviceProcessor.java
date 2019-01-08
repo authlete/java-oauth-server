@@ -18,8 +18,15 @@ package com.authlete.jaxrs.server.api.backchannel;
 
 
 /**
- * An interface for processors that communicate with Authlete's CIBA authentication
- * device simulator for end-user authentication and authorization.
+ * An interface for processors that communicate with {@link <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a>} for end-user authentication
+ * and authorization.
+ *
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device
+ *      simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/">Authlete
+ *      CIBA authentication device simulator API</a>
  *
  * @author Hideki Ikeda
  */

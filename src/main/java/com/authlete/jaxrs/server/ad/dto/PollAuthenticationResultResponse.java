@@ -18,18 +18,24 @@ package com.authlete.jaxrs.server.ad.dto;
 
 
 import java.io.Serializable;
-
 import com.authlete.jaxrs.server.ad.type.Result;
 import com.authlete.jaxrs.server.ad.type.Status;
 
 
 /**
- * The class representing a response from Authlete's CIBA authentication device
- * simulator's {@code /api/authenticate/result} API.
+ * A class representing a request from {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_result">
+ * /api/authenticate/result API</a>} of {@link <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a>}.
+ *
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication
+ *      device simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_result">
+ *      /api/authenticate/result API</a>
  *
  * @author Hideki Ikeda
  */
-public class PollAuthenticationResultGetResponse implements Serializable
+public class PollAuthenticationResultResponse implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
@@ -39,10 +45,10 @@ public class PollAuthenticationResultGetResponse implements Serializable
 
 
     /**
-     * Get the status of end-user authentication and authorizaiton.
+     * Get the status of end-user authentication and authorization.
      *
      * @return
-     *         The status of end-user authentication and authorizaiton.
+     *         The status of end-user authentication and authorization.
      */
     public Status getStatus()
     {
@@ -51,12 +57,12 @@ public class PollAuthenticationResultGetResponse implements Serializable
 
 
     /**
-     * Set the status of end-user authentication and authorizaiton.
+     * Set the status of end-user authentication and authorization.
      *
      * @param status
-     *         The status of end-user authentication and authorizaiton.
+     *         The status of end-user authentication and authorization.
      */
-    public PollAuthenticationResultGetResponse setAuthenticationStatus(Status status)
+    public PollAuthenticationResultResponse setAuthenticationStatus(Status status)
     {
         this.status = status;
 
@@ -87,7 +93,7 @@ public class PollAuthenticationResultGetResponse implements Serializable
      * @return
      *         {@code this} object.
      */
-    public PollAuthenticationResultGetResponse setAuthenticationResult(Result result)
+    public PollAuthenticationResultResponse setAuthenticationResult(Result result)
     {
         this.result = result;
 

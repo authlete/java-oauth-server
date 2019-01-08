@@ -156,9 +156,9 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
     @Override
     public void startCommunicationWithAuthenticationDevice(User user, BackchannelAuthenticationResponse info)
     {
-        // Ensure that the communication with the authentication device has not
-        // started yet so that the following authentication/authorization process
-        // will never be performed more than once.
+        // Ensure that the authorization server has not started communicating with
+        // the authentication device yet so that the following authentication/authorization
+        // process will never be performed more than once.
         synchronized (this)
         {
             if (communicationWithAuthenticationDeviceStarted)
@@ -170,9 +170,11 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
             communicationWithAuthenticationDeviceStarted = true;
         }
 
-        // To process the end-user authentication and authorization, we use authlete
-        // authentication device simulator as an authentication device (AD) here.
-        // The simulator has three communication modes as follows.
+        // To process the end-user authentication and authorization, we use Authlete
+        // authentication device simulator (https://cibasim.authlete.com) as an
+        // authentication device (AD) here.
+        // According to API documents (https://app.swaggerhub.com/apis-docs/Authlete/cibasim),
+        // the simulator has three communication modes as follows.
         //
         //   1. synchronous mode
         //   2. asynchronous mode
@@ -204,16 +206,9 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
         // The biding message to be shown to the user on authentication.
         String bindingMessage = info.getBindingMessage();
 
-        // The warnings raised during processing the backchannel authentication
-        // request.
-        String[] warnings = info.getWarnings();
-
         // The mode in which this authorization server communicates with the
         // authentication device.
         Mode mode = getAuthenticationDeviceMode();
-
-        // Debug code.
-        log(mode, ticket, user, acrs, scopes, claimNames, bindingMessage, warnings);
 
         // Get a processor to process end-user authentication and authorization
         // by communicating with the authentication device.
@@ -225,25 +220,12 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
     }
 
 
-    private void log(Mode mode, String ticket, User user, String[] requestedAcrs, Scope[] requestedScopes, String[] requestedClaimNames, String bindingMessage, String[] warnings)
-    {
-        System.out.println("user: " + user.getSubject());
-        System.out.println("ticket: " + ticket);
-        if (requestedAcrs != null) { System.out.println("requestedAcrs[0]: " + requestedAcrs[0]); }
-        if (requestedScopes != null) { System.out.println("requestedScopes[0]: " + requestedScopes[0]); }
-        if (requestedClaimNames != null) { System.out.println("requestedClaimNames[0]: " + requestedClaimNames[0]); }
-        System.out.println("bindingMessage: " + bindingMessage);
-        if (warnings != null) { System.out.println("warnings[0]: " + warnings[0]); }
-    }
-
-
     private Mode getAuthenticationDeviceMode()
     {
         // In this dummy implementation, we always use SYNC mode when communicating
         // with the authentication device but you may change this behavior as you
-        // like (e.g. which mode you use may vary depending on the ACRs values).
-        return Mode.ASYNC;
-        //return Mode.SYNC;
+        // like (e.g. you may decide which mode to use depending on the ACRs values).
+        return Mode.SYNC;
     }
 
 
@@ -273,15 +255,11 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
             catch (WebApplicationException e)
             {
                 // Do something.
-                e.printStackTrace();
             }
             catch (Throwable t)
             {
                 // Do something.
-                t.printStackTrace();
             }
-
-            System.out.println("background process is done.");
         }
     }
 }

@@ -33,14 +33,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * commercial use.
  * </p>
  *
- *
- * @author Hideki Ikeda
- *
  * @see AuthInfo
  *
  * @see AsyncAuthenticationDeviceProcessor
  *
  * @see BackchannelAuthenticationCallbackEndpoint
+ *
+ * @author Hideki Ikeda
  */
 public class AuthInfoHolder
 {

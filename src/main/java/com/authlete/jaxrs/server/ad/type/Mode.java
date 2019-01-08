@@ -18,7 +18,14 @@ package com.authlete.jaxrs.server.ad.type;
 
 
 /**
- * The mode of Authlete's CIBA authentication device simulator.
+ * The communication mode of {@link <a href="https://cibasim.authlete.com">Authlete
+ * CIBA authentication device simulator</a>}.
+ *
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device
+ *      simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete
+ *      CIBA authentication device simulator API</a>
  *
  * @author Hideki Ikeda
  */

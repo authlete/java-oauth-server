@@ -31,8 +31,9 @@ import com.authlete.jaxrs.server.ad.type.Mode;
 public class AuthenticationDeviceProcessorFactory
 {
     /**
-     * Create a processor that communicates with Authlete's CIBA authentication
-     * device simulator for end-user authentication and authorization.
+     * Create a processor that communicates with {@link <a href="https://cibasim.authlete.com">
+     * Authlete CIBA authentication device simulator</a>} for end-user authentication
+     * and authorization.
      *
      * @param mode
      *         The mode communication with the authentication device simulator.
@@ -62,8 +63,15 @@ public class AuthenticationDeviceProcessorFactory
      *         device.
      *
      * @return
-     *         A processor that communicates with Authlete's CIBA authentication
-     *         device simulator for end-user authentication and authorization.
+     *         A processor that communicates with {@link <a href="https://cibasim.authlete.com">
+     *         Authlete CIBA authentication device simulator</a>} for end-user
+     *         authentication and authorization.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device
+     *      simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/">Authlete
+     *      CIBA authentication device simulator API</a>
      */
     public static AuthenticationDeviceProcessor create(Mode mode, String ticket, User user, String clientName, String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage)
     {

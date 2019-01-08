@@ -23,9 +23,9 @@ import com.authlete.common.types.User;
 /**
  * Information required to complete processes that are executed in {@link AsyncAuthenticationDeviceProcessor}
  *
- * @author Hideki Ikeda
- *
  * @see AsyncAuthenticationDeviceProcessor
+ *
+ * @author Hideki Ikeda
  */
 public class AuthInfo
 {

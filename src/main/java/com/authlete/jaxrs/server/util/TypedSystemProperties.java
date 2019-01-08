@@ -22,7 +22,7 @@ import com.authlete.common.util.StringBasedTypedProperties;
 
 
 /**
- * A class to read system properties.
+ * A class for system properties.
  *
  * @author Hideki Ikeda
  */

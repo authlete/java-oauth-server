@@ -36,14 +36,20 @@ import com.authlete.jaxrs.server.ad.dto.SyncAuthenticationResponse;
 
 
 /**
- * A class to communicate with Authlete's CIBA authentication device simulator.
+ * A class to communicate with {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
+ * Authlete CIBA authentication device simulator API</a>}.
+ *
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication
+ *      device simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete CIBA authentication device simulator API</a>
  *
  * @author Hideki Ikeda
  */
 public class AuthenticationDevice
 {
     /**
-     * Authlete CIBA authentication simlulator's API Endpoint path.
+     * Authlete CIBA authentication simulator API endpoints.
      */
     private static final String SYNC_AUTHENTICATION_ENDPOINT_PATH        = "/api/authenticate/sync";
     private static final String ASYNC_AUTHENTICATION_ENDPOINT_PATH       = "/api/authenticate/async";
@@ -52,7 +58,7 @@ public class AuthenticationDevice
 
 
     /**
-     * Parameters required to communicate with the authentication device.
+     * Parameters required to communicate with the authentication device simulator.
      */
     private static final String sBaseUrl                 = ServerConfig.getAdBaseUrl();
     private static final String sWorkspace               = ServerConfig.getAdWorkspace();
@@ -72,22 +78,23 @@ public class AuthenticationDevice
 
     private static Client createClient(int readTimeout, int connectTimeout)
     {
-        // Client configuration
+        // Client configuration.
         ClientConfig config = new ClientConfig();
 
-        // Read timeout
+        // Read timeout.
         config.property(READ_TIMEOUT, readTimeout);
 
-        // Connect timeout
+        // Connect timeout.
         config.property(CONNECT_TIMEOUT, connectTimeout);
 
-        // The client that synchronously communicates with the authentication device.
+        // The client that synchronously communicates with the authentication device simulator.
         return ClientBuilder.newClient(config);
     }
 
 
     /**
-     * Send a request to the authentication device simulator in sync mode.
+     * Send a request to the authentication device simulator for end-user authentication
+     * and authorization in synchronous mode.
      *
      * @param subject
      *         The subject of the end-user to be authenticated and asked to authorize
@@ -131,7 +138,8 @@ public class AuthenticationDevice
 
 
     /**
-     * Send a request to the authentication device simulator in async mode.
+     * Send a request to the authentication device simulator for for end-user authentication
+     * and authorization in asynchronous mode.
      *
      * @param subject
      *         The subject of the end-user to be authenticated and asked to authorize
@@ -141,7 +149,7 @@ public class AuthenticationDevice
      *         The message to be shown to the end-user on the authentication device.
      *
      * @return
-     *         A response from the authentication device.
+     *         A response from the authentication device simulator.
      *
      * @throws ResponseProcessingException
      *         in case processing of a received HTTP response fails (e.g. in a filter
@@ -174,7 +182,8 @@ public class AuthenticationDevice
 
 
     /**
-     * Send a request to the authentication device simulator in poll mode.
+     * Send a request to the authentication device simulator for end-user authentication
+     * and authorization in poll mode.
      *
      * @param subject
      *         The subject of the end-user to be authenticated and asked to authorize
@@ -184,7 +193,7 @@ public class AuthenticationDevice
      *         The message to be shown to the end-user on the authentication device.
      *
      * @return
-     *         A response from the authentication device.
+     *         A response from the authentication device simulator.
      *
      * @throws ResponseProcessingException
      *         in case processing of a received HTTP response fails (e.g. in a filter

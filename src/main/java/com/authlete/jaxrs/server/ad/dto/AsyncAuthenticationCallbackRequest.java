@@ -23,16 +23,25 @@ import com.authlete.jaxrs.server.ad.type.Result;
 
 
 /**
- * The class representing a callback request that is made from Authlete's CIBA authentication
- * device simulator when it is used in asynchronous mode.
+ * The class representing a callback request that is made from {@link <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a>} when it is used in asynchronous
+ * mode.
  *
  * <p>
- * Note that, before the authorization server receives this callback request from the authentication
- * device simulator, the authorization server has made a request to the authentication
- * device simulator's {@code /api/authenticate/async} API for end-user authentication
- * and authorization. This callback request contains the result of the end-user
- * authentication and authorization.
+ * Note that, before the authorization server receives this callback request from
+ * the authentication device simulator, it is assumed that the authorization server
+ * has made a request to the authentication device simulator's {@link
+ * <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+ * /api/authenticate/async API</a>} for end-user authentication and authorization.
+ * This callback request contains the result of the end-user authentication and
+ * authorization.
  * </p>
+ *
+ * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication
+ *      device simulator</a>
+ *
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+ *      /api/authenticate/async API</a>
  *
  * @author Hideki Ikeda
  */
@@ -48,15 +57,19 @@ public class AsyncAuthenticationCallbackRequest implements Serializable
 
 
     /**
-     * Get the ID of a request that the authorization server had made to the authentication
-     * device simulator's {@code /api/authenticate/async} API before the authorization
-     * server received this callback request from the authentication device simulator.
+     * Get the ID of a request that the authorization server has made to the authentication
+     * device simulator's {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     * /api/authenticate/async API</a>} before the authorization server receives
+     * this callback request from the authentication device simulator.
      *
      * @return
-     *         The ID of a request that the authorization server had made to the
-     *         authentication device simulator's {@code /api/authenticate/async}
-     *         API before the authorization server received this callback request
-     *         from the authentication device simulator.
+     *         The ID of a request that the authorization server has made to the
+     *         authentication device simulator's {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     *         /api/authenticate/async API</a>} before the authorization server
+     *         receives this callback request from the authentication device simulator.
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     *      /api/authenticate/async API</a>
      */
     public String getRequestId()
     {
@@ -65,15 +78,19 @@ public class AsyncAuthenticationCallbackRequest implements Serializable
 
 
     /**
-     * Set the ID of a request that the authorization server had made to the authentication
-     * device simulator's {@code /api/authenticate/async} API before the authorization
-     * server received this callback request from the authentication device simulator.
+     * Set the ID of a request that the authorization server has made to the authentication
+     * device simulator's {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     * /api/authenticate/async API</a>} before the authorization server receives
+     * this callback request from the authentication device simulator.
      *
-     * @param requestId
-     *         The ID of a request that the authorization server had made to the
-     *         authentication device simulator's {@code /api/authenticate/async}
-     *         API before the authorization server received this callback request
-     *         from the authentication device simulator.
+     * @param
+     *         The ID of a request that the authorization server has made to the
+     *         authentication device simulator's {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     *         /api/authenticate/async API</a>} before the authorization server
+     *         receives this callback request from the authentication device simulator.
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     *      /api/authenticate/async API</a>
      *
      * @return
      *         {@code this} object.
@@ -118,15 +135,19 @@ public class AsyncAuthenticationCallbackRequest implements Serializable
     /**
      * Get the value of the {@code state} parameter that was included in a request
      * that the authorization server made to the authentication device simulator's
-     * {@code /api/authenticate/async} API before the authorization server received
+     * {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     * /api/authenticate/async API</a>} before the authorization server receives
      * this callback request from the authentication device simulator.
      *
      * @return
-     *         The value of the {@code state} parameter that was included in a
-     *         request that the authorization server made to the authentication
-     *         device simulator's {@code /api/authenticate/async} API before the
-     *         authorization server received this callback request from the authentication
-     *         device simulator.
+     *         The value of the {@code state} parameter that was included in a request
+     *         that the authorization server made to the authentication device simulator's
+     *         {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     *         /api/authenticate/async API</a>} before the authorization server
+     *         receives this callback request from the authentication device simulator.
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     *      /api/authenticate/async API</a>
      */
     public String getState()
     {
@@ -137,18 +158,22 @@ public class AsyncAuthenticationCallbackRequest implements Serializable
     /**
      * Set the value of the {@code state} parameter that was included in a request
      * that the authorization server made to the authentication device simulator's
-     * {@code /api/authenticate/async} API before the authorization server received
+     * {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     * /api/authenticate/async API</a>} before the authorization server receives
      * this callback request from the authentication device simulator.
      *
      * @param state
-     *         The value of the {@code state} parameter that was included in a
-     *         request that the authorization server made to the authentication
-     *         device simulator's {@code /api/authenticate/async} API before the
-     *         authorization server received this callback request from the authentication
-     *         device simulator.
+     *         The value of the {@code state} parameter that was included in a request
+     *         that the authorization server made to the authentication device simulator's
+     *         {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     *         /api/authenticate/async API</a>} before the authorization server
+     *         receives this callback request from the authentication device simulator.
      *
      * @return
      *         {@code this} object.
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
+     *      /api/authenticate/async API</a>
      */
     public AsyncAuthenticationCallbackRequest setState(String state)
     {
