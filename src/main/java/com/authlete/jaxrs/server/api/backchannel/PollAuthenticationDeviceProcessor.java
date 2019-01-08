@@ -37,8 +37,8 @@ import com.authlete.common.types.User;
 public class PollAuthenticationDeviceProcessor extends BaseAuthenticationDeviceProcessor
 {
     /**
-     * Construct a processor that communicates with Authlete's CIBA authentication
-     * device simulator in poll mode.
+     * Construct a processor that communicates with the authentication device
+     * simulator for end-user authentication and authorization in poll mode.
      *
      * @param ticket
      *         A ticket that was issued by Authlete's {@code /api/backchannel/authentication}
@@ -65,8 +65,8 @@ public class PollAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
      *         device.
      *
      * @return
-     *         A processor that communicates with Authlete's CIBA authentication
-     *         device simulator in poll mode.
+     *         A processor that communicates with the authentication device simulator
+     *         for end-user authentication and authorization in poll mode.
      */
     public PollAuthenticationDeviceProcessor(String ticket, User user, String clientName, String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage)
     {

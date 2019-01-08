@@ -24,8 +24,8 @@ import com.authlete.jaxrs.server.ad.dto.SyncAuthenticationResponse;
 public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceProcessor
 {
     /**
-     * Construct a processor that communicates with Authlete's CIBA  authentication
-     * device simulator in synchronous mode.
+     * Construct a processor that communicates with the authentication device simulator
+     * for end-user authentication and authorization in synchronous mode.
      *
      * @param ticket
      *         A ticket that was issued by Authlete's {@code /api/backchannel/authentication}
@@ -52,8 +52,8 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
      *         device.
      *
      * @return
-     *         A processor that communicates with Authlete's CIBA authentication
-     *         device simulator in synchronous mode.
+     *         A processor that communicates with the authentication device simulator
+     *         for end-user authentication and authorization in synchronous mode.
      */
     public SyncAuthenticationDeviceProcessor(String ticket, User user, String clientName, String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage)
     {

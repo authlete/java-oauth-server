@@ -61,8 +61,8 @@ import com.authlete.jaxrs.server.ad.dto.AsyncAuthenticationCallbackRequest;
 public class BackchannelAuthenticationCallbackEndpoint
 {
     /**
-     * The callback endpoint for Authlete's CIBA authentication device simulator
-     * used in asynchronous mode.
+     * The callback endpoint called back from Authlete CIBA authentication device
+     * simulator when it is used in in asynchronous mode.
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
