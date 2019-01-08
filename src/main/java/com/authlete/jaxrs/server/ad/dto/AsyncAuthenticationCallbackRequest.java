@@ -83,7 +83,7 @@ public class AsyncAuthenticationCallbackRequest implements Serializable
      * /api/authenticate/async API</a>} before the authorization server receives
      * this callback request from the authentication device simulator.
      *
-     * @param
+     * @param requestId
      *         The ID of a request that the authorization server has made to the
      *         authentication device simulator's {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_async">
      *         /api/authenticate/async API</a>} before the authorization server

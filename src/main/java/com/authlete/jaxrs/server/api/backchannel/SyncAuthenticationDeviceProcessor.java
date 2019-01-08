@@ -20,7 +20,6 @@ import com.authlete.jaxrs.server.ad.dto.SyncAuthenticationResponse;
  *      CIBA authentication device simulator API</a>
  *
  * @author Hideki Ikeda
- * @author Hideki Ikeda
  */
 public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceProcessor
 {

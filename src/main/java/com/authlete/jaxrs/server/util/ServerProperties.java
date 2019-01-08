@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
 /**
  * A class to read properties from an external file or system properties.
  *
- * @author hidebike712
+ * @author Hideki Ikeda
  */
 public class ServerProperties extends TypedSystemProperties
 {

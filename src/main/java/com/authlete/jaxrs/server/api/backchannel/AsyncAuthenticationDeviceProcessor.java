@@ -127,9 +127,6 @@ public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDevice
         // process will complete there. Then, we need to store some information
         // required to complete the process (e.g. ticket, claim names, etc...) at
         // the BackchannelAuthenticationCallbackEndpoint.
-
-        // Store the information required to complete the process for later use.
-        // See BackchannelAuthenticationCallbackEndpoint for more details.
         AuthInfoHolder.put(requestId, new AuthInfo(mTicket, mUser, mClaimNames, mAcrs));
     }
 }
