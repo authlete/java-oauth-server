@@ -23,8 +23,8 @@ import com.authlete.jaxrs.server.ad.type.Mode;
 
 
 /**
- * The factory class that creates a processor that communicates with {@link
- * <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>}
+ * The factory class that creates a processor that communicates with
+ * <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
  * for end-user authentication and authorization.
  *
  * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device

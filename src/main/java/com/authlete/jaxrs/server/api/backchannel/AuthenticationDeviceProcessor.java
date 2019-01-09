@@ -18,8 +18,8 @@ package com.authlete.jaxrs.server.api.backchannel;
 
 
 /**
- * An interface for processors that communicate with {@link <a href="https://cibasim.authlete.com">
- * Authlete CIBA authentication device simulator</a>} for end-user authentication
+ * An interface for processors that communicate with <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a> for end-user authentication
  * and authorization.
  *
  * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device

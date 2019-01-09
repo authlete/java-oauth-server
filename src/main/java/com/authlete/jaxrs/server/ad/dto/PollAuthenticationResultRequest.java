@@ -21,14 +21,14 @@ import java.io.Serializable;
 
 
 /**
- * A class representing a request to {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_result">
- * /api/authenticate/result API</a>} of {@link <a href="https://cibasim.authlete.com">
- * Authlete CIBA authentication device simulator</a>}.
+ * A class representing a request to <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_result">
+ * /api/authenticate/result API</a> of <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a>.
  *
  * <p>
  * Note that it is assumed that the authorization server has made a request to the
- * authentication device simulator's {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
- * /api/authenticate/poll API</a>} for end-user authentication and authorization
+ * authentication device simulator's <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
+ * /api/authenticate/poll API</a> for end-user authentication and authorization
  * before the authorization server makes this request to the authentication device
  * simulator.
  * </p>
@@ -54,14 +54,14 @@ public class PollAuthenticationResultRequest implements Serializable
 
     /**
      * Get the ID of a request that the authorization server has made to the authentication
-     * device simulator's {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
-     * /api/authenticate/poll API</a>} before the authorization server makes this
+     * device simulator's <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
+     * /api/authenticate/poll API</a> before the authorization server makes this
      * request to the authentication device simulator.
      *
      * @return
      *         The ID of a request that the authorization server has made to the
-     *         authentication device simulator's {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
-     *         /api/authenticate/poll API</a>} before the authorization server
+     *         authentication device simulator's <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
+     *         /api/authenticate/poll API</a> before the authorization server
      *         makes this request to the authentication device simulator.
      *
      * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
@@ -75,14 +75,14 @@ public class PollAuthenticationResultRequest implements Serializable
 
     /**
      * Set the ID of a request that the authorization server has made to the authentication
-     * device simulator's {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
-     * /api/authenticate/poll API</a>} before the authorization server makes this
+     * device simulator's <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
+     * /api/authenticate/poll API</a> before the authorization server makes this
      * request to the authentication device simulator.
      *
      * @param requestId
      *         The ID of a request that the authorization server has made to the
-     *         authentication device simulator's {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
-     *         /api/authenticate/poll API</a>} before the authorization server
+     *         authentication device simulator's <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">
+     *         /api/authenticate/poll API</a> before the authorization server
      *         makes this request to the authentication device simulator.
      *
      * @return

@@ -36,8 +36,8 @@ import com.authlete.jaxrs.server.ad.dto.SyncAuthenticationResponse;
 
 
 /**
- * A class to communicate with {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
- * Authlete CIBA authentication device simulator API</a>}.
+ * A class to communicate with <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
+ * Authlete CIBA authentication device simulator API</a>.
  *
  * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication
  *      device simulator</a>

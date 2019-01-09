@@ -18,8 +18,8 @@ package com.authlete.jaxrs.server.ad.type;
 
 
 /**
- * Status of end-user authentication and authorization on {@link
- * <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>}
+ * Status of end-user authentication and authorization on
+ * <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
  * when it is used in poll mode.
  *
  * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device

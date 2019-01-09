@@ -21,14 +21,14 @@ import java.io.Serializable;
 
 
 /**
- * A base class for a request to an {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
- * Authlete CIBA authentication device simulator API</a>}.
+ * A base class for a request to an <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
+ * Authlete CIBA authentication device simulator API</a>.
  *
  * @param <T>
  *         Request type.
  *
- * @see {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
- *      Authlete CIBA authentication device simulator API</a>}
+ * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete
+ *      CIBA authentication device simulator API</a>
  *
  * @author Hideki Ikeda
  */

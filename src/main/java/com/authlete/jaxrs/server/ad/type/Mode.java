@@ -18,8 +18,8 @@ package com.authlete.jaxrs.server.ad.type;
 
 
 /**
- * The communication mode of {@link <a href="https://cibasim.authlete.com">Authlete
- * CIBA authentication device simulator</a>}.
+ * The communication mode of <a href="https://cibasim.authlete.com">Authlete
+ * CIBA authentication device simulator</a>.
  *
  * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device
  *      simulator</a>

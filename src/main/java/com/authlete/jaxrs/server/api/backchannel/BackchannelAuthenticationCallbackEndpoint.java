@@ -34,8 +34,8 @@ import com.authlete.jaxrs.server.ad.dto.AsyncAuthenticationCallbackRequest;
 
 
 /**
- * The endpoint called back from {@link <a href="https://cibasim.authlete.com">
- * Authlete CIBA authentication device simulator</a>} when the authentication device
+ * The endpoint called back from <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a> when the authentication device
  * simulator is used in asynchronous mode.
  *
  * <p>

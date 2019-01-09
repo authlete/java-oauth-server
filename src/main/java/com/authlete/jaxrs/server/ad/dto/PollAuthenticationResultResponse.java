@@ -23,9 +23,9 @@ import com.authlete.jaxrs.server.ad.type.Status;
 
 
 /**
- * A class representing a request from {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_result">
- * /api/authenticate/result API</a>} of {@link <a href="https://cibasim.authlete.com">
- * Authlete CIBA authentication device simulator</a>}.
+ * A class representing a request from <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_result">
+ * /api/authenticate/result API</a> of <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a>.
  *
  * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication
  *      device simulator</a>

@@ -22,9 +22,9 @@ import com.authlete.jaxrs.server.ad.type.Result;
 
 
 /**
- * A class representing a response from {@link <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">
- * /api/authenticate/sync API</a>} of {@link <a href="https://cibasim.authlete.com">
- * Authlete CIBA authentication device simulator</a>}.
+ * A class representing a response from <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_sync">
+ * /api/authenticate/sync API</a> of <a href="https://cibasim.authlete.com">
+ * Authlete CIBA authentication device simulator</a>.
  *
  * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication
  *      device simulator</a>

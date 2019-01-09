@@ -18,8 +18,8 @@ package com.authlete.jaxrs.server.ad.type;
 
 
 /**
- * Result of end-user authentication and authorization returned from {@link
- * <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>}
+ * Result of end-user authentication and authorization returned from
+ * <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
  *
  * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device
  *      simulator</a>
