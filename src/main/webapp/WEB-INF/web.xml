@@ -28,6 +28,8 @@
       <param-value>
         com.authlete.jaxrs.server.api.AuthorizationDecisionEndpoint,
         com.authlete.jaxrs.server.api.AuthorizationEndpoint,
+        com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationEndpoint,
+        com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationCallbackEndpoint,
         com.authlete.jaxrs.server.api.ConfigurationEndpoint,
         com.authlete.jaxrs.server.api.IntrospectionEndpoint,
         com.authlete.jaxrs.server.api.JwksEndpoint,
