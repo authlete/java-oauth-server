@@ -53,13 +53,13 @@ public class ServerConfig
      * Default configuration values.
      */
     private static final String DEFAULT_AUTHLETE_AD_BASE_URL                  = "https://cibasim.authlete.com";
-    private static final int DEFAULT_AUTHLETE_AD_SYNC_AUTHENTICATION_TIMEOUT  = 10;    // 10 seconds.
+    private static final int DEFAULT_AUTHLETE_AD_SYNC_AUTHENTICATION_TIMEOUT  = 20;    // 20 seconds.
     private static final int DEFAULT_AUTHLETE_AD_SYNC_CONNECT_TIMEOUT         = 10000; // 10000 milliseconds.
     private static final int DEFAULT_AUTHLETE_AD_SYNC_READ_TIMEOUT            = 60000; // 60000 milliseconds.
-    private static final int DEFAULT_AUTHLETE_AD_ASYNC_AUTHENTICATION_TIMEOUT = 10;    // 10 seconds.
+    private static final int DEFAULT_AUTHLETE_AD_ASYNC_AUTHENTICATION_TIMEOUT = 20;    // 20 seconds.
     private static final int DEFAULT_AUTHLETE_AD_ASYNC_CONNECT_TIMEOUT        = 10000; // 10000 milliseconds.
     private static final int DEFAULT_AUTHLETE_AD_ASYNC_READ_TIMEOUT           = 10000; // 10000 milliseconds.
-    private static final int DEFAULT_AUTHLETE_AD_POLL_AUTHENTICATION_TIMEOUT  = 10;    // 10 seconds.
+    private static final int DEFAULT_AUTHLETE_AD_POLL_AUTHENTICATION_TIMEOUT  = 20;    // 20 seconds.
     private static final int DEFAULT_AUTHLETE_AD_POLL_CONNECT_TIMEOUT         = 10000; // 10000 milliseconds.
     private static final int DEFAULT_AUTHLETE_AD_POLL_READ_TIMEOUT            = 10000; // 10000 milliseconds.
 

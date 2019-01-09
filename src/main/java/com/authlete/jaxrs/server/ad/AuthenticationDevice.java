@@ -132,8 +132,8 @@ public class AuthenticationDevice
         return sSyncClient
             .target(sBaseUrl)
             .path(SYNC_AUTHENTICATION_ENDPOINT_PATH)
-            .request(APPLICATION_JSON_TYPE)
-            .post(Entity.entity(request, APPLICATION_JSON_TYPE.withCharset("UTF-8")), SyncAuthenticationResponse.class);
+            .request()
+            .post(Entity.json(request), SyncAuthenticationResponse.class);
     }
 
 
@@ -176,8 +176,8 @@ public class AuthenticationDevice
         return sAsyncClient
             .target(sBaseUrl)
             .path(ASYNC_AUTHENTICATION_ENDPOINT_PATH)
-            .request(APPLICATION_JSON_TYPE)
-            .post(Entity.entity(request, APPLICATION_JSON_TYPE.withCharset("UTF-8")), AsyncAuthenticationResponse.class);
+            .request()
+            .post(Entity.json(request), AsyncAuthenticationResponse.class);
     }
 
 
