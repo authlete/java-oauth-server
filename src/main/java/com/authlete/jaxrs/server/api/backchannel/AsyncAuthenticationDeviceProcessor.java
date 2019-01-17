@@ -101,7 +101,7 @@ public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDevice
         {
             // An unexpected error occurred when communicating with the authentication
             // device.
-            completeWithError();
+            completeWithTransactionFailed();
             return;
         }
 
@@ -115,7 +115,7 @@ public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDevice
         if (requestId == null || requestId.length() == 0)
         {
             // The request ID was invalid. This should never happen.
-            completeWithError();
+            completeWithTransactionFailed();
             return;
         }
 

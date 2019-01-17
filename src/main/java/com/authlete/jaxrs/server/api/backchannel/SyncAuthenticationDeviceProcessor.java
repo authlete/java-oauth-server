@@ -77,7 +77,7 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
         {
             // An unexpected error occurred when communicating with the authentication
             // device.
-            completeWithError();
+            completeWithTransactionFailed();
             return;
         }
 
@@ -88,7 +88,7 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
         {
             // The result returned from the authentication device is empty.
             // This should never happen.
-            completeWithError();
+            completeWithTransactionFailed();
             return;
         }
 
@@ -107,12 +107,12 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
             case timeout:
                 // Timeout occurred while the authentication device was authenticating
                 // the end-user.
-                completeWithError();
+                completeWithTransactionFailed();
                 return;
 
             default:
                 // An unknown result returned from the authentication device.
-                completeWithError();
+                completeWithTransactionFailed();
                 return;
         }
     }

@@ -129,12 +129,13 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
     /**
      * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
      * BackchannelAuthenticationCompleteRequestHandler} with a result of {@link
-     * Result#ERROR ERROR}. This method is equivalent to {@link #complete(Result, Date)
-     * complete}({@link Result}.{@link Result#ERROR ERROR}, {@code null}).
+     * Result#TRANSACTION_FAILED TRANSACTION_FAILED}. This method is equivalent
+     * to {@link #complete(Result, Date) complete}({@link Result}.{@link Result#TRANSACTION_FAILED TRANSACTION_FAILED},
+     * {@code null}).
      */
-    protected void completeWithError()
+    protected void completeWithTransactionFailed()
     {
-        complete(Result.ERROR, null);
+        complete(Result.TRANSACTION_FAILED, null);
     }
 
 

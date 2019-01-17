@@ -140,7 +140,7 @@ public class BackchannelAuthenticationCallbackEndpoint
             case timeout:
                 // Timeout occurred while the authentication device was authenticating
                 // the user.
-                return Result.ERROR;
+                return Result.TRANSACTION_FAILED;
 
             default:
                 // An unknown result returned from the authentication device.

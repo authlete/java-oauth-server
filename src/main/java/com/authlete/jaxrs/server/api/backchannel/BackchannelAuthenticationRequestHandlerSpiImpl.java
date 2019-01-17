@@ -126,7 +126,7 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
     @Override
     public boolean shouldCheckUserCode(User user, BackchannelAuthenticationResponse info)
     {
-        // This implementation requires a user code only when the value of "userCodeRequired"
+        // This implementation checks a user code only when the value of "userCodeRequired"
         // parameter is true (i.e. both the "backchannel_user_code_parameter" metadata
         // of the client (= Client's "bcUserCodeRequired" property) and the
         // "backchannel_user_code_parameter_supported" metadata of the service
@@ -150,6 +150,29 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
         }
 
         return uc.equals(userCode);
+    }
+
+
+    @Override
+    public boolean isValidBindingMessage(String bindingMessage)
+    {
+        // In this implementation, any value is regarded as a valid binding message.
+        // You may add additional checks here according to the following excerpt
+        // from the specification.
+        //
+        //   CIBA Core spec, 7.1. Authentication Request
+        //     binding_message
+        //       ...
+        //       The value SHOULD contain something that enables the end-user to
+        //       reliably discern that the transaction is related across the consumption
+        //       device and the authentication device, such as a random value of
+        //       reasonable entropy (e.g. a transactional approval code). Because
+        //       the various devices involved may have limited display abilities
+        //       and the message is intending for visual inspection by the end-user,
+        //       the binding_message value SHOULD be relatively short and use a
+        //       limited set of plain text characters.
+        //
+        return true;
     }
 
 
