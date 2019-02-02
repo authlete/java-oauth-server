@@ -256,7 +256,7 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
      * A class representing a task in which end-user authentication and authorization
      * is performed by communicating with the authentication device.
      */
-    private class AuthTask implements Runnable
+    private static class AuthTask implements Runnable
     {
         private final AuthenticationDeviceProcessor mProcessor;
 
