@@ -154,7 +154,7 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
     @Override
     public void sendNotification(BackchannelAuthenticationCompleteResponse info)
     {
-        // The URL of the client's notification endpoint.
+        // The URL of the consumption device's notification endpoint.
         URI clientNotificationEndpointUri = info.getClientNotificationEndpoint();
 
         // The token that is needed for client authentication at the consumption
@@ -177,7 +177,7 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
         catch (Throwable t)
         {
             // Failed to send the notification to the consumption device.
-            throw internalServerError("Failed to send the notificaiton to the consumption device", t);
+            throw internalServerError("Failed to send the notification to the consumption device", t);
         }
 
         // The status of the response from the consumption device.
@@ -192,7 +192,7 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
         if (status == Status.OK || status == Status.NO_CONTENT)
         {
             // In this case, the request was successfully processed by the consumption
-            // device since the spec says as follows.
+            // device since the specification says as follows.
             //
             //   CIBA Core spec, 10.2. Ping Callback and 10.3. Push Callback
             //     For valid requests, the Client Notification Endpoint SHOULD
@@ -204,8 +204,8 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
 
         if (status.getFamily() == Status.Family.REDIRECTION)
         {
-            // HTTP 3xx code. This case must be ignored since the spec says
-            // as follows.
+            // HTTP 3xx code. This case must be ignored since the specification
+            // says as follows.
             //
             //   CIBA Core spec, 10.2. Ping Callback, 10.3. Push Callback
             //     The Client MUST NOT return an HTTP 3xx code.  The OP MUST
