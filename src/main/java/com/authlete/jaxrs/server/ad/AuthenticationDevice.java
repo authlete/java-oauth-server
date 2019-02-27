@@ -17,15 +17,12 @@
 package com.authlete.jaxrs.server.ad;
 
 
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static org.glassfish.jersey.client.ClientProperties.CONNECT_TIMEOUT;
 import static org.glassfish.jersey.client.ClientProperties.READ_TIMEOUT;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.ResponseProcessingException;
+import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 import com.authlete.jaxrs.server.ServerConfig;
 import com.authlete.jaxrs.server.ad.dto.AsyncAuthenticationRequest;
@@ -70,10 +67,7 @@ public class AuthenticationDevice
     private static final int sAsyncReadTimeout           = ServerConfig.getAuthleteAdAsyncReadTimeout();
     private static final int sPollAuthenticationTimeout  = ServerConfig.getAuthleteAdPollAuthenticationTimeout();
     private static final int sPollConnectTimeout         = ServerConfig.getAuthleteAdPollConnectTimeout();
-    private static final int sPollReadTimeout            = ServerConfig.getAuthleteAdPollReadTimeout();;
-    private static final Client sSyncClient              = createClient(sSyncReadTimeout, sSyncConnectTimeout);
-    private static final Client sAsyncClient             = createClient(sAsyncReadTimeout, sAsyncConnectTimeout);
-    private static final Client sPollClient              = createClient(sPollReadTimeout, sPollConnectTimeout);
+    private static final int sPollReadTimeout            = ServerConfig.getAuthleteAdPollReadTimeout();
 
 
     private static Client createClient(int readTimeout, int connectTimeout)
@@ -105,22 +99,12 @@ public class AuthenticationDevice
      *
      * @return
      *         A response from the authentication device.
-     *
-     * @throws ResponseProcessingException
-     *         in case processing of a received HTTP response fails (e.g. in a filter
-     *         or during conversion of the response entity data to an instance
-     *         of a particular Java type).
-     *
-     * @throws ProcessingException
-     *         in case the request processing or subsequent I/O operation fails.
-     *
-     * @throws WebApplicationException
-     *         in case the response status code of the response returned by the
-     *         server is not {@link javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
-     *         successful} and the specified response type is not {@link javax.ws.rs.core.Response}.
      */
     public static SyncAuthenticationResponse syncAuth(String subject, String message)
     {
+        // Create a web client to communicate with the authentication device.
+        Client client = createClient(sSyncReadTimeout, sSyncConnectTimeout);
+
         // A request to be sent to the authentication device.
         SyncAuthenticationRequest request = new SyncAuthenticationRequest()
             .setWorkspace(sWorkspace)
@@ -128,12 +112,8 @@ public class AuthenticationDevice
             .setMessage(message)
             .setTimeout(sSyncAuthenticationTimeout);
 
-        // Send the request to the authentication device as a HTTP Post request.
-        return sSyncClient
-            .target(sBaseUrl)
-            .path(SYNC_AUTHENTICATION_ENDPOINT_PATH)
-            .request()
-            .post(Entity.json(request), SyncAuthenticationResponse.class);
+        // Send the request as a HTTP POST request.
+        return post(client, SYNC_AUTHENTICATION_ENDPOINT_PATH, request, SyncAuthenticationResponse.class);
     }
 
 
@@ -150,34 +130,21 @@ public class AuthenticationDevice
      *
      * @return
      *         A response from the authentication device simulator.
-     *
-     * @throws ResponseProcessingException
-     *         in case processing of a received HTTP response fails (e.g. in a filter
-     *         or during conversion of the response entity data to an instance
-     *         of a particular Java type).
-     *
-     * @throws ProcessingException
-     *         in case the request processing or subsequent I/O operation fails.
-     *
-     * @throws WebApplicationException
-     *         in case the response status code of the response returned by the
-     *         server is not {@link javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
-     *         successful} and the specified response type is not {@link javax.ws.rs.core.Response}.
      */
     public static AsyncAuthenticationResponse asyncAuth(String subject, String message)
     {
+        // Create a web client to communicate with the authentication device.
+        Client client = createClient(sAsyncReadTimeout, sAsyncConnectTimeout);
+
+        // A request to be sent to the authentication device.
         AsyncAuthenticationRequest request = new AsyncAuthenticationRequest()
             .setWorkspace(sWorkspace)
             .setUser(subject)
             .setMessage(message)
             .setTimeout(sAsyncAuthenticationTimeout);
 
-        // Send the request to the authentication device as a HTTP Post request.
-        return sAsyncClient
-            .target(sBaseUrl)
-            .path(ASYNC_AUTHENTICATION_ENDPOINT_PATH)
-            .request()
-            .post(Entity.json(request), AsyncAuthenticationResponse.class);
+        // Send the request as a HTTP POST request.
+        return post(client, ASYNC_AUTHENTICATION_ENDPOINT_PATH, request, AsyncAuthenticationResponse.class);
     }
 
 
@@ -194,23 +161,34 @@ public class AuthenticationDevice
      *
      * @return
      *         A response from the authentication device simulator.
-     *
-     * @throws ResponseProcessingException
-     *         in case processing of a received HTTP response fails (e.g. in a filter
-     *         or during conversion of the response entity data to an instance
-     *         of a particular Java type).
-     *
-     * @throws ProcessingException
-     *         in case the request processing or subsequent I/O operation fails.
-     *
-     * @throws WebApplicationException
-     *         in case the response status code of the response returned by the
-     *         server is not {@link javax.ws.rs.core.Response.Status.Family#SUCCESSFUL
-     *         successful} and the specified response type is not {@link javax.ws.rs.core.Response}.
      */
     public PollAuthenticationResponse pollAuth(String subject, String message)
     {
         // TODO: Implement this.
         return null;
+    }
+
+
+    private static <TRequest, TResponse> TResponse post(Client client, String path,
+            TRequest request, Class<TResponse> responseClass)
+    {
+        try
+        {
+            // Send the request to the authentication device as a HTTP Post request.
+            Response response = client
+                .target(sBaseUrl)
+                .path(path)
+                .request()
+                .post(Entity.json(request));
+
+            // Read the message entity as an instance of the specified response
+            // class.
+            return response.readEntity(responseClass);
+        }
+        finally
+        {
+            // Close the client.
+            client.close();
+        }
     }
 }
