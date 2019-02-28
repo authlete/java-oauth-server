@@ -105,9 +105,8 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
                 return;
 
             case timeout:
-                // Timeout occurred while the authentication device was authenticating
-                // the end-user.
-                completeWithTransactionFailed();
+                // Timeout occurred on the authentication device.
+                completeWithTransactionFailed("Timeout occurred on the authentication device.");
                 return;
 
             default:
