@@ -44,12 +44,6 @@ import com.authlete.jaxrs.spi.BackchannelAuthenticationCompleteRequestHandlerSpi
 public class BackchannelAuthenticationCompleteHandlerSpiImpl extends BackchannelAuthenticationCompleteRequestHandlerSpiAdapter
 {
     /**
-     * The JAX-RS client which sends a notification to a consumption device.
-     */
-    Client sJaxRsClient = ClientBuilder.newClient();
-
-
-    /**
      * The result of end-user authentication and authorization.
      */
     private final Result mResult;
@@ -164,21 +158,9 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
         // The notification content (JSON) to send to the consumption device.
         String notificationContent = info.getResponseContent();
 
-        // The response from the consumption device.
-        Response response;
-
-        try
-        {
-            // Send the notification to the consumption device..
-            response = sJaxRsClient.target(clientNotificationEndpointUri).request()
-                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + notificationToken)
-                    .post(Entity.json(notificationContent));
-        }
-        catch (Throwable t)
-        {
-            // Failed to send the notification to the consumption device.
-            throw internalServerError("Failed to send the notification to the consumption device", t);
-        }
+        // Send the notification to the consumption device's notification endpoint.
+        Response response =
+                doSendNotification(clientNotificationEndpointUri, notificationToken, notificationContent);
 
         // The status of the response from the consumption device.
         Status status = Status.fromStatusCode(response.getStatusInfo().getStatusCode());
@@ -212,6 +194,33 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
             //     NOT follow redirects.
             //
             return;
+        }
+    }
+
+
+    private Response doSendNotification(URI clientNotificationEndpointUri,
+            String notificationToken, String notificationContent)
+    {
+        // A web client to send a notification to the consumption device's notification
+        // endpoint.
+        Client webClient = ClientBuilder.newClient();
+
+        try
+        {
+            // Send the notification to the consumption device..
+            return webClient.target(clientNotificationEndpointUri).request()
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + notificationToken)
+                    .post(Entity.json(notificationContent));
+        }
+        catch (Throwable t)
+        {
+            // Failed to send the notification to the consumption device.
+            throw internalServerError("Failed to send the notification to the consumption device", t);
+        }
+        finally
+        {
+            // Close the web client.
+            webClient.close();
         }
     }
 
