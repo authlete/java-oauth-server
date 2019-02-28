@@ -96,16 +96,18 @@ public class BackchannelAuthenticationCallbackEndpoint
         AuthInfo authInfo = getAuthInfo(requestId);
 
         // Get some variables from the stored information.
-        String ticket       = authInfo.getTicket();
-        User user           = authInfo.getUser();
-        String[] claimNames = authInfo.getClaimNames();
-        String[] acrs       = authInfo.getAcrs();
-        Date authTime       = (result == Result.AUTHORIZED) ? new Date() : null;
+        String ticket           = authInfo.getTicket();
+        User user               = authInfo.getUser();
+        String[] claimNames     = authInfo.getClaimNames();
+        String[] acrs           = authInfo.getAcrs();
+        Date authTime           = (result == Result.AUTHORIZED) ? new Date() : null;
+        String errorDescription = determineErrorDescription(request);
 
         // Complete the authentication and authorization process.
         new BackchannelAuthenticationCompleteRequestHandler(
                 AuthleteApiFactory.getDefaultApi(),
-                new BackchannelAuthenticationCompleteHandlerSpiImpl(result, user, authTime, acrs)
+                new BackchannelAuthenticationCompleteHandlerSpiImpl(
+                        result, user, authTime, acrs, errorDescription, null)
             )
         .handle(ticket, claimNames);
 
@@ -180,6 +182,17 @@ public class BackchannelAuthenticationCallbackEndpoint
         }
 
         return info;
+    }
+
+
+    private String determineErrorDescription(AsyncAuthenticationCallbackRequest request)
+    {
+        if (request.getResult() == com.authlete.jaxrs.server.ad.type.Result.timeout)
+        {
+            return "Timeout occurred on the authentication device.";
+        }
+
+        return null;
     }
 
 

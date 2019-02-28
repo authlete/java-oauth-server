@@ -67,7 +67,21 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
     private String[] mAcrs;
 
 
-    public BackchannelAuthenticationCompleteHandlerSpiImpl(Result result, User user, Date userAuthenticatedAt, String[] acrs)
+    /**
+     * The description of the error.
+     */
+    private String mErrorDescription;
+
+
+    /**
+     * The URI of a document which describes the error in detail.
+     */
+    private URI mErrorUri;
+
+
+    public BackchannelAuthenticationCompleteHandlerSpiImpl(
+            Result result, User user, Date userAuthenticatedAt, String[] acrs,
+            String errorDescription, URI errorUri)
     {
         // The result of end-user authentication and authorization.
         mResult = result;
@@ -77,6 +91,12 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
 
         if (result != Result.AUTHORIZED)
         {
+            // The description of the error.
+            mErrorDescription = errorDescription;
+
+            // The URI of a document which describes the error in detail.
+            mErrorUri = errorUri;
+
             // The end-user has not authorized the client.
             return;
         }
@@ -237,5 +257,19 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
                 .build();
 
         return new WebApplicationException(message, response);
+    }
+
+
+    @Override
+    public String getErrorDescription()
+    {
+        return mErrorDescription;
+    }
+
+
+    @Override
+    public URI getErrorUri()
+    {
+        return mErrorUri;
     }
 }

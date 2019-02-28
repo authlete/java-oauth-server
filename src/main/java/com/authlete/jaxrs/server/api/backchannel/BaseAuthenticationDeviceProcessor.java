@@ -17,6 +17,7 @@
 package com.authlete.jaxrs.server.api.backchannel;
 
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -98,9 +99,10 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
     /**
      * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
-     * BackchannelAuthenticationCompleteRequestHandler} with a result of {@link
-     * Result#AUTHORIZED AUTHORIZED}. This method is equivalent to {@link #complete(Result, Date)
-     * complete}({@link Result}.{@link Result#AUTHORIZED AUTHORIZED}, {@code null}).
+     * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
+     * Result#AUTHORIZED AUTHORIZED}. This method is equivalent to {@link #complete(Result,
+     * Date) complete}({@link Result}.{@link Result#AUTHORIZED AUTHORIZED}, {@code authTime},
+     * {@code null}, {@code null}).
      *
      * @param authTime
      *         The time when end-user authentication occurred. The number of
@@ -110,32 +112,141 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
      */
     protected void completeWithAuthorized(Date authTime)
     {
-        complete(Result.AUTHORIZED, authTime);
+        complete(Result.AUTHORIZED, authTime, null, null);
     }
 
 
     /**
      * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
-     * BackchannelAuthenticationCompleteRequestHandler} with a result of {@link
+     * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
+     * Result#ACCESS_DENIED ACCESS_DENIED}, the description of the error and the
+     * URI of a document which describes the error in detail. This method is
+     * equivalent to {@link #complete(String, URI) complete}({@link Result}.{@link
+     * Result#ACCESS_DENIED ACESS_DENIED}, {@code null}, {@code errorDescription},
+     * {@code errorUri}).
+     *
+     * @param errorDescription
+     *         The description of the error.
+     *
+     * @param errorUri
+     *         The URI of a document which describes the error in detail.
+     */
+    protected void completeWithAccessDenied(String errorDescription, URI errorUri)
+    {
+        complete(Result.ACCESS_DENIED, null, errorDescription, errorUri);
+    }
+
+
+    /**
+     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
+     * Result#ACCESS_DENIED ACCESS_DENIED} and the description of the error. This
+     * method is equivalent to {@link #completeWithAccessDenied(String, URI)
+     * completeWithAccessDenied}({@code errorDescription}, {@code null}).
+     *
+     * @param errorDescription
+     *         The description of the error.
+     */
+    protected void completeWithAccessDenied(String errorDescription)
+    {
+        completeWithAccessDenied(errorDescription, null);
+    }
+
+
+    /**
+     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
+     * Result#ACCESS_DENIED ACCESS_DENIED} and the URI of a document which describes
+     * the error in detail. This method is equivalent to {@link #completeWithAccessDenied(String, URI)
+     * completeWithAccessDenied}({@code null}, {@code errorUri}).
+     *
+     * @param errorUri
+     *         The URI of a document which describes the error in detail.
+     */
+    protected void completeWithAccessDenied(URI errorUri)
+    {
+        completeWithAccessDenied(null, errorUri);
+    }
+
+
+    /**
+     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
      * Result#ACCESS_DENIED ACCESS_DENIED}. This method is equivalent to {@link
-     * #complete(Result, Date) complete}({@link Result}.{@link Result#ACCESS_DENIED ACCESS_DENIED}, {@code null}).
+     * #completeWithAccessDenied(String, URI) completeWithAccessDenied}({@code null}
+     * , {@code null}).
      */
     protected void completeWithAccessDenied()
     {
-        complete(Result.ACCESS_DENIED, null);
+        completeWithAccessDenied(null, null);
     }
 
 
     /**
      * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
-     * BackchannelAuthenticationCompleteRequestHandler} with a result of {@link
-     * Result#TRANSACTION_FAILED TRANSACTION_FAILED}. This method is equivalent
-     * to {@link #complete(Result, Date) complete}({@link Result}.{@link Result#TRANSACTION_FAILED TRANSACTION_FAILED},
+     * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
+     * Result#TRANSACTION_FAILED TRANSACTION_FAILED}, the description of the error
+     * and the URI of a document which describes the error in detail. This method
+     * is equivalent to {@link #complete(String, URI) complete}({@link Result}.{@link
+     * Result#TRANSACTION_FAILED TRANSACTION_FAILED}, {@code null}, {@code errorDescription},
+     * {@code errorUri}).
+     *
+     * @param errorDescription
+     *         The description of the error.
+     *
+     * @param errorUri
+     *         The URI of a document which describes the error in detail.
+     */
+    protected void completeWithTransactionFailed(String errorDescription, URI errorUri)
+    {
+        complete(Result.TRANSACTION_FAILED, null, errorDescription, errorUri);
+    }
+
+
+    /**
+     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
+     * Result#TRANSACTION_FAILED TRANSACTION_FAILED} and the description of the
+     * error. This method is equivalent to {@link #completeWithTransactionFailed
+     * (String, URI) completeWithTransactionFailed}({@code errorDescription},
      * {@code null}).
+     *
+     * @param errorDescription
+     *         The description of the error.
+     */
+    protected void completeWithTransactionFailed(String errorDescription)
+    {
+        completeWithTransactionFailed(errorDescription, null);
+    }
+
+
+    /**
+     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
+     * Result#TRANSACTION_FAILED TRANSACTION_FAILED} and the URI of a document
+     * which describes the error in detail. This method is equivalent to {@link
+     * #completeWithTransactionFailed(String, URI) completeWithTransactionFailed}
+     * ({@code null}, {@code errorUri}).
+     *
+     * @param errorUri
+     *         The URI of a document which describes the error in detail.
+     */
+    protected void completeWithTransactionFailed(URI errorUri)
+    {
+        completeWithTransactionFailed(null, errorUri);
+    }
+
+
+    /**
+     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
+     * Result#TRANSACTION_FAILED TRANSACTION_FAILED}. This method is equivalent
+     * to {@link #completeWithTransactionFailed(String, URI) completeWithTransactionFailed}
+     * ({@code null}, {@code null}).
      */
     protected void completeWithTransactionFailed()
     {
-        complete(Result.TRANSACTION_FAILED, null);
+        completeWithTransactionFailed(null, null);
     }
 
 
@@ -144,19 +255,27 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
      * BackchannelAuthenticationCompleteRequestHandler}.
      *
      * @param result
-     *         A result of the end-user authentication and authorization.
+     *         The result of the end-user authentication and authorization.
      *
      * @param authTime
      *         The time when end-user authentication occurred. The number of
      *         seconds since Unix epoch (1970-01-01). This value is used as
      *         the value of {@code auth_time} claim in an ID token that may
      *         be issued. Pass 0 if the time is unknown.
+     *
+     * @param errorDescription
+     *         The description of the error.
+     *
+     * @param errorUri
+     *         The URI of a document which describes the error in detail.
+     *
      */
-    protected void complete(Result result, Date authTime)
+    protected void complete(Result result, Date authTime, String errorDescription, URI errorUri)
     {
         new BackchannelAuthenticationCompleteRequestHandler(
                 AuthleteApiFactory.getDefaultApi(),
-                new BackchannelAuthenticationCompleteHandlerSpiImpl(result, mUser, authTime, mAcrs)
+                new BackchannelAuthenticationCompleteHandlerSpiImpl(
+                        result, mUser, authTime, mAcrs, errorDescription, errorUri)
             )
         .handle(mTicket, mClaimNames);
     }
