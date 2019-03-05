@@ -53,6 +53,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
     protected final Scope[] mScopes;
     protected final String[] mClaimNames;
     protected final String mBindingMessage;
+    protected final String mAuthReqId;
 
 
     /**
@@ -82,10 +83,16 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
      *         The binding message to be shown to the end-user on the authentication
      *         device.
      *
+     * @param authReqId
+     *         The authentication request ID ({@code auth_req_id}) issued to the
+     *         client.
+     *
      * @return
      *         An instance of this class.
      */
-    public BaseAuthenticationDeviceProcessor(String ticket, User user, String clientName, String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage)
+    public BaseAuthenticationDeviceProcessor(String ticket, User user, String clientName,
+            String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage,
+            String authReqId)
     {
         mTicket         = ticket;
         mUser           = user;
@@ -94,6 +101,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
         mScopes         = scopes;
         mClaimNames     = claimNames;
         mBindingMessage = bindingMessage;
+        mAuthReqId      = authReqId;
     }
 
 

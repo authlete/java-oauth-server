@@ -19,6 +19,7 @@ package com.authlete.jaxrs.server.api.backchannel;
 
 import java.util.concurrent.Executors;
 import javax.ws.rs.WebApplicationException;
+import com.authlete.common.dto.BackchannelAuthenticationIssueResponse;
 import com.authlete.common.dto.BackchannelAuthenticationResponse;
 import com.authlete.common.dto.Scope;
 import com.authlete.common.types.User;
@@ -177,7 +178,8 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
 
 
     @Override
-    public void startCommunicationWithAuthenticationDevice(User user, BackchannelAuthenticationResponse info)
+    public void startCommunicationWithAuthenticationDevice(User user, BackchannelAuthenticationResponse baRes,
+            BackchannelAuthenticationIssueResponse baiRes)
     {
         // Ensure that the authorization server has not started communicating with
         // the authentication device yet so that the following authentication/authorization
@@ -212,22 +214,26 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
 
         // The ticket to call Authlete's /api/backchannel/authentication/complete
         // API after processing end-user authentication and authorization.
-        String ticket = info.getTicket();
+        String ticket = baRes.getTicket();
 
         // The name of the client.
-        String clientName = info.getClientName();
+        String clientName = baRes.getClientName();
 
         // The acr values requested by the client.
-        String[] acrs = info.getAcrs();
+        String[] acrs = baRes.getAcrs();
 
         // The scopes requested by the client.
-        Scope[] scopes = info.getScopes();
+        Scope[] scopes = baRes.getScopes();
 
         // The claims requested by the client.
-        String[] claimNames = info.getClaimNames();
+        String[] claimNames = baRes.getClaimNames();
 
         // The biding message to be shown to the user on authentication.
-        String bindingMessage = info.getBindingMessage();
+        String bindingMessage = baRes.getBindingMessage();
+
+        // The auth_req_id issued to the client. This is used to programmatically
+        // complete the authentication on the authentication device.
+        String authReqId = baiRes.getAuthReqId();
 
         // The mode in which this authorization server communicates with the
         // authentication device.
@@ -235,8 +241,8 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
 
         // Get a processor to process end-user authentication and authorization
         // by communicating with the authentication device.
-        AuthenticationDeviceProcessor processor =
-                AuthenticationDeviceProcessorFactory.create(mode, ticket, user, clientName, acrs, scopes, claimNames, bindingMessage);
+        AuthenticationDeviceProcessor processor = AuthenticationDeviceProcessorFactory.create(
+                mode, ticket, user, clientName, acrs, scopes, claimNames, bindingMessage, authReqId);
 
         // Start executing the process in the background.
         Executors.newSingleThreadExecutor().execute(new AuthTask(processor));

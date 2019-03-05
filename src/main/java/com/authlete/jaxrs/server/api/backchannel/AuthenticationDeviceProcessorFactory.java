@@ -68,11 +68,17 @@ public class AuthenticationDeviceProcessorFactory
      *         The binding message to be shown to the end-user on the authentication
      *         device.
      *
+     * @param authReqId
+     *         The authentication request ID ({@code auth_req_id}) issued to the
+     *         client.
+     *
      * @return
      *         A processor that communicates with the authentication device simulator
      *         for end-user authentication and authorization.
      */
-    public static AuthenticationDeviceProcessor create(Mode mode, String ticket, User user, String clientName, String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage)
+    public static AuthenticationDeviceProcessor create(Mode mode, String ticket,
+            User user, String clientName, String[] acrs, Scope[] scopes, String[] claimNames,
+            String bindingMessage, String authReqId)
     {
         if (mode == null)
         {
@@ -82,16 +88,22 @@ public class AuthenticationDeviceProcessorFactory
         switch (mode)
         {
             case SYNC:
-                // Create a processor that communicates with the authentication device in synchronous mode.
-                return new SyncAuthenticationDeviceProcessor(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage);
+                // Create a processor that communicates with the authentication
+                // device in synchronous mode.
+                return new SyncAuthenticationDeviceProcessor(ticket, user, clientName,
+                        acrs, scopes, claimNames, bindingMessage, authReqId);
 
             case ASYNC:
-                // Create a processor that communicates with the authentication device in asynchronous mode.
-                return new AsyncAuthenticationDeviceProcessor(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage);
+                // Create a processor that communicates with the authentication
+                // device in asynchronous mode.
+                return new AsyncAuthenticationDeviceProcessor(ticket, user, clientName,
+                        acrs, scopes, claimNames, bindingMessage, authReqId);
 
             case POLL:
-                // Create a processor that communicates with the authentication device in poll mode.
-                return new PollAuthenticationDeviceProcessor(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage);
+                // Create a processor that communicates with the authentication
+                // device in poll mode.
+                return new PollAuthenticationDeviceProcessor(ticket, user, clientName,
+                        acrs, scopes, claimNames, bindingMessage, authReqId);
 
             default:
                 // Undefined authentication device mode. This never happens.

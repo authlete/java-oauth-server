@@ -75,13 +75,19 @@ public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDevice
      *         The binding message to be shown to the end-user on the authentication
      *         device.
      *
+     * @param authReqId
+     *         The authentication request ID ({@code auth_req_id}) issued to the
+     *         client.
+     *
      * @return
      *         A processor that communicates with the authentication device simulator
      *         for end-user authentication and authorization in asynchronous mode.
      */
-    public AsyncAuthenticationDeviceProcessor(String ticket, User user, String clientName, String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage)
+    public AsyncAuthenticationDeviceProcessor(String ticket, User user, String clientName,
+            String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage,
+            String authReqId)
     {
-        super(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage);
+        super(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage, authReqId);
     }
 
 
@@ -95,7 +101,7 @@ public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDevice
         {
             // Communicate with the authentication device for end-user authentication
             // and authorization.
-            response = AuthenticationDevice.asyncAuth(mUser.getSubject(), buildMessage());
+            response = AuthenticationDevice.asyncAuth(mUser.getSubject(), buildMessage(), mAuthReqId);
         }
         catch (Throwable t)
         {
