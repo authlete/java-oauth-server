@@ -51,13 +51,19 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
      *         The binding message to be shown to the end-user on the authentication
      *         device.
      *
+     * @param authReqId
+     *         The authentication request ID ({@code auth_req_id}) issued to the
+     *         client.
+     *
      * @return
      *         A processor that communicates with the authentication device simulator
      *         for end-user authentication and authorization in synchronous mode.
      */
-    public SyncAuthenticationDeviceProcessor(String ticket, User user, String clientName, String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage)
+    public SyncAuthenticationDeviceProcessor(String ticket, User user, String clientName,
+            String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage,
+            String authReqId)
     {
-        super(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage);
+        super(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage, authReqId);
     }
 
 
@@ -71,7 +77,7 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
         {
             // Perform the end-user authentication and authorization by communicating
             // with the authentication device in the sync mode.
-            response = AuthenticationDevice.syncAuth(mUser.getSubject(), buildMessage());
+            response = AuthenticationDevice.syncAuth(mUser.getSubject(), buildMessage(), mAuthReqId);
         }
         catch (Throwable t)
         {

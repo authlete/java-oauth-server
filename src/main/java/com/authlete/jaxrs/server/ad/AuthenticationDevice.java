@@ -95,12 +95,17 @@ public class AuthenticationDevice
      *         the client application.
      *
      * @param message
-     *         The message to be shown to the end-user on the authentication device.
+     *         A message to be shown to the end-user on the authentication device.
+     *
+     * @param actionizeToken
+     *         A token that is used with the actionize endpoint ({@code /api/atuhenticate/actionize})
+     *         to automate authentication device responses.
      *
      * @return
      *         A response from the authentication device.
      */
-    public static SyncAuthenticationResponse syncAuth(String subject, String message)
+    public static SyncAuthenticationResponse syncAuth(String subject, String message,
+            String actionizeToken)
     {
         // Create a web client to communicate with the authentication device.
         Client client = createClient(sSyncReadTimeout, sSyncConnectTimeout);
@@ -110,7 +115,8 @@ public class AuthenticationDevice
             .setWorkspace(sWorkspace)
             .setUser(subject)
             .setMessage(message)
-            .setTimeout(sSyncAuthenticationTimeout);
+            .setTimeout(sSyncAuthenticationTimeout)
+            .setActionizeToken(actionizeToken);
 
         // Send the request as a HTTP POST request.
         return post(client, SYNC_AUTHENTICATION_ENDPOINT_PATH, request, SyncAuthenticationResponse.class);
@@ -126,12 +132,17 @@ public class AuthenticationDevice
      *         the client application.
      *
      * @param message
-     *         The message to be shown to the end-user on the authentication device.
+     *         A message to be shown to the end-user on the authentication device.
+     *
+     * @param actionizeToken
+     *         A token that is used with the actionize endpoint ({@code /api/atuhenticate/actionize})
+     *         to automate authentication device responses.
      *
      * @return
      *         A response from the authentication device simulator.
      */
-    public static AsyncAuthenticationResponse asyncAuth(String subject, String message)
+    public static AsyncAuthenticationResponse asyncAuth(String subject, String message,
+            String actionizeToken)
     {
         // Create a web client to communicate with the authentication device.
         Client client = createClient(sAsyncReadTimeout, sAsyncConnectTimeout);
@@ -141,7 +152,8 @@ public class AuthenticationDevice
             .setWorkspace(sWorkspace)
             .setUser(subject)
             .setMessage(message)
-            .setTimeout(sAsyncAuthenticationTimeout);
+            .setTimeout(sAsyncAuthenticationTimeout)
+            .setActionizeToken(actionizeToken);
 
         // Send the request as a HTTP POST request.
         return post(client, ASYNC_AUTHENTICATION_ENDPOINT_PATH, request, AsyncAuthenticationResponse.class);
@@ -157,7 +169,11 @@ public class AuthenticationDevice
      *         the client application.
      *
      * @param message
-     *         The message to be shown to the end-user on the authentication device.
+     *         A message to be shown to the end-user on the authentication device.
+     *
+     * @param actionizeToken
+     *         A token that is used with the actionize endpoint ({@code /api/atuhenticate/actionize})
+     *         to automate authentication device responses.
      *
      * @return
      *         A response from the authentication device simulator.

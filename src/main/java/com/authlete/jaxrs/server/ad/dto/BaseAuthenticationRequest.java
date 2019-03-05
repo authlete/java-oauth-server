@@ -18,6 +18,7 @@ package com.authlete.jaxrs.server.ad.dto;
 
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlElement;
 
 
 /**
@@ -41,6 +42,9 @@ public class BaseAuthenticationRequest<T extends BaseAuthenticationRequest<T>> i
     private String user;
     private String message;
     private int timeout;
+
+    @XmlElement(name = "actionize_token")
+    private String actionizeToken;
 
 
     /**
@@ -176,6 +180,40 @@ public class BaseAuthenticationRequest<T extends BaseAuthenticationRequest<T>> i
     public T setTimeout(int timeout)
     {
         this.timeout = timeout;
+
+        return (T)this;
+    }
+
+
+    /**
+     * Get a token that is used with the actionize endpoint ({@code /api/atuhenticate/actionize})
+     * to automate authentication device responses.
+     *
+     * @return
+     *         A token that is used with the actionize endpoint ({@code /api/atuhenticate/actionize})
+     *         to automate authentication device responses.
+     */
+    public String getActionizeToken()
+    {
+        return actionizeToken;
+    }
+
+
+    /**
+     * Set a token that is used with the actionize endpoint ({@code /api/atuhenticate/actionize})
+     * to automate authentication device responses.
+     *
+     * @param actionizeToken
+     *         A token that is used with the actionize endpoint ({@code /api/atuhenticate/actionize})
+     *         to automate authentication device responses.
+     *
+     * @return
+     *         {@code this} object.
+     */
+    @SuppressWarnings("unchecked")
+    public T setActionizeToken(String actionizeToken)
+    {
+        this.actionizeToken = actionizeToken;
 
         return (T)this;
     }
