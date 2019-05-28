@@ -187,12 +187,27 @@ public class BackchannelAuthenticationCallbackEndpoint
 
     private String determineErrorDescription(AsyncAuthenticationCallbackRequest request)
     {
-        if (request.getResult() == com.authlete.jaxrs.server.ad.type.Result.timeout)
+        com.authlete.jaxrs.server.ad.type.Result result = request.getResult();
+
+        if (result == null)
         {
-            return "Timeout occurred on the authentication device.";
+            return null;
         }
 
-        return null;
+        switch (result)
+        {
+            case allow:
+                return null;
+
+            case deny:
+                return "The backchannel authentication request was denied by the end-user.";
+
+            case timeout:
+                return "Timeout occurred on the authentication device.";
+
+            default:
+                return "An unrecognizable result was returned from the authentication device.";
+        }
     }
 
 

@@ -83,7 +83,8 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
         {
             // An unexpected error occurred when communicating with the authentication
             // device.
-            completeWithTransactionFailed();
+            completeWithTransactionFailed(
+                    "Failed to communicate with the authentication device synchronously.");
             return;
         }
 
@@ -94,7 +95,8 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
         {
             // The result returned from the authentication device is empty.
             // This should never happen.
-            completeWithTransactionFailed();
+            completeWithTransactionFailed(
+                    "The result returned from the authentication device is empty.");
             return;
         }
 
@@ -107,17 +109,20 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
 
             case deny:
                 // The user denied the client.
-                completeWithAccessDenied();
+                completeWithAccessDenied(
+                        "The end-user denied the backchannel authentication request.");
                 return;
 
             case timeout:
                 // Timeout occurred on the authentication device.
-                completeWithTransactionFailed("Timeout occurred on the authentication device.");
+                completeWithTransactionFailed(
+                        "The task delegated to the authentication device timed out.");
                 return;
 
             default:
                 // An unknown result returned from the authentication device.
-                completeWithTransactionFailed();
+                completeWithTransactionFailed(
+                        "The authentication device returned an unrecognizable result.");
                 return;
         }
     }
