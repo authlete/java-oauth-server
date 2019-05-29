@@ -35,7 +35,7 @@ import com.authlete.jaxrs.BaseClientRegistrationEndpoint;
 
 /**
  * An implementation of the dynamic client registration and
- * dynamic client registration managment endpoints. This implementation
+ * dynamic client registration management endpoints. This implementation
  * takes registration requests via POST to {@code /api/register} and
  * returns the resulting registered client as JSON. This implementation
  * takes client management requests via GET, PUT, and DELETE to
