@@ -35,6 +35,7 @@
         com.authlete.jaxrs.server.api.JwksEndpoint,
         com.authlete.jaxrs.server.api.RevocationEndpoint,
         com.authlete.jaxrs.server.api.TokenEndpoint,
+        com.authlete.jaxrs.server.api.ClientRegistrationEndpoint,
         org.glassfish.jersey.moxy.json.MoxyJsonFeature,
         org.glassfish.jersey.server.mvc.jsp.JspMvcFeature
       </param-value>
