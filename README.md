@@ -91,14 +91,15 @@ Endpoints
 
 This implementation exposes endpoints as listed in the table below.
 
-| Endpoint               | Path                                |
-|:-----------------------|:------------------------------------|
-| Authorization Endpoint | `/api/authorization`                |
-| Token Endpoint         | `/api/token`                        |
-| JWK Set Endpoint       | `/api/jwks`                         |
-| Configuration Endpoint | `/.well-known/openid-configuration` |
-| Revocation Endpoint    | `/api/revocation`                   |
-| Introspection Endpoint | `/api/introspection`                |
+| Endpoint                             | Path                                |
+|:-------------------------------------|:------------------------------------|
+| Authorization Endpoint               | `/api/authorization`                |
+| Token Endpoint                       | `/api/token`                        |
+| JWK Set Endpoint                     | `/api/jwks`                         |
+| Configuration Endpoint               | `/.well-known/openid-configuration` |
+| Revocation Endpoint                  | `/api/revocation`                   |
+| Introspection Endpoint               | `/api/introspection`                |
+| Dynamic Client Registration Endpoint | `/api/register`                     |
 
 The authorization endpoint and the token endpoint accept parameters described
 in [RFC 6749][1], [OpenID Connect Core 1.0][13],
@@ -117,6 +118,9 @@ tokens. Its behavior is defined in [RFC 7009][21].
 
 The introspection endpoint is a Web API to get information about access
 tokens and refresh tokens. Its behavior is defined in [RFC 7662][32].
+
+The dynamic client registration endpoint is a Web API to register and update
+client applications. Its behavior is defined in [RFC 7591][43] and [RFC 7592][44].
 
 
 Authorization Request Example
@@ -179,6 +183,8 @@ Related Specifications
 - [RFC 7521][28] - Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants
 - [RFC 7522][29] - Security Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants
 - [RFC 7523][30] - JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants
+- [RFC 7591][43] - OAuth 2.0 Dynamic Client Registration Protocol
+- [RFC 7592][44] - OAuth 2.0 Dynamic Client Registration Management Protocol
 - [RFC 7636][31] - Proof Key for Code Exchange by OAuth Public Clients
 - [RFC 7662][32] - OAuth 2.0 Token Introspection
 - [OAuth 2.0 Multiple Response Type Encoding Practices][33]
@@ -198,11 +204,15 @@ See Also
 - [java-resource-server][40] - Resource Server Implementation
 
 
-Support
+Contact
 -------
 
-[Authlete, Inc.](https://www.authlete.com/)<br/>
-support@authlete.com
+| Purpose   | Email Address        |
+|:----------|:---------------------|
+| General   | info@authlete.com    |
+| Sales     | sales@authlete.com   |
+| PR        | pr@authlete.com      |
+| Technical | support@authlete.com |
 
 
 [1]: http://tools.ietf.org/html/rfc6749
@@ -247,3 +257,5 @@ support@authlete.com
 [40]: https://github.com/authlete/java-resource-server
 [41]: http://openid.net/specs/openid-connect-core-1_0.html#UserInfo
 [42]: https://maven.apache.org/
+[43]: http://tools.ietf.org/html/rfc7591
+[44]: http://tools.ietf.org/html/rfc7592

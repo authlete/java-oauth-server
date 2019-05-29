@@ -90,14 +90,15 @@ Docker を利用する場合は, ステップ 2 の後に以下のコマンド�
 
 この実装は、下表に示すエンドポイントを公開します。
 
-| エンドポイント         | パス                                |
-|:-----------------------|:------------------------------------|
-| 認可エンドポイント     | `/api/authorization`                |
-| トークンエンドポイント | `/api/token`                        |
-| JWK Set エンドポイント | `/api/jwks`                         |
-| 設定エンドポイント     | `/.well-known/openid-configuration` |
-| 取り消しエンドポイント | `/api/revocation`                   |
-| イントロスペクションエンドポイント | `/api/introspection`    |
+| エンドポイント                     | パス                                |
+|:-----------------------------------|:------------------------------------|
+| 認可エンドポイント                 | `/api/authorization`                |
+| トークンエンドポイント             | `/api/token`                        |
+| JWK Set エンドポイント             | `/api/jwks`                         |
+| 設定エンドポイント                 | `/.well-known/openid-configuration` |
+| 取り消しエンドポイント             | `/api/revocation`                   |
+| イントロスペクションエンドポイント | `/api/introspection`                |
+| 動的クライアント登録エンドポイント | `/api/register`                     |
 
 認可エンドポイントとトークンエンドポイントは、[RFC 6749][1]、[OpenID Connect Core 1.0][13]、
 [OAuth 2.0 Multiple Response Type Encoding Practices][33]、[RFC 7636][14] ([PKCE][15])、
@@ -116,6 +117,9 @@ Web API です。 その動作は [RFC 7009][21] で定義されています。
 
 イントロスペクションエンドポイントはアクセストークンやリフレッシュトークンの情報を取得するための
 Web API です。 その動作は [RFC 7662][32] で定義されています。
+
+動的クライアント登録エンドポイントは、クライアントアプリケーションの登録・更新をおこなうための
+Web API です。 その動作は [RFC 7591][43] および [RFC 7592][44] で定義されています。
 
 
 認可リクエストの例
@@ -175,6 +179,8 @@ Authlete はユーザーアカウントを管理しないので、基本的に�
 - [RFC 7521][28] - Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants
 - [RFC 7522][29] - Security Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants
 - [RFC 7523][30] - JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants
+- [RFC 7591][43] - OAuth 2.0 Dynamic Client Registration Protocol
+- [RFC 7592][44] - OAuth 2.0 Dynamic Client Registration Management Protocol
 - [RFC 7636][31] - Proof Key for Code Exchange by OAuth Public Clients
 - [RFC 7662][32] - OAuth 2.0 Token Introspection
 - [OAuth 2.0 Multiple Response Type Encoding Practices][33]
@@ -194,11 +200,15 @@ Authlete はユーザーアカウントを管理しないので、基本的に�
 - [java-resource-server][40] - リソースサーバーの実装
 
 
-サポート
---------
+コンタクト
+----------
 
-[Authlete, Inc.](https://www.authlete.com/)<br/>
-support@authlete.com
+| 目的 | メールアドレス       |
+|:-----|:---------------------|
+| 一般 | info@authlete.com    |
+| 営業 | sales@authlete.com   |
+| 広報 | pr@authlete.com      |
+| 技術 | support@authlete.com |
 
 
 [1]: http://tools.ietf.org/html/rfc6749
@@ -243,3 +253,5 @@ support@authlete.com
 [40]: https://github.com/authlete/java-resource-server
 [41]: http://openid.net/specs/openid-connect-core-1_0.html#UserInfo
 [42]: https://maven.apache.org/
+[43]: http://tools.ietf.org/html/rfc7591
+[44]: http://tools.ietf.org/html/rfc7592
