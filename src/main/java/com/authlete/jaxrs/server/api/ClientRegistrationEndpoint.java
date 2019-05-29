@@ -64,7 +64,6 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
             @Context HttpServletRequest httpServletRequest)
     {
         return handleRegister(AuthleteApiFactory.getDefaultApi(), json, authorization);
-
     }
 
 
