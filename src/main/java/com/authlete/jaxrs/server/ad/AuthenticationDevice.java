@@ -178,7 +178,8 @@ public class AuthenticationDevice
      * @return
      *         A response from the authentication device simulator.
      */
-    public PollAuthenticationResponse pollAuth(String subject, String message)
+    public PollAuthenticationResponse pollAuth(String subject, String message,
+            String actionizeToken)
     {
         // TODO: Implement this.
         return null;
