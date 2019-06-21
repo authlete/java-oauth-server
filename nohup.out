@@ -1,0 +1,41 @@
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building java-oauth-server 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] >>> jetty-maven-plugin:9.3.7.v20160115:run (default-cli) @ java-oauth-server >>>
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ java-oauth-server ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/hidebike712/Development/Authlete/java-oauth-server/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.3:compile (default-compile) @ java-oauth-server ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ java-oauth-server ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /Users/hidebike712/Development/Authlete/java-oauth-server/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.3:testCompile (default-testCompile) @ java-oauth-server ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] <<< jetty-maven-plugin:9.3.7.v20160115:run (default-cli) @ java-oauth-server <<<
+[INFO] 
+[INFO] --- jetty-maven-plugin:9.3.7.v20160115:run (default-cli) @ java-oauth-server ---
+2016-02-10 14:43:37.326:INFO::main: Logging initialized @4194ms
+[INFO] Configuring Jetty for project: java-oauth-server
+[INFO] webAppSourceDirectory not set. Trying src/main/webapp
+[INFO] Reload Mechanic: automatic
+[INFO] Classes = /Users/hidebike712/Development/Authlete/java-oauth-server/target/classes
+[INFO] Context path = /
+[INFO] Tmp directory = /Users/hidebike712/Development/Authlete/java-oauth-server/target/tmp
+[INFO] Web defaults = org/eclipse/jetty/webapp/webdefault.xml
+[INFO] Web overrides =  none
+[INFO] web.xml file = file:///Users/hidebike712/Development/Authlete/java-oauth-server/src/main/webapp/WEB-INF/web.xml
+[INFO] Webapp directory = /Users/hidebike712/Development/Authlete/java-oauth-server/src/main/webapp
+2016-02-10 14:43:37.513:INFO:oejs.Server:main: jetty-9.3.7.v20160115
+2016-02-10 14:43:39.562:INFO:oejsh.ContextHandler:main: Started o.e.j.m.p.JettyWebAppContext@6dba847b{/,file:///Users/hidebike712/Development/Authlete/java-oauth-server/src/main/webapp/,AVAILABLE}{file:///Users/hidebike712/Development/Authlete/java-oauth-server/src/main/webapp/}
+2016-02-10 14:43:39.606:INFO:oejs.ServerConnector:main: Started ServerConnector@3e67f5f2{HTTP/1.1,[http/1.1]}{0.0.0.0:8080}
+2016-02-10 14:43:39.607:INFO:oejs.Server:main: Started @6475ms
+[INFO] Started Jetty Server
