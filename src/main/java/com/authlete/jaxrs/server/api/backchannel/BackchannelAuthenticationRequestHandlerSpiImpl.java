@@ -235,6 +235,9 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
         // complete the authentication on the authentication device.
         String authReqId = baiRes.getAuthReqId();
 
+        // The duration of the issued auth_req_id in seconds.
+        int expiresIn = baiRes.getExpiresIn();
+
         // The mode in which this authorization server communicates with the
         // authentication device.
         Mode mode = getAuthenticationDeviceMode();
@@ -242,7 +245,7 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
         // Get a processor to process end-user authentication and authorization
         // by communicating with the authentication device.
         AuthenticationDeviceProcessor processor = AuthenticationDeviceProcessorFactory.create(
-                mode, ticket, user, clientName, acrs, scopes, claimNames, bindingMessage, authReqId);
+                mode, ticket, user, clientName, acrs, scopes, claimNames, bindingMessage, authReqId, expiresIn);
 
         // Start executing the process in the background.
         Executors.newSingleThreadExecutor().execute(new AuthTask(processor));

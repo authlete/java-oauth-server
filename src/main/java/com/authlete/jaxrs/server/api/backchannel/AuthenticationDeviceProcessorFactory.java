@@ -72,13 +72,17 @@ public class AuthenticationDeviceProcessorFactory
      *         The authentication request ID ({@code auth_req_id}) issued to the
      *         client.
      *
+     * @param expiresIn
+     *         The duration of the issued authentication request ID ({@code auth_req_id})
+     *         in seconds.
+     *
      * @return
      *         A processor that communicates with the authentication device simulator
      *         for end-user authentication and authorization.
      */
     public static AuthenticationDeviceProcessor create(Mode mode, String ticket,
             User user, String clientName, String[] acrs, Scope[] scopes, String[] claimNames,
-            String bindingMessage, String authReqId)
+            String bindingMessage, String authReqId, int expiresIn)
     {
         if (mode == null)
         {
@@ -91,19 +95,19 @@ public class AuthenticationDeviceProcessorFactory
                 // Create a processor that communicates with the authentication
                 // device in synchronous mode.
                 return new SyncAuthenticationDeviceProcessor(ticket, user, clientName,
-                        acrs, scopes, claimNames, bindingMessage, authReqId);
+                        acrs, scopes, claimNames, bindingMessage, authReqId, expiresIn);
 
             case ASYNC:
                 // Create a processor that communicates with the authentication
                 // device in asynchronous mode.
                 return new AsyncAuthenticationDeviceProcessor(ticket, user, clientName,
-                        acrs, scopes, claimNames, bindingMessage, authReqId);
+                        acrs, scopes, claimNames, bindingMessage, authReqId, expiresIn);
 
             case POLL:
                 // Create a processor that communicates with the authentication
                 // device in poll mode.
                 return new PollAuthenticationDeviceProcessor(ticket, user, clientName,
-                        acrs, scopes, claimNames, bindingMessage, authReqId);
+                        acrs, scopes, claimNames, bindingMessage, authReqId, expiresIn);
 
             default:
                 // Undefined authentication device mode. This never happens.

@@ -79,15 +79,20 @@ public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDevice
      *         The authentication request ID ({@code auth_req_id}) issued to the
      *         client.
      *
+     * @param expiresIn
+     *         The duration of the issued authentication request ID ({@code auth_req_id})
+     *         in seconds.
+     *
      * @return
      *         A processor that communicates with the authentication device simulator
      *         for end-user authentication and authorization in asynchronous mode.
      */
     public AsyncAuthenticationDeviceProcessor(String ticket, User user, String clientName,
             String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage,
-            String authReqId)
+            String authReqId, int expiresIn)
     {
-        super(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage, authReqId);
+        super(ticket, user, clientName, acrs, scopes, claimNames, bindingMessage,
+                authReqId, expiresIn);
     }
 
 
@@ -101,7 +106,8 @@ public class AsyncAuthenticationDeviceProcessor extends BaseAuthenticationDevice
         {
             // Communicate with the authentication device for end-user authentication
             // and authorization.
-            response = AuthenticationDevice.asyncAuth(mUser.getSubject(), buildMessage(), mAuthReqId);
+            response = AuthenticationDevice.asyncAuth(mUser.getSubject(), buildMessage(),
+                    computeAuthTimeout(), mAuthReqId);
         }
         catch (Throwable t)
         {

@@ -46,6 +46,15 @@ import com.authlete.jaxrs.server.ad.dto.SyncAuthenticationResponse;
 public class AuthenticationDevice
 {
     /**
+     * The limit values for end-user authentication/authorization timeout defined
+     * by <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete
+     * CIBA authentication device simulator API</a>.
+     */
+    public static final int AUTHENTICATION_TIMEOUT_MIN = 5;
+    public static final int AUTHENTICATION_TIMEOUT_MAX = 60;
+
+
+    /**
      * Authlete CIBA authentication simulator API endpoints.
      */
     private static final String SYNC_AUTHENTICATION_ENDPOINT_PATH        = "/api/authenticate/sync";
@@ -57,17 +66,14 @@ public class AuthenticationDevice
     /**
      * Parameters required to communicate with the authentication device simulator.
      */
-    private static final String sBaseUrl                 = ServerConfig.getAuthleteAdBaseUrl();
-    private static final String sWorkspace               = ServerConfig.getAuthleteAdWorkspace();
-    private static final int sSyncAuthenticationTimeout  = ServerConfig.getAuthleteAdSyncAuthenticationTimeout();
-    private static final int sSyncConnectTimeout         = ServerConfig.getAuthleteAdSyncConnectTimeout();
-    private static final int sSyncReadTimeout            = ServerConfig.getAuthleteAdSyncReadTimeout();
-    private static final int sAsyncAuthenticationTimeout = ServerConfig.getAuthleteAdAsyncAuthenticationTimeout();
-    private static final int sAsyncConnectTimeout        = ServerConfig.getAuthleteAdAsyncConnectTimeout();
-    private static final int sAsyncReadTimeout           = ServerConfig.getAuthleteAdAsyncReadTimeout();
-    private static final int sPollAuthenticationTimeout  = ServerConfig.getAuthleteAdPollAuthenticationTimeout();
-    private static final int sPollConnectTimeout         = ServerConfig.getAuthleteAdPollConnectTimeout();
-    private static final int sPollReadTimeout            = ServerConfig.getAuthleteAdPollReadTimeout();
+    private static final String sBaseUrl                = ServerConfig.getAuthleteAdBaseUrl();
+    private static final String sWorkspace              = ServerConfig.getAuthleteAdWorkspace();
+    private static final int sSyncConnectTimeout        = ServerConfig.getAuthleteAdSyncConnectTimeout();
+    private static final int sSyncAdditionalReadTimeout = ServerConfig.getAuthleteAdSyncAdditionalReadTimeout();
+    private static final int sAsyncConnectTimeout       = ServerConfig.getAuthleteAdAsyncConnectTimeout();
+    private static final int sAsyncReadTimeout          = ServerConfig.getAuthleteAdAsyncReadTimeout();
+    private static final int sPollConnectTimeout        = ServerConfig.getAuthleteAdPollConnectTimeout();
+    private static final int sPollReadTimeout           = ServerConfig.getAuthleteAdPollReadTimeout();
 
 
     private static Client createClient(int readTimeout, int connectTimeout)
@@ -97,6 +103,10 @@ public class AuthenticationDevice
      * @param message
      *         A message to be shown to the end-user on the authentication device.
      *
+     * @param authTimeout
+     *         The value of timeout in seconds for the end-user authentication/authorization
+     *         on the authentication device.
+     *
      * @param actionizeToken
      *         A token that is used with the actionize endpoint ({@code /api/atuhenticate/actionize})
      *         to automate authentication device responses.
@@ -105,17 +115,22 @@ public class AuthenticationDevice
      *         A response from the authentication device.
      */
     public static SyncAuthenticationResponse syncAuth(String subject, String message,
-            String actionizeToken)
+            int authTimeout, String actionizeToken)
     {
+        // Determine the read timeout in milliseconds based on the value of the
+        // authentication timeout. This should be a bit longer than the timeout
+        // for end-user authentication/authorization.
+        int readTimeout = authTimeout * 1000 + sSyncAdditionalReadTimeout;
+
         // Create a web client to communicate with the authentication device.
-        Client client = createClient(sSyncReadTimeout, sSyncConnectTimeout);
+        Client client = createClient(readTimeout, sSyncConnectTimeout);
 
         // A request to be sent to the authentication device.
         SyncAuthenticationRequest request = new SyncAuthenticationRequest()
             .setWorkspace(sWorkspace)
             .setUser(subject)
             .setMessage(message)
-            .setTimeout(sSyncAuthenticationTimeout)
+            .setTimeout(authTimeout)
             .setActionizeToken(actionizeToken);
 
         // Send the request as a HTTP POST request.
@@ -134,6 +149,10 @@ public class AuthenticationDevice
      * @param message
      *         A message to be shown to the end-user on the authentication device.
      *
+     * @param authTimeout
+     *         The value of timeout in seconds for the end-user authentication/authorization
+     *         on the authentication device.
+     *
      * @param actionizeToken
      *         A token that is used with the actionize endpoint ({@code /api/atuhenticate/actionize})
      *         to automate authentication device responses.
@@ -142,7 +161,7 @@ public class AuthenticationDevice
      *         A response from the authentication device simulator.
      */
     public static AsyncAuthenticationResponse asyncAuth(String subject, String message,
-            String actionizeToken)
+            int authTimeout, String actionizeToken)
     {
         // Create a web client to communicate with the authentication device.
         Client client = createClient(sAsyncReadTimeout, sAsyncConnectTimeout);
@@ -152,7 +171,7 @@ public class AuthenticationDevice
             .setWorkspace(sWorkspace)
             .setUser(subject)
             .setMessage(message)
-            .setTimeout(sAsyncAuthenticationTimeout)
+            .setTimeout(authTimeout)
             .setActionizeToken(actionizeToken);
 
         // Send the request as a HTTP POST request.
@@ -171,6 +190,10 @@ public class AuthenticationDevice
      * @param message
      *         A message to be shown to the end-user on the authentication device.
      *
+     * @param authTimeout
+     *         The value of timeout in seconds for the end-user authentication/authorization
+     *         on the authentication device.
+     *
      * @param actionizeToken
      *         A token that is used with the actionize endpoint ({@code /api/atuhenticate/actionize})
      *         to automate authentication device responses.
@@ -179,7 +202,7 @@ public class AuthenticationDevice
      *         A response from the authentication device simulator.
      */
     public PollAuthenticationResponse pollAuth(String subject, String message,
-            String actionizeToken)
+            int authTimeout, String actionizeToken)
     {
         // TODO: Implement this.
         return null;

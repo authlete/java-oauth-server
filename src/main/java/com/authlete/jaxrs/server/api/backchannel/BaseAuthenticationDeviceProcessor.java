@@ -26,6 +26,7 @@ import com.authlete.common.dto.Scope;
 import com.authlete.common.dto.BackchannelAuthenticationCompleteRequest.Result;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler;
+import com.authlete.jaxrs.server.ad.AuthenticationDevice;
 
 
 /**
@@ -54,6 +55,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
     protected final String[] mClaimNames;
     protected final String mBindingMessage;
     protected final String mAuthReqId;
+    protected final int mExpiresIn;
 
 
     /**
@@ -87,12 +89,16 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
      *         The authentication request ID ({@code auth_req_id}) issued to the
      *         client.
      *
+     * @param expiresIn
+     *         The duration of the issued authentication request ID ({@code auth_req_id})
+     *         in seconds.
+     *
      * @return
      *         An instance of this class.
      */
     public BaseAuthenticationDeviceProcessor(String ticket, User user, String clientName,
             String[] acrs, Scope[] scopes, String[] claimNames, String bindingMessage,
-            String authReqId)
+            String authReqId, int expiresIn)
     {
         mTicket         = ticket;
         mUser           = user;
@@ -102,6 +108,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
         mClaimNames     = claimNames;
         mBindingMessage = bindingMessage;
         mAuthReqId      = authReqId;
+        mExpiresIn      = expiresIn;
     }
 
 
@@ -318,6 +325,50 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
         // Build a message to be shown to the end-user.
         return String.format(messageFormatBuilder.toString(), messageArgs.toArray());
+    }
+
+
+    /**
+     * Compute the value of timeout for end-user authentication/authorization
+     * on the authentication device.
+     *
+     * @return
+     *         The value of timeout for end-user authentication/authorization
+     *         on the authentication device.
+     */
+    protected int computeAuthTimeout()
+    {
+        // End-user authentication/authorization on the authentication device should
+        // be done before the 'auth_req_id' expires. This means the value of timeout
+        // for end-user authentication/authorization should be shorter than the
+        // duration of the 'auth_req_id'.
+
+        // If the duration of the 'auth_req_id' is shorter than the minimum value
+        // of the timeout.
+        if (mExpiresIn < AuthenticationDevice.AUTHENTICATION_TIMEOUT_MIN)
+        {
+            // In this case, the duration of the 'auth_req_id' is too short. Then,
+            // end-user authentication/authorization cannot be done before the
+            // 'auth_req_id' expires.
+
+            // TODO: For now, we throw an exception here but there might be better
+            // ways for this case.
+            throw new IllegalStateException(
+                    "End-user authentication/authorization cannot be done before the 'auth_req_id' expires " +
+                    "because the duratin of the 'auth_req_id' is too short.");
+        }
+
+        // If the duration of the 'auth_req_id' is larger than the maximum value
+        // of the timeout.
+        if (AuthenticationDevice.AUTHENTICATION_TIMEOUT_MAX < mExpiresIn)
+        {
+            // Use the maximum value.
+            return AuthenticationDevice.AUTHENTICATION_TIMEOUT_MAX;
+        }
+
+        // The duration of the 'auth_req_id' is in a range from the minimum value
+        // to the maximum value, then just use the duration as the value of timeout.
+        return mExpiresIn;
     }
 
 
