@@ -44,6 +44,7 @@ public class ServerConfig
     private static final String AUTHLETE_AD_ASYNC_READ_TIMEOUT_KEY           = "authlete.ad.async.read_timeout";
     private static final String AUTHLETE_AD_POLL_CONNECT_TIMEOUT_KEY         = "authlete.ad.poll.connect_timeout";
     private static final String AUTHLETE_AD_POLL_READ_TIMEOUT_KEY            = "authlete.ad.poll.read_timeout";
+    private static final String AUTHLETE_AD_AUTH_TIMEOUT_RATIO_KEY           = "authlete.ad.auth_timeout_ratio";
 
 
     /**
@@ -56,6 +57,7 @@ public class ServerConfig
     private static final int DEFAULT_AUTHLETE_AD_ASYNC_READ_TIMEOUT           = 10000; // 10000 milliseconds.
     private static final int DEFAULT_AUTHLETE_AD_POLL_CONNECT_TIMEOUT         = 10000; // 10000 milliseconds.
     private static final int DEFAULT_AUTHLETE_AD_POLL_READ_TIMEOUT            = 10000; // 10000 milliseconds.
+    private static final float DEFALUT_AUTHLETE_AD_AUTH_TIMEOUT_RATIO         = 0.8f;
 
 
     /**
@@ -69,7 +71,7 @@ public class ServerConfig
     private static final int AUTHLETE_AD_ASYNC_READ_TIMEOUT           = sProperties.getInt(AUTHLETE_AD_ASYNC_READ_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_ASYNC_READ_TIMEOUT);
     private static final int AUTHLETE_AD_POLL_CONNECT_TIMEOUT         = sProperties.getInt(AUTHLETE_AD_POLL_CONNECT_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_POLL_CONNECT_TIMEOUT);
     private static final int AUTHLETE_AD_POLL_READ_TIMEOUT            = sProperties.getInt(AUTHLETE_AD_POLL_READ_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_POLL_READ_TIMEOUT);
-
+    private static final float AUTHLETE_AD_AUTH_TIMEOUT_RATIO         = sProperties.getFloat(AUTHLETE_AD_AUTH_TIMEOUT_RATIO_KEY, DEFALUT_AUTHLETE_AD_AUTH_TIMEOUT_RATIO);
 
     /**
      * Get the base URL of <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
@@ -142,7 +144,8 @@ public class ServerConfig
      * (read timeout) = (the duration of an <code>'auth_req_id'</code> in milliseconds) + (the value returned by this method)
      * </p>
      *
-     * For more details, see the implementation of {@link com.authlete.jaxrs.server.ad.AuthenticationDevice
+     * For more details, see {@link com.authlete.jaxrs.server.ad.AuthenticationDevice#syncAuth(String, String, int, String)
+     * syncAuth} method in {@link com.authlete.jaxrs.server.ad.AuthenticationDevice
      * AuthenticationDevice}.
      *
      * @return
@@ -249,5 +252,38 @@ public class ServerConfig
     public static int getAuthleteAdPollReadTimeout()
     {
         return AUTHLETE_AD_POLL_READ_TIMEOUT;
+    }
+
+
+    /**
+     * Get the ratio of timeout for end-user authentication/authorization on the
+     * authentication device (<a href="https://cibasim.authlete.com">Authlete CIBA
+     * authentication device simulator</a>) to the duration of an <code>'auth_req_id'</code>.
+     * Must be specified between 0.0 and 1.0.
+     *
+     * <p>
+     * This value is used to compute the timeout value based on the duration of
+     * an <code>'auth_req_id'</code> as below.
+     * </p>
+     *
+     * <p style="border: solid 1px black; padding: 0.5em;">
+     * (timeout in seconds) = (the value returned by this method) * (the duration of an <code>'auth_req_id'</code> in seconds)
+     * </p>
+     *
+     * For more details, see {@link com.authlete.jaxrs.server.api.backchannel.BaseAuthenticationDeviceProcessor#computeAuthTimeout
+     * computeAuthTimeout()} method in {@link com.authlete.jaxrs.server.api.backchannel.BaseAuthenticationDeviceProcessor
+     * BaseAuthenticationDeviceProcessor}.
+     *
+     * @return
+     *         The ratio of timeout for end-user authentication/authorization on
+     *         the authentication device (<a href="https://cibasim.authlete.com">Authlete
+     *         CIBA authentication device simulator</a>) to the duration
+     *         of an <code>'auth_req_id'</code>.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     */
+    public static float getAuthleteAdAuthTimeoutRatio()
+    {
+        return AUTHLETE_AD_AUTH_TIMEOUT_RATIO;
     }
 }

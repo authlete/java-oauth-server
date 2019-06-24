@@ -50,8 +50,8 @@ public class AuthenticationDevice
      * by <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete
      * CIBA authentication device simulator API</a>.
      */
-    public static final int AUTHENTICATION_TIMEOUT_MIN = 5;
-    public static final int AUTHENTICATION_TIMEOUT_MAX = 60;
+    public static final int AUTH_TIMEOUT_MIN = 5;
+    public static final int AUTH_TIMEOUT_MAX = 60;
 
 
     /**

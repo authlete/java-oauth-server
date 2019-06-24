@@ -21,11 +21,13 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.dto.Scope;
 import com.authlete.common.dto.BackchannelAuthenticationCompleteRequest.Result;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler;
+import com.authlete.jaxrs.server.ServerConfig;
 import com.authlete.jaxrs.server.ad.AuthenticationDevice;
 
 
@@ -47,6 +49,13 @@ import com.authlete.jaxrs.server.ad.AuthenticationDevice;
  */
 public abstract class BaseAuthenticationDeviceProcessor implements AuthenticationDeviceProcessor
 {
+    /**
+     * The ratio of timeout for end-user authentication/authorization on the authentication
+     * device to the duration of an 'auth_req_id'
+     */
+    private static final float AUTH_TIMEOUT_RATIO  = ServerConfig.getAuthleteAdAuthTimeoutRatio();
+
+
     protected final String mTicket;
     protected final User mUser;
     protected final String mClientName;
@@ -343,32 +352,34 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
         // for end-user authentication/authorization should be shorter than the
         // duration of the 'auth_req_id'.
 
-        // If the duration of the 'auth_req_id' is shorter than the minimum value
-        // of the timeout.
-        if (mExpiresIn < AuthenticationDevice.AUTHENTICATION_TIMEOUT_MIN)
+        // First, compute the value of the timeout based on the duration of the
+        // 'auth_req_id'.
+        int authTimeout = (int)(AUTH_TIMEOUT_RATIO * mExpiresIn);
+
+        // If the computed timeout is shorter than the minimum value of the timeout.
+        if (authTimeout < AuthenticationDevice.AUTH_TIMEOUT_MIN)
         {
-            // In this case, the duration of the 'auth_req_id' is too short. Then,
-            // end-user authentication/authorization cannot be done before the
-            // 'auth_req_id' expires.
+            // In this case, the computed timeout value is too short to perform
+            // end-user authentication/authorization on the authentication device.
 
             // TODO: For now, we throw an exception here but there might be better
             // ways for this case.
             throw new IllegalStateException(
-                    "End-user authentication/authorization cannot be done before the 'auth_req_id' expires " +
-                    "because the duratin of the 'auth_req_id' is too short.");
+                    "The timeout for end-user authentication/authorization on the " +
+                    "authentication device was computed based on the duration of " +
+                    "the 'auth_req_id' but the computed timeout value is shorter " +
+                    "than the allowed minimum value.");
         }
 
-        // If the duration of the 'auth_req_id' is larger than the maximum value
-        // of the timeout.
-        if (AuthenticationDevice.AUTHENTICATION_TIMEOUT_MAX < mExpiresIn)
+        // If the computed timeout value is larger than the maximum value of the
+        // timeout.
+        if (AuthenticationDevice.AUTH_TIMEOUT_MAX < authTimeout)
         {
             // Use the maximum value.
-            return AuthenticationDevice.AUTHENTICATION_TIMEOUT_MAX;
+            return AuthenticationDevice.AUTH_TIMEOUT_MAX;
         }
 
-        // The duration of the 'auth_req_id' is in a range from the minimum value
-        // to the maximum value, then just use the duration as the value of timeout.
-        return mExpiresIn;
+        return authTimeout;
     }
 
 
