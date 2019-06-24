@@ -73,6 +73,7 @@ public class ServerConfig
     private static final int AUTHLETE_AD_POLL_READ_TIMEOUT            = sProperties.getInt(AUTHLETE_AD_POLL_READ_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_POLL_READ_TIMEOUT);
     private static final float AUTHLETE_AD_AUTH_TIMEOUT_RATIO         = sProperties.getFloat(AUTHLETE_AD_AUTH_TIMEOUT_RATIO_KEY, DEFALUT_AUTHLETE_AD_AUTH_TIMEOUT_RATIO);
 
+
     /**
      * Get the base URL of <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
      * Authlete CIBA authentication device simulator API</a>.
