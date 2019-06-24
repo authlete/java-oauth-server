@@ -21,7 +21,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.dto.Scope;
 import com.authlete.common.dto.BackchannelAuthenticationCompleteRequest.Result;
