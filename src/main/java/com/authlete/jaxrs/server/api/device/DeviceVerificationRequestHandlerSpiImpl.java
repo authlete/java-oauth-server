@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 package com.authlete.jaxrs.server.api.device;
 
 
+import static com.authlete.jaxrs.server.util.ResponseUtil.badRequest;
+import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerError;
+import static com.authlete.jaxrs.server.util.ResponseUtil.notFound;
+import static com.authlete.jaxrs.server.util.ResponseUtil.ok;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import org.glassfish.jersey.server.mvc.Viewable;
-
 import com.authlete.common.dto.DeviceVerificationResponse;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.DeviceAuthorizationPageModel;
@@ -32,35 +32,22 @@ import com.authlete.jaxrs.spi.DeviceVerificationRequestHandlerSpiAdapter;
 
 
 /**
- * Empty implementation of {@link TokenRequestHandlerSpi} interface.
+ * Empty implementation of {@link DeviceVerificationRequestHandlerSpi} interface.
  *
- * <p>
- * If you don't support <a href="https://tools.ietf.org/html/rfc6749#section-4.3"
- * >Resource Owner Password Credentials Grant</a>, you don't have to
- * override {@link #authenticateUser(String, String)} method.
- * </p>
- *
- * @author Takahiko Kawasaki
+ * @author Hideki Ikeda
  */
 public class DeviceVerificationRequestHandlerSpiImpl extends DeviceVerificationRequestHandlerSpiAdapter
 {
     /**
-     * {@code "text/html;charset=UTF-8"}
+     * The page template to ask the resource owner for authorization.
      */
-    private static final MediaType MEDIA_TYPE_HTML =
-            MediaType.TEXT_HTML_TYPE.withCharset("UTF-8");
+    private static final String VERIFICATION_PAGE_TEMPLATE = "/device/verification";
 
 
     /**
      * The page template to ask the resource owner for authorization.
      */
-    private static final String TEMPLATE = "/device/verification";
-
-
-    /**
-     * The page template to ask the resource owner for authorization.
-     */
-    private static final String COMPLETE_TEMPLATE = "/device/authorization";
+    private static final String AUTHORIZATION_PAGE_TEMPLATE = "/device/authorization";
 
 
     /**
@@ -70,21 +57,14 @@ public class DeviceVerificationRequestHandlerSpiImpl extends DeviceVerificationR
 
 
     /**
-     *  The authenticated user.
-     */
-    private User mUser;
-
-
-    /**
      *  The user code given by the user..
      */
     private String mUserCode;
 
 
-    public DeviceVerificationRequestHandlerSpiImpl(HttpSession session, User user, String userCode)
+    public DeviceVerificationRequestHandlerSpiImpl(HttpSession session, String userCode)
     {
         mSession  = session;
-        mUser     = user;
         mUserCode = userCode;
     }
 
@@ -97,61 +77,48 @@ public class DeviceVerificationRequestHandlerSpiImpl extends DeviceVerificationR
 
 
     @Override
-    public Response onUserCodeValid(DeviceVerificationResponse info)
+    public Response onValid(DeviceVerificationResponse info)
     {
         // Ask the user to authorize the client.
 
-        // Store the valid user code to the user's session for later use.
-        mSession.setAttribute("userCode", mUserCode);
+        // Store some information to the user's session for later use.
+        mSession.setAttribute("userCode",   mUserCode);
+        mSession.setAttribute("claimNames", info.getClaimNames());
+        mSession.setAttribute("acrs",       info.getAcrs());
 
-        // The model for rendering the verification page.
+        // The model for rendering the authorization page.
         DeviceAuthorizationPageModel model = new DeviceAuthorizationPageModel(info);
 
-        // Create a Viewable instance that represents the verification page.
-        Viewable viewable = new Viewable(COMPLETE_TEMPLATE, model);
-
-        // Create a response that has the viewable as its content.
-        return Response.ok(viewable, MEDIA_TYPE_HTML).build();
+        // Create a response having the page.
+        return ok(new Viewable(AUTHORIZATION_PAGE_TEMPLATE, model));
     }
 
 
     @Override
-    public Response onUserCodeExpired()
+    public Response onExpired()
     {
-        // Urge the user to re-initiate device flow.
-        return Response
-                .status(Status.BAD_REQUEST)
-                .entity("User Code Expired.")
-                .type(MediaType.TEXT_PLAIN)
-                .build();
+        // Urge the user to re-initiate the device flow.
+        return badRequest("The user Code Expired. Please re-initiate the flow again.");
     }
 
 
     @Override
-    public Response onUserCodeNotExist()
+    public Response onNotExist()
     {
         // Urge the user to re-input a valid user code.
 
         // The user.
         User user = (User)mSession.getAttribute("user");
 
-        // The notification to be shown to the user on the verification page.
-        String notification = "The user code does not exist.";
-
         // The model for rendering the verification page.
-        DeviceVerificationPageModel model = new DeviceVerificationPageModel(
-                null, mUserCode, user, notification);
+        DeviceVerificationPageModel model = new DeviceVerificationPageModel()
+            .setUserCode(mUserCode)
+            .setUser(user)
+            .setNotification("The user code does not exist.");
 
-        // Create a Viewable instance that represents the authorization
-        // page. Viewable is a class provided by Jersey for MVC.
-        Viewable viewable = new Viewable(TEMPLATE, model);
-
-        // Return a response of "404 Not Found".
-        return Response
-                .status(Status.NOT_FOUND)
-                .entity(viewable)
-                .type(MEDIA_TYPE_HTML)
-                .build();
+        // Return a response of "404 Not Found" having the verification page and
+        // urge the user to re-input a valid user code.
+        return notFound(new Viewable(VERIFICATION_PAGE_TEMPLATE, model));
     }
 
 
@@ -159,10 +126,6 @@ public class DeviceVerificationRequestHandlerSpiImpl extends DeviceVerificationR
     public Response onServerError()
     {
         // Urge the user to re-initiate device flow.
-        return Response
-                .status(Status.INTERNAL_SERVER_ERROR)
-                .entity("Server Error.")
-                .type(MediaType.TEXT_PLAIN)
-                .build();
+        return internalServerError("Server Error. Please re-initiate the flow again.");
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ import com.authlete.jaxrs.spi.DeviceAuthorizationRequestHandlerSpiAdapter;
 
 
 /**
- * Implementation of {@link com.authlete.jaxrs.spi.TokenRequestHandlerSpi
- * TokenRequestHandlerSpi} interface which needs to be given to the
- * constructor of {@link com.authlete.jaxrs.TokenRequestHandler
- * TokenRequestHandler}.
+ * Implementation of {@link com.authlete.jaxrs.spi.DeviceAuthorizationRequestHandlerSpi
+ * DeviceAuthorizationRequestHandlerSpi} interface which needs to be given to the
+ * constructor of {@link com.authlete.jaxrs.DeviceAuthorizationRequestHandler
+ * DeviceAuthorizationRequestHandler}.
  *
- * @author Takahiko Kawasaki
+ * @author Hideki Ikeda
  */
 class DeviceAuthorizationRequestHandlerSpiImpl extends DeviceAuthorizationRequestHandlerSpiAdapter
 {

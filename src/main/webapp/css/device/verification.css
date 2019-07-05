@@ -90,7 +90,7 @@ input {
   margin: 20px auto;
 }
 
-#verification-button {
+#send-button {
   display: inline-block;
   width: 150px;
   padding: 12px 0;
@@ -105,10 +105,10 @@ input {
   color: white;
 }
 
-#verification-button:hover {
+#send-button:hover {
   background-color: #1255f4;
 }
 
-#verification-button:active {
+#send-button:active {
   background-color: blue;
 }

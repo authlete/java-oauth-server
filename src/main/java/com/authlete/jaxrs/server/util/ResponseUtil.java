@@ -1,0 +1,224 @@
+package com.authlete.jaxrs.server.util;
+
+
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
+import org.glassfish.jersey.server.mvc.Viewable;
+
+
+/**
+ * Utility class for responses.
+ *
+ * @author Hideki Ikeda
+ */
+public class ResponseUtil
+{
+    /**
+     * {@code "text/html;charset=UTF-8"}
+     */
+    private static final MediaType MEDIA_TYPE_HTML =
+            MediaType.TEXT_HTML_TYPE.withCharset("UTF-8");
+
+
+    /**
+     * {@code "text/plain;charset=UTF-8"}
+     */
+    private static final MediaType MEDIA_TYPE_PLAIN =
+            MediaType.TEXT_PLAIN_TYPE.withCharset("UTF-8");
+
+
+    /**
+     * Build a "text/plain" response of "200 OK".
+     *
+     * @param entity
+     *         A string entity to contain in the response.
+     *
+     * @return
+     *         A "text/plain" response of "200 OK".
+     */
+    public static Response ok(String entity)
+    {
+        return builderForPlain(Status.OK, entity).build();
+    }
+
+
+    /**
+     * Build a "text/html" response of "200 OK".
+     *
+     * @param entity
+     *         A {@link Viewable} entity to contain in the response.
+     *
+     * @return
+     *         A "text/html" response of "200 OK".
+     */
+    public static Response ok(Viewable entity)
+    {
+        return builderForHtml(Status.OK, entity).build();
+    }
+
+
+    /**
+     * Build a "text/plain" response of "400 Bad Request".
+     *
+     * @param entity
+     *         A string entity to contain in the response.
+     *
+     * @return
+     *         A "text/plain" response of "400 Bad Request".
+     */
+    public static Response badRequest(String entity)
+    {
+        return builderForPlain(Status.BAD_REQUEST, entity).build();
+    }
+
+
+    /**
+     * Build a "text/html" response of "400 Bad Request".
+     *
+     * @param entity
+     *         A {@link Viewable} entity to contain in the response.
+     *
+     * @return
+     *         A "text/html" response of "400 Bad Request".
+     */
+    public static Response badRequest(Viewable entity)
+    {
+        return builderForHtml(Status.BAD_REQUEST, entity).build();
+    }
+
+
+    /**
+     * Build a "text/plain" response of "401 Unauthorized".
+     *
+     * @param entity
+     *         A string entity to contain in the response.
+     *
+     * @param challenge
+     *         The value of the "WWW-Authenticate" header of the response.
+     *
+     * @return
+     *         A "text/plain" response of "401 Unauthorized".
+     */
+    public static Response unauthorized(String entity, String challenge)
+    {
+        return builderForPlain(Status.UNAUTHORIZED, entity)
+                .header(HttpHeaders.WWW_AUTHENTICATE, challenge)
+                .build();
+    }
+
+
+    /**
+     * Build a "text/html" response of "401 Unauthorized".
+     *
+     * @param entity
+     *         A {@link Viewable} entity to contain in the response.
+     *
+     * @param challenge
+     *         The value of the "WWW-Authenticate" header of the response.
+     *
+     * @return
+     *         A "text/html" response of "401 Unauthorized".
+     */
+    public static Response unauthorized(Viewable entity, String challenge)
+    {
+        return builderForHtml(Status.UNAUTHORIZED, entity)
+                .header(HttpHeaders.WWW_AUTHENTICATE, challenge)
+                .build();
+    }
+
+
+    /**
+     * Build a "text/plain" response of "404 Not Found".
+     *
+     * @param entity
+     *         A string entity to contain in the response.
+     *
+     * @return
+     *         A "text/plain" response of "404 Not Found".
+     */
+    public static Response notFound(String entity)
+    {
+        return builderForPlain(Status.NOT_FOUND, entity).build();
+    }
+
+
+    /**
+     * Build a "text/html" response of "404 Not Found".
+     *
+     * @param entity
+     *         A {@link Viewable} entity to contain in the response.
+     *
+     * @return
+     *         A "text/html" response of "404 Not Found".
+     */
+    public static Response notFound(Viewable entity)
+    {
+        return builderForHtml(Status.NOT_FOUND, entity).build();
+    }
+
+
+    /**
+     * Build a "text/plain" response of "500 Internal Server Error".
+     *
+     * @param entity
+     *         A string entity to contain in the response.
+     *
+     * @return
+     *         A "text/plain" response of "500 Internal Server Error".
+     */
+    public static Response internalServerError(String entity)
+    {
+        return builder(Status.INTERNAL_SERVER_ERROR, entity, MEDIA_TYPE_PLAIN).build();
+    }
+
+
+    /**
+     * Build a "text/html" response of "500 Internal Server Error".
+     *
+     * @param entity
+     *         A {@link Viewable} entity to contain in the response.
+     *
+     * @return
+     *         A "text/html" response of "500 Internal Server Error".
+     */
+    public static Response internalServerError(Viewable entity)
+    {
+        return builderForHtml(Status.INTERNAL_SERVER_ERROR, entity).build();
+    }
+
+
+    /**
+     * Build a response of "204 No Content".
+     *
+     * @return
+     *         A response of "204 No Content".
+     */
+    public static Response noContent()
+    {
+        return Response.noContent().build();
+    }
+
+
+    private static ResponseBuilder builderForPlain(Status status, String message)
+    {
+        return builder(status, message, MEDIA_TYPE_PLAIN);
+    }
+
+
+    private static ResponseBuilder builderForHtml(Status status, Viewable entity)
+    {
+        return builder(status, entity, MEDIA_TYPE_HTML);
+    }
+
+
+    private static ResponseBuilder builder(Status status, Object entity, MediaType type)
+    {
+        return Response
+                .status(status)
+                .entity(entity)
+                .type(type);
+    }
+}

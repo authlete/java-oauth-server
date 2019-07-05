@@ -54,6 +54,7 @@ public class BackchannelAuthenticationEndpoint extends BaseBackchannelAuthentica
 
         // Handle the backchannel authentication request.
         return handle(AuthleteApiFactory.getDefaultApi(),
-                new BackchannelAuthenticationRequestHandlerSpiImpl(), parameters, authorization, clientCertificates);
+                new BackchannelAuthenticationRequestHandlerSpiImpl(), parameters,
+                authorization, clientCertificates);
     }
 }

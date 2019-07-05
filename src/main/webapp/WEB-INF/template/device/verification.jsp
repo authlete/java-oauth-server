@@ -58,14 +58,15 @@
         <c:if test="${model.user != null}">
         <div id="login-user"><i>Logged in as <c:out value="${model.user.subject}" /></i></div>
         </c:if>
-        
+
         <div id="usercode-field" class="indent">
           <div id="usercode-prompt">Input User Code.</div>
           <input type="text" id="userCode" name="userCode" placeholder="User Code"
                  class="font-default" required value="${model.userCode}">
         </div>
+
         <div id="verification-form-button">
-          <input type="submit" name="verification" id="verification-button" value="Submit" class="font-default"/>
+          <input type="submit" name="send" id="send-button" value="Send" class="font-default"/>
         </div>
       </form>
     </div>
