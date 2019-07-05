@@ -57,7 +57,7 @@
     <div class="indent">
       <p>Do you grant authorization to the application?</p>
 
-      <form id="authorization-form" action="/api/authorization/decision" method="POST">
+      <form id="authorization-form" action="/api/device/complete" method="POST">
         <div id="authorization-form-buttons">
           <input type="submit" name="authorized" id="authorize-button" value="Authorize" class="font-default"/>
           <input type="submit" name="denied"     id="deny-button"      value="Deny"      class="font-default"/>

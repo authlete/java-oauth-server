@@ -17,6 +17,8 @@
 package com.authlete.jaxrs.server.api.backchannel;
 
 
+import static com.authlete.jaxrs.server.util.ResponseUtil.badRequest;
+import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerError;
 import java.util.Date;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -24,7 +26,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.dto.BackchannelAuthenticationCompleteRequest.Result;
@@ -78,7 +79,10 @@ public class BackchannelAuthenticationCallbackEndpoint
         }
         catch (Throwable t)
         {
-            throw internalServerError("unexpected error", t);
+            // Append the message of the cause.
+            String message = "unexpected error: " + t.getMessage();
+
+            throw new WebApplicationException(message, internalServerError(message));
         }
     }
 
@@ -115,7 +119,7 @@ public class BackchannelAuthenticationCallbackEndpoint
         removeAuthInfo(requestId);
 
         // 204 No Content.
-        return builder(Status.NO_CONTENT).build();
+        return Response.status(Status.NO_CONTENT).build();
     }
 
 
@@ -126,7 +130,7 @@ public class BackchannelAuthenticationCallbackEndpoint
         if (result == null)
         {
             // Invalid result.
-            throw badRequest("The result must not be empty.");
+            throw badRequestException("The result must not be empty.");
         }
 
         switch (result)
@@ -147,7 +151,7 @@ public class BackchannelAuthenticationCallbackEndpoint
             default:
                 // An unknown result returned from the authentication device.
                 // This should never happen.
-                throw badRequest("Unknown result.");
+                throw badRequestException("Unknown result.");
         }
     }
 
@@ -161,7 +165,7 @@ public class BackchannelAuthenticationCallbackEndpoint
         if (requestId == null || requestId.length() == 0)
         {
             // The request ID is empty.
-            throw badRequest("The request ID must not be empty.");
+            throw badRequestException("The request ID must not be empty.");
         }
 
         return requestId;
@@ -178,7 +182,7 @@ public class BackchannelAuthenticationCallbackEndpoint
         if (info == null)
         {
             // The information for the request ID doesn't exist.
-            throw badRequest("The request ID is invalid.");
+            throw badRequestException("The request ID is invalid.");
         }
 
         return info;
@@ -218,36 +222,8 @@ public class BackchannelAuthenticationCallbackEndpoint
     }
 
 
-    private WebApplicationException badRequest(String message)
+    private WebApplicationException badRequestException(String message)
     {
-        Response response = builder(Status.BAD_REQUEST, message).build();
-
-        return new WebApplicationException(message, response);
-    }
-
-
-    private WebApplicationException internalServerError(String message, Throwable cause)
-    {
-        // Append the message of the cause.
-        message += ": " + cause.getMessage();
-
-        Response response = builder(Status.INTERNAL_SERVER_ERROR, message).build();
-
-        return new WebApplicationException(message, response);
-    }
-
-
-    private ResponseBuilder builder(Status status, String message)
-    {
-        return builder(status)
-                .entity(message)
-                .type(MediaType.TEXT_PLAIN)
-                ;
-    }
-
-
-    private ResponseBuilder builder(Status status)
-    {
-        return Response.status(status);
+        return new WebApplicationException(message, badRequest(message));
     }
 }

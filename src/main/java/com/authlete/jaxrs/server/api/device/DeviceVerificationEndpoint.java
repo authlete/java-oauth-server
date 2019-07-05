@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,9 @@
 package com.authlete.jaxrs.server.api.device;
 
 
+import static com.authlete.jaxrs.server.util.ResponseUtil.ok;
+import static com.authlete.jaxrs.server.util.ResponseUtil.unauthorized;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
@@ -29,10 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
-
 import org.glassfish.jersey.server.mvc.Viewable;
-
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.BaseDeviceVerificationEndpoint;
@@ -41,73 +41,53 @@ import com.authlete.jaxrs.server.db.UserDao;
 
 
 /**
- * An implementation of OAuth 2.0 authorization endpoint with OpenID Connect support.
+ * An implementation of verification endpoint of OAuth 2.0 Device Authorization
+ * Grant (Device Flow).
  *
- * @see <a href="http://tools.ietf.org/html/rfc6749#section-3.1"
- *      >RFC 6749, 3.1. Authorization Endpoint</a>
- *
- * @see <a href="http://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndpoint"
- *      >OpenID Connect Core 1.0, 3.1.2. Authorization Endpoint (Authorization Code Flow)</a>
- *
- * @see <a href="http://openid.net/specs/openid-connect-core-1_0.html#ImplicitAuthorizationEndpoint"
- *      >OpenID Connect Core 1.0, 3.2.2. Authorization Endpoint (Implicit Flow)</a>
- *
- * @see <a href="http://openid.net/specs/openid-connect-core-1_0.html#HybridAuthorizationEndpoint"
- *      >OpenID Connect Core 1.0, 3.3.2. Authorization Endpoint (Hybrid Flow)</a>
- *
- * @author Takahiko Kawasaki
+ * @author Hideki Ikeda
  */
 @Path("/api/device/verification")
 public class DeviceVerificationEndpoint extends BaseDeviceVerificationEndpoint
 {
     /**
-     * {@code "text/html;charset=UTF-8"}
-     */
-    private static final MediaType MEDIA_TYPE_HTML =
-            MediaType.TEXT_HTML_TYPE.withCharset("UTF-8");
-
-
-    /**
-     * The page template to ask the resource owner for authorization.
+     * The page template to ask the resource owner for a user code.
      */
     private static final String TEMPLATE = "/device/verification";
 
 
     /**
-     * The authorization endpoint for {@code GET} method.
-     *
-     * <p>
-     * <a href="http://tools.ietf.org/html/rfc6749#section-3.1">RFC 6749,
-     * 3.1 Authorization Endpoint</a> says that the authorization endpoint
-     * MUST support {@code GET} method.
-     * </p>
-     *
-     * @see <a href="http://tools.ietf.org/html/rfc6749#section-3.1"
-     *      >RFC 6749, 3.1 Authorization Endpoint</a>
+     * The value for {@code WWW-Authenticate} header on 401 Unauthorized.
+     */
+    private static final String CHALLENGE = "Basic realm=\"device/verification\"";
+
+
+    /**
+     * The verification endpoint for {@code GET} method. This method returns a
+     * verification page where the end-user is asked to input her login credentials
+     * (if not authenticated) and a user code.
      */
     @GET
     public Response get(
             @Context HttpServletRequest request,
             @Context UriInfo uriInfo)
     {
-        // TODO: catch exception.
+        // Get user information from the existing session if present.
+        User user = getUserFromSessionIfPresent(request);
 
-        // Get user information from the existing session if possible.
-        // This may be null.
-        User user = getUserFromSessionIfExist(request);
+        // Get the user code from the query parameters if present.
+        String userCode = uriInfo.getQueryParameters().getFirst("user_code");
 
         // The model for rendering the verification page.
-        DeviceVerificationPageModel model = new DeviceVerificationPageModel().setUser(user);
+        DeviceVerificationPageModel model = new DeviceVerificationPageModel()
+            .setUser(user)
+            .setUserCode(userCode);
 
-        // Create a Viewable instance that represents the verification page.
-        Viewable viewable = new Viewable(TEMPLATE, model);
-
-        // Create a response that has the viewable as its content.
-        return Response.ok(viewable, MEDIA_TYPE_HTML).build();
+        // Create a response of "200 OK" having the verification page.
+        return ok(new Viewable(TEMPLATE, model));
     }
 
 
-    private User getUserFromSessionIfExist(HttpServletRequest request)
+    private User getUserFromSessionIfPresent(HttpServletRequest request)
     {
         // Get the existing session.
         HttpSession session = request.getSession(false);
@@ -124,19 +104,8 @@ public class DeviceVerificationEndpoint extends BaseDeviceVerificationEndpoint
 
 
     /**
-     * The authorization endpoint for {@code POST} method.
-     *
-     * <p>
-     * <a href="http://tools.ietf.org/html/rfc6749#section-3.1">RFC 6749,
-     * 3.1 Authorization Endpoint</a> says that the authorization endpoint
-     * MAY support {@code POST} method.
-     * </p>
-     *
-     * <p>
-     * In addition, <a href="http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest"
-     * >OpenID Connect Core 1.0, 3.1.2.1. Authentication Request</a> says
-     * that the authorization endpoint MUST support {@code POST} method.
-     * </p>
+     * The verification endpoint for {@code POST} method. This method receives a
+     * request from the form in the verification page.
      */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -144,21 +113,21 @@ public class DeviceVerificationEndpoint extends BaseDeviceVerificationEndpoint
             @Context HttpServletRequest request,
             MultivaluedMap<String, String> parameters)
     {
-        // Get the existing session or create new one.
+        // Get the existing session or create a new one.
         HttpSession session = request.getSession(true);
 
-        // Get the user.
-        User user = getUser(session, parameters);
+        // Authenticate the user.
+        authenticateUser(session, parameters);
 
         // Get the user code from the parameters.
         String userCode = parameters.getFirst("userCode");
 
         // Handle the verification request.
-        return handle(session, user, userCode);
+        return handle(session, userCode);
     }
 
 
-    private User getUser(HttpSession session, MultivaluedMap<String, String> parameters)
+    private void authenticateUser(HttpSession session, MultivaluedMap<String, String> parameters)
     {
         // Look up the user in the session to see if they're already logged in.
         User sessionUser = (User)session.getAttribute("user");
@@ -166,7 +135,7 @@ public class DeviceVerificationEndpoint extends BaseDeviceVerificationEndpoint
         if (sessionUser != null)
         {
             // OK. The user has been already authenticated.
-            return sessionUser;
+            return;
         }
 
         // The user has not been authenticated yet. Then, check the user credentials
@@ -180,51 +149,39 @@ public class DeviceVerificationEndpoint extends BaseDeviceVerificationEndpoint
         {
             // OK. The user having the credentials was found.
 
-            // Set the information about the user in the session.
+            // Set the login information about the user in the session.
             session.setAttribute("user", loginUser);
+            session.setAttribute("authTime", new Date());
 
-            return loginUser;
+            return;
         }
 
         // Error. The user authentication has failed.
         // Urge the user to input valid login credentials again.
-        throw createExceptionOnUserNotAuthenticated(parameters);
+        onUserAuthenticationFailed(parameters);
     }
 
 
-    private WebApplicationException createExceptionOnUserNotAuthenticated(
-            MultivaluedMap<String, String> parameters)
+    private void onUserAuthenticationFailed(MultivaluedMap<String, String> parameters)
     {
-        // The notification to be shown to the user on the verification page.
-        String notification = "User authentication failed.";
-
         // The model for rendering the verification page.
         DeviceVerificationPageModel model = new DeviceVerificationPageModel()
             .setLoginId(parameters.getFirst("loginId"))
-            .setUserCode(parameters.getFirst("loginId"))
-            .setNotification(notification);
+            .setUserCode(parameters.getFirst("userCode"))
+            .setNotification("User authentication failed.");
 
-        // Create a Viewable instance that represents the verification page.
-        Viewable viewable = new Viewable(TEMPLATE, model);
-
-        // Make a response of "401 Unauthorized".
-        Response response = Response
-                .status(Status.UNAUTHORIZED)
-                .entity(viewable)
-                .type(MEDIA_TYPE_HTML)
-                .build();
-
-        return new WebApplicationException(response);
+        // Throw a "401 Unauthorized" exception and show the verification page.
+        throw new WebApplicationException(
+                unauthorized(new Viewable(TEMPLATE, model), CHALLENGE));
     }
 
 
     /**
      * Handle the device verification request.
      */
-    private Response handle(HttpSession session, User user, String userCode)
+    private Response handle(HttpSession session, String userCode)
     {
-        System.out.println(userCode);
         return handle(AuthleteApiFactory.getDefaultApi(),
-                new DeviceVerificationRequestHandlerSpiImpl(session, user, userCode));
+                new DeviceVerificationRequestHandlerSpiImpl(session, userCode));
     }
 }

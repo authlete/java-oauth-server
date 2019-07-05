@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package com.authlete.jaxrs.server.api.device;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -28,47 +27,21 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.BaseDeviceAuthorizationEndpoint;
-import com.authlete.jaxrs.spi.DeviceAuthorizationRequestHandlerSpi;
 
 
 /**
- * An implementation of OAuth 2.0 authorization endpoint with OpenID Connect support.
+ * An implementation of device authorization endpoint of OAuth 2.0 Device Authorization
+ * Grant (Device Flow).
  *
- * @see <a href="http://tools.ietf.org/html/rfc6749#section-3.1"
- *      >RFC 6749, 3.1. Authorization Endpoint</a>
- *
- * @see <a href="http://openid.net/specs/openid-connect-core-1_0.html#AuthorizationEndpoint"
- *      >OpenID Connect Core 1.0, 3.1.2. Authorization Endpoint (Authorization Code Flow)</a>
- *
- * @see <a href="http://openid.net/specs/openid-connect-core-1_0.html#ImplicitAuthorizationEndpoint"
- *      >OpenID Connect Core 1.0, 3.2.2. Authorization Endpoint (Implicit Flow)</a>
- *
- * @see <a href="http://openid.net/specs/openid-connect-core-1_0.html#HybridAuthorizationEndpoint"
- *      >OpenID Connect Core 1.0, 3.3.2. Authorization Endpoint (Hybrid Flow)</a>
- *
- * @author Takahiko Kawasaki
+ * @author Hideki Ikeda
  */
 @Path("/api/device/authorization")
 public class DeviceAuthorizationEndpoint extends BaseDeviceAuthorizationEndpoint
 {
     /**
-     * The authorization endpoint for {@code POST} method.
-     *
-     * <p>
-     * <a href="http://tools.ietf.org/html/rfc6749#section-3.1">RFC 6749,
-     * 3.1 Authorization Endpoint</a> says that the authorization endpoint
-     * MAY support {@code POST} method.
-     * </p>
-     *
-     * <p>
-     * In addition, <a href="http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest"
-     * >OpenID Connect Core 1.0, 3.1.2.1. Authentication Request</a> says
-     * that the authorization endpoint MUST support {@code POST} method.
-     * </p>
+     * The device authorization endpoint.
      */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -81,6 +54,7 @@ public class DeviceAuthorizationEndpoint extends BaseDeviceAuthorizationEndpoint
 
         // Handle the device authorization request.
         return handle(AuthleteApiFactory.getDefaultApi(),
-                new DeviceAuthorizationRequestHandlerSpiImpl(), parameters, authorization, clientCertificates);
+                new DeviceAuthorizationRequestHandlerSpiImpl(), parameters,
+                authorization, clientCertificates);
     }
 }
