@@ -17,14 +17,13 @@
 package com.authlete.jaxrs.server.api.device;
 
 
-import static com.authlete.jaxrs.server.util.ResponseUtil.badRequest;
+import static com.authlete.jaxrs.server.util.ExceptionUtil.badRequestException;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -84,8 +83,7 @@ public class DeviceCompleteEndpoint extends BaseDeviceCompleteEndpoint
         }
 
         // A session does not exist. Make a response of "400 Bad Request".
-        String message = "A session does not exist.";
-        throw new WebApplicationException(message, badRequest(message));
+        throw badRequestException("A session does not exist.");
     }
 
 
@@ -100,8 +98,7 @@ public class DeviceCompleteEndpoint extends BaseDeviceCompleteEndpoint
         }
 
         // A user code was not found in the session.
-        String message = "A user code was not found in the session. Re-initiate the flow again.";
-        throw new WebApplicationException(message, badRequest(message));
+        throw badRequestException("A user code was not found in the session. Re-initiate the flow again.");
     }
 
 
@@ -120,8 +117,7 @@ public class DeviceCompleteEndpoint extends BaseDeviceCompleteEndpoint
         // Authlete /api/device/complete API with result=TRANSACTION_FAILED ?
 
         // An authenticated user was not found in the session.
-        String message = "An authenticated user was not found in the session. Re-initiate the flow again.";
-        throw new WebApplicationException(message, badRequest(message));
+        throw badRequestException("An authenticated user was not found in the session. Re-initiate the flow again.");
     }
 
 

@@ -17,14 +17,13 @@
 package com.authlete.jaxrs.server.api;
 
 
-import static com.authlete.jaxrs.server.util.ResponseUtil.badRequest;
+import static com.authlete.jaxrs.server.util.ExceptionUtil.badRequestException;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -108,8 +107,7 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         }
 
         // A session does not exist. Make a response of "400 Bad Request".
-        String message = "A session does not exist.";
-        throw new WebApplicationException(message, badRequest(message));
+        throw badRequestException("A session does not exist.");
     }
 
 

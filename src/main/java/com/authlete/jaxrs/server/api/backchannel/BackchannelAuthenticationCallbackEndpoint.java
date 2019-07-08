@@ -17,8 +17,8 @@
 package com.authlete.jaxrs.server.api.backchannel;
 
 
-import static com.authlete.jaxrs.server.util.ResponseUtil.badRequest;
-import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerError;
+import static com.authlete.jaxrs.server.util.ExceptionUtil.badRequestException;
+import static com.authlete.jaxrs.server.util.ExceptionUtil.internalServerErrorException;
 import java.util.Date;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -79,10 +79,7 @@ public class BackchannelAuthenticationCallbackEndpoint
         }
         catch (Throwable t)
         {
-            // Append the message of the cause.
-            String message = "unexpected error: " + t.getMessage();
-
-            throw new WebApplicationException(message, internalServerError(message));
+            throw internalServerErrorException("unexpected error: " + t.getMessage());
         }
     }
 
@@ -219,11 +216,5 @@ public class BackchannelAuthenticationCallbackEndpoint
     {
         // Remove the information for the request ID from the holder.
         AuthInfoHolder.remove(requestId);
-    }
-
-
-    private WebApplicationException badRequestException(String message)
-    {
-        return new WebApplicationException(message, badRequest(message));
     }
 }

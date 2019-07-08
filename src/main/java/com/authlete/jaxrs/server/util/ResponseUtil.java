@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2019 Authlete, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the
+ * License.
+ */
 package com.authlete.jaxrs.server.util;
 
 
@@ -57,6 +73,18 @@ public class ResponseUtil
     public static Response ok(Viewable entity)
     {
         return builderForHtml(Status.OK, entity).build();
+    }
+
+
+    /**
+     * Build a response of "204 No Content".
+     *
+     * @return
+     *         A response of "204 No Content".
+     */
+    public static Response noContent()
+    {
+        return Response.noContent().build();
     }
 
 
@@ -171,7 +199,7 @@ public class ResponseUtil
      */
     public static Response internalServerError(String entity)
     {
-        return builder(Status.INTERNAL_SERVER_ERROR, entity, MEDIA_TYPE_PLAIN).build();
+        return builderForPlain(Status.INTERNAL_SERVER_ERROR, entity).build();
     }
 
 
@@ -190,21 +218,9 @@ public class ResponseUtil
     }
 
 
-    /**
-     * Build a response of "204 No Content".
-     *
-     * @return
-     *         A response of "204 No Content".
-     */
-    public static Response noContent()
+    private static ResponseBuilder builderForPlain(Status status, String entity)
     {
-        return Response.noContent().build();
-    }
-
-
-    private static ResponseBuilder builderForPlain(Status status, String message)
-    {
-        return builder(status, message, MEDIA_TYPE_PLAIN);
+        return builder(status, entity, MEDIA_TYPE_PLAIN);
     }
 
 
