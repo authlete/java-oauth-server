@@ -355,7 +355,8 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
         // 'auth_req_id'.
         int authTimeout = (int)(AUTH_TIMEOUT_RATIO * mExpiresIn);
 
-        // If the computed timeout is shorter than the minimum value of the timeout.
+        // If the computed timeout is shorter than the minimum value allowed by
+        // the authentication device.
         if (authTimeout < AuthenticationDevice.AUTH_TIMEOUT_MIN)
         {
             // In this case, the computed timeout value is too short to perform
@@ -367,11 +368,11 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
                     "The timeout for end-user authentication/authorization on the " +
                     "authentication device was computed based on the duration of " +
                     "the 'auth_req_id' but the computed timeout value is shorter " +
-                    "than the allowed minimum value.");
+                    "than the minimum value allowed by the authentication device.");
         }
 
-        // If the computed timeout value is larger than the maximum value of the
-        // timeout.
+        // If the computed timeout value is larger than the maximum value allowed
+        // by the authentication device.
         if (AuthenticationDevice.AUTH_TIMEOUT_MAX < authTimeout)
         {
             // Use the maximum value.

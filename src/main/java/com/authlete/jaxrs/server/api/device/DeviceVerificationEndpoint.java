@@ -18,7 +18,7 @@ package com.authlete.jaxrs.server.api.device;
 
 
 import static com.authlete.jaxrs.server.util.ResponseUtil.ok;
-import static com.authlete.jaxrs.server.util.ResponseUtil.unauthorized;
+import static com.authlete.jaxrs.server.util.ExceptionUtil.unauthorizedException;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,7 +26,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -158,12 +157,7 @@ public class DeviceVerificationEndpoint extends BaseDeviceVerificationEndpoint
 
         // Error. The user authentication has failed.
         // Urge the user to input valid login credentials again.
-        onUserAuthenticationFailed(parameters);
-    }
 
-
-    private void onUserAuthenticationFailed(MultivaluedMap<String, String> parameters)
-    {
         // The model for rendering the verification page.
         DeviceVerificationPageModel model = new DeviceVerificationPageModel()
             .setLoginId(parameters.getFirst("loginId"))
@@ -171,8 +165,7 @@ public class DeviceVerificationEndpoint extends BaseDeviceVerificationEndpoint
             .setNotification("User authentication failed.");
 
         // Throw a "401 Unauthorized" exception and show the verification page.
-        throw new WebApplicationException(
-                unauthorized(new Viewable(TEMPLATE, model), CHALLENGE));
+        throw unauthorizedException(new Viewable(TEMPLATE, model), CHALLENGE);
     }
 
 
