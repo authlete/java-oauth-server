@@ -19,6 +19,7 @@ package com.authlete.jaxrs.server.api.backchannel;
 
 import java.net.URI;
 import java.util.Date;
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -223,7 +224,7 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
     {
         // A web client to send a notification to the consumption device's notification
         // endpoint.
-        Client webClient = ClientBuilder.newClient();
+        Client webClient = createClient();
 
         try
         {
@@ -271,5 +272,37 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
     public URI getErrorUri()
     {
         return mErrorUri;
+    }
+
+
+    private Client createClient()
+    {
+        // SSLContext's for older TLS versions ("TLSv1" and "TLSv1.1") may not
+        // include any FAPI cipher suites. Here we create an SSLContext with
+        // "TLSv1.2" whose getDefaultSSLParameters().getCipherSuites() probably
+        // includes FAPI cipher suites.
+        SSLContext sc = createSslContext("TLSv1.2");
+
+        return ClientBuilder.newBuilder().sslContext(sc).build();
+    }
+
+
+    private SSLContext createSslContext(String protocol)
+    {
+        try
+        {
+            // Get an SSL context for the protocol.
+            SSLContext sc = SSLContext.getInstance(protocol);
+
+            // Initialize the SSL context.
+            sc.init(null, null, null);
+
+            return sc;
+        }
+        catch (Exception e)
+        {
+            throw internalServerError(
+                    "Failed to get an SSLContext for " + protocol, e);
+        }
     }
 }
