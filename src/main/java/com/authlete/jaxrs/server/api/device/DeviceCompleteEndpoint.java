@@ -83,7 +83,7 @@ public class DeviceCompleteEndpoint extends BaseDeviceCompleteEndpoint
         }
 
         // A session does not exist. Make a response of "400 Bad Request".
-        throw badRequestException("A session does not exist.");
+        throw badRequestException("A session does not exist. Re-initiate the flow again.");
     }
 
 
@@ -104,7 +104,7 @@ public class DeviceCompleteEndpoint extends BaseDeviceCompleteEndpoint
 
     private User getUser(HttpSession session)
     {
-        // Look up the user in the session to see if they're already logged in.
+        // Look up the user in the session to see if the user is already logged in.
         User sessionUser = (User)session.getAttribute("user");
 
         if (sessionUser != null)
@@ -114,7 +114,7 @@ public class DeviceCompleteEndpoint extends BaseDeviceCompleteEndpoint
         }
 
         // TODO: In this case, should we invalidate the user code here by calling
-        // Authlete /api/device/complete API with result=TRANSACTION_FAILED ?
+        // Authlete /api/device/complete API with result='TRANSACTION_FAILED'?
 
         // An authenticated user was not found in the session.
         throw badRequestException("An authenticated user was not found in the session. Re-initiate the flow again.");

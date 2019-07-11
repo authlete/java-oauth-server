@@ -49,7 +49,7 @@ import com.authlete.jaxrs.server.db.UserDao;
 public class DeviceVerificationEndpoint extends BaseDeviceVerificationEndpoint
 {
     /**
-     * The page template to ask the resource owner for a user code.
+     * The page template to ask the end-user for a user code.
      */
     private static final String TEMPLATE = "/device/verification";
 

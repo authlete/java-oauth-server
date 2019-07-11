@@ -19,6 +19,7 @@ package com.authlete.jaxrs.server.api.backchannel;
 
 import static com.authlete.jaxrs.server.util.ExceptionUtil.badRequestException;
 import static com.authlete.jaxrs.server.util.ExceptionUtil.internalServerErrorException;
+import static com.authlete.jaxrs.server.util.ResponseUtil.noContent;
 import java.util.Date;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -116,7 +117,7 @@ public class BackchannelAuthenticationCallbackEndpoint
         removeAuthInfo(requestId);
 
         // 204 No Content.
-        return Response.status(Status.NO_CONTENT).build();
+        return noContent();
     }
 
 
