@@ -57,7 +57,7 @@ public class ResponseUtil
      */
     public static Response ok(String entity)
     {
-        return builderForPlain(Status.OK, entity).build();
+        return builderForTextPlain(Status.OK, entity).build();
     }
 
 
@@ -72,7 +72,7 @@ public class ResponseUtil
      */
     public static Response ok(Viewable entity)
     {
-        return builderForHtml(Status.OK, entity).build();
+        return builderForTextHtml(Status.OK, entity).build();
     }
 
 
@@ -99,7 +99,7 @@ public class ResponseUtil
      */
     public static Response badRequest(String entity)
     {
-        return builderForPlain(Status.BAD_REQUEST, entity).build();
+        return builderForTextPlain(Status.BAD_REQUEST, entity).build();
     }
 
 
@@ -114,7 +114,7 @@ public class ResponseUtil
      */
     public static Response badRequest(Viewable entity)
     {
-        return builderForHtml(Status.BAD_REQUEST, entity).build();
+        return builderForTextHtml(Status.BAD_REQUEST, entity).build();
     }
 
 
@@ -132,7 +132,7 @@ public class ResponseUtil
      */
     public static Response unauthorized(String entity, String challenge)
     {
-        return builderForPlain(Status.UNAUTHORIZED, entity)
+        return builderForTextPlain(Status.UNAUTHORIZED, entity)
                 .header(HttpHeaders.WWW_AUTHENTICATE, challenge)
                 .build();
     }
@@ -152,7 +152,7 @@ public class ResponseUtil
      */
     public static Response unauthorized(Viewable entity, String challenge)
     {
-        return builderForHtml(Status.UNAUTHORIZED, entity)
+        return builderForTextHtml(Status.UNAUTHORIZED, entity)
                 .header(HttpHeaders.WWW_AUTHENTICATE, challenge)
                 .build();
     }
@@ -169,7 +169,7 @@ public class ResponseUtil
      */
     public static Response notFound(String entity)
     {
-        return builderForPlain(Status.NOT_FOUND, entity).build();
+        return builderForTextPlain(Status.NOT_FOUND, entity).build();
     }
 
 
@@ -184,7 +184,7 @@ public class ResponseUtil
      */
     public static Response notFound(Viewable entity)
     {
-        return builderForHtml(Status.NOT_FOUND, entity).build();
+        return builderForTextHtml(Status.NOT_FOUND, entity).build();
     }
 
 
@@ -199,7 +199,7 @@ public class ResponseUtil
      */
     public static Response internalServerError(String entity)
     {
-        return builderForPlain(Status.INTERNAL_SERVER_ERROR, entity).build();
+        return builderForTextPlain(Status.INTERNAL_SERVER_ERROR, entity).build();
     }
 
 
@@ -214,17 +214,17 @@ public class ResponseUtil
      */
     public static Response internalServerError(Viewable entity)
     {
-        return builderForHtml(Status.INTERNAL_SERVER_ERROR, entity).build();
+        return builderForTextHtml(Status.INTERNAL_SERVER_ERROR, entity).build();
     }
 
 
-    private static ResponseBuilder builderForPlain(Status status, String entity)
+    private static ResponseBuilder builderForTextPlain(Status status, String entity)
     {
         return builder(status, entity, MEDIA_TYPE_PLAIN);
     }
 
 
-    private static ResponseBuilder builderForHtml(Status status, Viewable entity)
+    private static ResponseBuilder builderForTextHtml(Status status, Viewable entity)
     {
         return builder(status, entity, MEDIA_TYPE_HTML);
     }

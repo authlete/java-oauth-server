@@ -50,52 +50,6 @@ h3, h4 {
   padding: 0 20px 20px;
 }
 
-#logo {
-  width: 150px;
-  height: 150px;
-  background: lightgray;
-  margin: 0 20px 10px 5px;
-  float: left;
-}
-
-#client-summary {
-  float: left;
-}
-
-#client-link-list {
-  margin: 0;
-  padding: 0;
-}
-
-#client-link-list li {
-  list-style-type: none;
-}
-
-#client-link-list a {
-  position: relative;
-  padding-left: 25px;
-  text-decoration: none;
-  color: cadetblue;
-}
-
-#client-link-list a:hover {
-  text-decoration: underline;
-}
-
-#client-link-list a:before {
-  display: block;
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 0;
-  margin: -5px 0 0 0;
-  border-top: 12px solid cadetblue;
-  border-left: 12px solid transparent;
-  -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
-}
-
 #scope-list {
   margin-left: 20px;
 }
@@ -110,30 +64,6 @@ h3, h4 {
 
 input {
   color: black;
-}
-
-#login-fields {
-  margin-bottom: 20px;
-}
-
-#login-prompt {
-  font-size: 85%;
-  margin-bottom: 5px;
-}
-
-#loginId {
-  display: block;
-  border: 1px solid #666;
-  border-bottom: none;
-  padding: 0.3em 0.5em;
-  width: 300px;
-}
-
-#password {
-  display: block;
-  border: 1px solid #666;
-  padding: 0.3em 0.5em;
-  width: 300px;
 }
 
 #authorization-form-buttons {

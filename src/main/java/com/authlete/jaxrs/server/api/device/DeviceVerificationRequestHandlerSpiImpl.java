@@ -39,13 +39,13 @@ import com.authlete.jaxrs.spi.DeviceVerificationRequestHandlerSpiAdapter;
 public class DeviceVerificationRequestHandlerSpiImpl extends DeviceVerificationRequestHandlerSpiAdapter
 {
     /**
-     * The page template to ask the resource owner for authorization.
+     * The page template to ask the end-user for a user code.
      */
     private static final String VERIFICATION_PAGE_TEMPLATE = "/device/verification";
 
 
     /**
-     * The page template to ask the resource owner for authorization.
+     * The page template to ask the end-user for authorization.
      */
     private static final String AUTHORIZATION_PAGE_TEMPLATE = "/device/authorization";
 
