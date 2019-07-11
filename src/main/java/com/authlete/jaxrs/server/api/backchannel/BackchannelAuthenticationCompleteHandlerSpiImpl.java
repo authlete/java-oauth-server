@@ -21,7 +21,6 @@ import static com.authlete.jaxrs.server.util.ExceptionUtil.internalServerErrorEx
 import javax.net.ssl.SSLContext;
 import java.net.URI;
 import java.util.Date;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -287,8 +286,8 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
         }
         catch (Exception e)
         {
-            throw internalServerError(
-                    "Failed to get an SSLContext for " + protocol, e);
+            throw internalServerErrorException(
+                    "Failed to get an SSLContext for " + protocol + ": " + e.getMessage());
         }
     }
 }
