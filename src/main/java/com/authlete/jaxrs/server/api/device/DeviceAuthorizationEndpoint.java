@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the
  * License.
  */
-package com.authlete.jaxrs.server.api.backchannel;
+package com.authlete.jaxrs.server.api.device;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,20 +28,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApiFactory;
-import com.authlete.jaxrs.BaseBackchannelAuthenticationEndpoint;
+import com.authlete.jaxrs.BaseDeviceAuthorizationEndpoint;
 
 
 /**
- *  An implementation of backchannel authentication endpoint of CIBA (Client Initiated
- *  Backchannel Authentication).
+ * An implementation of device authorization endpoint of OAuth 2.0 Device Authorization
+ * Grant (Device Flow).
  *
  * @author Hideki Ikeda
  */
-@Path("/api/backchannel/authentication")
-public class BackchannelAuthenticationEndpoint extends BaseBackchannelAuthenticationEndpoint
+@Path("/api/device/authorization")
+public class DeviceAuthorizationEndpoint extends BaseDeviceAuthorizationEndpoint
 {
     /**
-     * The backchannel authentication endpoint.
+     * The device authorization endpoint.
      */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -52,9 +52,8 @@ public class BackchannelAuthenticationEndpoint extends BaseBackchannelAuthentica
     {
         String[] clientCertificates = extractClientCertificateChain(request);
 
-        // Handle the backchannel authentication request.
-        return handle(AuthleteApiFactory.getDefaultApi(),
-                new BackchannelAuthenticationRequestHandlerSpiImpl(), parameters,
-                authorization, clientCertificates);
+        // Handle the device authorization request.
+        return handle(AuthleteApiFactory.getDefaultApi(), parameters, authorization,
+                clientCertificates);
     }
 }

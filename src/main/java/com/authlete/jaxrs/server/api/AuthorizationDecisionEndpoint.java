@@ -17,18 +17,17 @@
 package com.authlete.jaxrs.server.api;
 
 
+import static com.authlete.jaxrs.server.util.ExceptionUtil.badRequestException;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.BaseAuthorizationDecisionEndpoint;
@@ -108,15 +107,7 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         }
 
         // A session does not exist. Make a response of "400 Bad Request".
-        String message = "A session does not exist.";
-
-        Response response = Response
-                .status(Status.BAD_REQUEST)
-                .entity(message)
-                .type(MediaType.TEXT_PLAIN)
-                .build();
-
-        throw new WebApplicationException(message, response);
+        throw badRequestException("A session does not exist.");
     }
 
 
@@ -144,22 +135,5 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         }
 
         return loginUser;
-    }
-
-
-    /**
-     * Get the value of an attribute from the given session and
-     * remove the attribute from the session after the retrieval.
-     */
-    private Object takeAttribute(HttpSession session, String key)
-    {
-        // Retrieve the value from the session.
-        Object value = session.getAttribute(key);
-
-        // Remove the attribute from the session.
-        session.removeAttribute(key);
-
-        // Return the value of the attribute.
-        return value;
     }
 }

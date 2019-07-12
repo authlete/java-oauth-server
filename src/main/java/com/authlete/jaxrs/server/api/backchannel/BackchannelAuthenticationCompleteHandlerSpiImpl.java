@@ -17,15 +17,14 @@
 package com.authlete.jaxrs.server.api.backchannel;
 
 
+import static com.authlete.jaxrs.server.util.ExceptionUtil.internalServerErrorException;
+import javax.net.ssl.SSLContext;
 import java.net.URI;
 import java.util.Date;
-import javax.net.ssl.SSLContext;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import com.authlete.common.dto.BackchannelAuthenticationCompleteRequest.Result;
@@ -236,28 +235,14 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
         catch (Throwable t)
         {
             // Failed to send the notification to the consumption device.
-            throw internalServerError("Failed to send the notification to the consumption device", t);
+            throw internalServerErrorException(
+                    t.getMessage() + ": Failed to send the notification to the consumption device");
         }
         finally
         {
             // Close the web client.
             webClient.close();
         }
-    }
-
-
-    private WebApplicationException internalServerError(String message, Throwable cause)
-    {
-        // Append the message of the cause.
-        message += ": " + cause.getMessage();
-
-        Response response = Response
-                .status(Status.INTERNAL_SERVER_ERROR)
-                .entity(message)
-                .type(MediaType.TEXT_PLAIN)
-                .build();
-
-        return new WebApplicationException(message, response);
     }
 
 
@@ -301,8 +286,8 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
         }
         catch (Exception e)
         {
-            throw internalServerError(
-                    "Failed to get an SSLContext for " + protocol, e);
+            throw internalServerErrorException(
+                    "Failed to get an SSLContext for " + protocol + ": " + e.getMessage());
         }
     }
 }
