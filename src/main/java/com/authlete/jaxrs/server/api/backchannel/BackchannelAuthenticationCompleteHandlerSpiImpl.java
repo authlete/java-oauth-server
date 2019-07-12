@@ -18,9 +18,9 @@ package com.authlete.jaxrs.server.api.backchannel;
 
 
 import static com.authlete.jaxrs.server.util.ExceptionUtil.internalServerErrorException;
-import javax.net.ssl.SSLContext;
 import java.net.URI;
 import java.util.Date;
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
