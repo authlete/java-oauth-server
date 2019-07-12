@@ -53,8 +53,7 @@ public class DeviceAuthorizationEndpoint extends BaseDeviceAuthorizationEndpoint
         String[] clientCertificates = extractClientCertificateChain(request);
 
         // Handle the device authorization request.
-        return handle(AuthleteApiFactory.getDefaultApi(),
-                new DeviceAuthorizationRequestHandlerSpiImpl(), parameters,
-                authorization, clientCertificates);
+        return handle(AuthleteApiFactory.getDefaultApi(), parameters, authorization,
+                clientCertificates);
     }
 }
