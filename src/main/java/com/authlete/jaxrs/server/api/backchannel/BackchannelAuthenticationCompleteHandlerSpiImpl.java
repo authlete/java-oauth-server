@@ -27,6 +27,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import org.glassfish.jersey.client.ClientProperties;
 import com.authlete.common.dto.BackchannelAuthenticationCompleteRequest.Result;
 import com.authlete.common.dto.BackchannelAuthenticationCompleteResponse;
 import com.authlete.common.types.User;
@@ -229,6 +230,8 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
         {
             // Send the notification to the consumption device..
             return webClient.target(clientNotificationEndpointUri).request()
+                    // CIBA Core says "The OP MUST NOT follow redirects."
+                    .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE)
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + notificationToken)
                     .post(Entity.json(notificationContent));
         }
