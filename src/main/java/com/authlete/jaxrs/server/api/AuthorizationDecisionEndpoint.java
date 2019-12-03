@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.common.dto.Client;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.BaseAuthorizationDecisionEndpoint;
 import com.authlete.jaxrs.server.db.UserDao;
@@ -82,11 +83,12 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         String[] acrs          = (String[])takeAttribute(session, "acrs");
         User user              = getUser(session, parameters);
         Date authTime          = (Date)session.getAttribute("authTime");
+        Client client          = (Client)  takeAttribute(session, "client");
 
         // Handle the end-user's decision.
         return handle(AuthleteApiFactory.getDefaultApi(),
                 new AuthorizationDecisionHandlerSpiImpl(
-                        parameters, user, authTime, idTokenClaims, acrs),
+                        parameters, user, authTime, idTokenClaims, acrs, client),
                 ticket, claimNames, claimLocales);
     }
 

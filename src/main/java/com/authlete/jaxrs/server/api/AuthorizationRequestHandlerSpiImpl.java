@@ -26,7 +26,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.server.mvc.Viewable;
 import com.authlete.common.dto.AuthorizationResponse;
+import com.authlete.common.dto.Client;
 import com.authlete.common.types.Prompt;
+import com.authlete.common.types.SubjectType;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.AuthorizationPageModel;
 import com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter;
@@ -73,6 +75,12 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
 
 
     /**
+     * Client associated with the authorization request. (Filled in during authorization response.)
+     */
+    private Client mClient;
+
+
+    /**
      * Constructor with an authorization request to the authorization endpoint.
      */
     public AuthorizationRequestHandlerSpiImpl(HttpServletRequest request)
@@ -94,6 +102,9 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         session.setAttribute("claimLocales",  info.getClaimsLocales());
         session.setAttribute("idTokenClaims", info.getIdTokenClaims());
         session.setAttribute("acrs",          info.getAcrs());
+        session.setAttribute("client",        info.getClient());
+
+        mClient = info.getClient(); // update the client in case we need it with a no-interaction response
 
         // Clear the current user information in the session if necessary.
         clearCurrentUserInfoInSessionIfNecessary(info, session);
@@ -231,5 +242,24 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
     {
         session.removeAttribute("user");
         session.removeAttribute("authTime");
+    }
+
+
+    @Override
+    public String getPairwiseUserSubject()
+    {
+        if (mClient != null &&
+                mClient.getSubjectType().equals(SubjectType.PAIRWISE))
+        {
+            // it's a pairwise subject, calculate it here
+
+            String sectorIdentifier = mClient.getDerivedSectorIdentifier();
+
+            return mClient.getSubjectType().name() + "-" + sectorIdentifier + "-" + getUserSubject();
+        }
+        else
+        {
+            return null;
+        }
     }
 }
