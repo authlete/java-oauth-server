@@ -246,7 +246,7 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
 
 
     @Override
-    public String getPairwiseUserSubject()
+    public String getSub()
     {
         if (mClient != null &&
                 mClient.getSubjectType().equals(SubjectType.PAIRWISE))

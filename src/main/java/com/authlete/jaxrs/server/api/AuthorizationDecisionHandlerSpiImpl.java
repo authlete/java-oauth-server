@@ -329,7 +329,7 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
 
 
     @Override
-    public String getPairwiseUserSubject()
+    public String getSub()
     {
         if (mClient.getSubjectType().equals(SubjectType.PAIRWISE))
         {
