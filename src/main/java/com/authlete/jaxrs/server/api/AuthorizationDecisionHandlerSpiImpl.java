@@ -20,7 +20,9 @@ package com.authlete.jaxrs.server.api;
 import java.util.Date;
 import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
+import com.authlete.common.dto.Client;
 import com.authlete.common.dto.Property;
+import com.authlete.common.types.SubjectType;
 import com.authlete.common.types.User;
 import com.authlete.common.util.Utils;
 import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpiAdapter;
@@ -80,6 +82,12 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
 
 
     /**
+     * Client associated with the request.
+     */
+    private Client mClient;
+
+
+    /**
      * Constructor with a request from the form in the authorization page.
      *
      * <p>
@@ -89,7 +97,7 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
      */
     public AuthorizationDecisionHandlerSpiImpl(
             MultivaluedMap<String, String> parameters, User user,
-            Date userAuthenticatedAt, String idTokenClaims, String[] acrs)
+            Date userAuthenticatedAt, String idTokenClaims, String[] acrs, Client client)
     {
         // If the end-user clicked the "Authorize" button, "authorized"
         // is contained in the request.
@@ -131,6 +139,9 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
 
         // The requested ACRs.
         mAcrs = acrs;
+
+        // The client associated with the request.
+        mClient = client;
     }
 
 
@@ -314,5 +325,23 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
 
         // Found the entry for the claim.
         return (Map<String, Object>)entry;
+    }
+
+
+    @Override
+    public String getSub()
+    {
+        if (mClient.getSubjectType() == SubjectType.PAIRWISE)
+        {
+            // it's a pairwise subject, calculate it here
+
+            String sectorIdentifier = mClient.getDerivedSectorIdentifier();
+
+            return mClient.getSubjectType().name() + "-" + sectorIdentifier + "-" + mUserSubject;
+        }
+        else
+        {
+            return null;
+        }
     }
 }
