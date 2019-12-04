@@ -331,7 +331,7 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
     @Override
     public String getSub()
     {
-        if (mClient.getSubjectType().equals(SubjectType.PAIRWISE))
+        if (mClient.getSubjectType() == SubjectType.PAIRWISE)
         {
             // it's a pairwise subject, calculate it here
 

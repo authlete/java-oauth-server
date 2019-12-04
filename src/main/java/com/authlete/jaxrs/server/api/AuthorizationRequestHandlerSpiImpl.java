@@ -249,7 +249,7 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
     public String getSub()
     {
         if (mClient != null &&
-                mClient.getSubjectType().equals(SubjectType.PAIRWISE))
+                mClient.getSubjectType() == SubjectType.PAIRWISE)
         {
             // it's a pairwise subject, calculate it here
 
