@@ -1,7 +1,7 @@
 <!doctype html>
 <!--<%
 /*
- * Copyright (C) 2016-2017 Authlete, Inc.
+ * Copyright (C) 2016-2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,6 +72,15 @@
         <dd>${scope.description}</dd>
         </c:forEach>
       </dl>
+    </div>
+    </c:if>
+
+    <c:if test="${model.authorizationDetails != null}">
+    <h4 id="authorization-details">Authorization Details</h4>
+    <div class="indent">
+<pre>
+${model.authorizationDetails}
+</pre>
     </div>
     </c:if>
 
