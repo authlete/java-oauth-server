@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2018 Authlete, Inc.
+ * Copyright (C) 2016-2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,14 @@ package com.authlete.jaxrs.server.api;
 import java.util.Date;
 import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
+import com.authlete.common.assurance.VerifiedClaims;
+import com.authlete.common.assurance.constraint.VerifiedClaimsConstraint;
 import com.authlete.common.dto.Client;
 import com.authlete.common.dto.Property;
 import com.authlete.common.types.SubjectType;
 import com.authlete.common.types.User;
 import com.authlete.common.util.Utils;
+import com.authlete.jaxrs.server.db.VerifiedClaimsDao;
 import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpiAdapter;
 
 
@@ -343,5 +346,12 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
         {
             return null;
         }
+    }
+
+
+    @Override
+    public VerifiedClaims getVerifiedClaims(String subject, VerifiedClaimsConstraint constraint)
+    {
+        return VerifiedClaimsDao.get(subject, constraint);
     }
 }

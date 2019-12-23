@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2018 Authlete, Inc.
+ * Copyright (C) 2016-2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,10 @@ import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.dto.Client;
 import com.authlete.common.types.User;
+import com.authlete.jaxrs.AuthorizationDecisionHandler.Params;
 import com.authlete.jaxrs.BaseAuthorizationDecisionEndpoint;
 import com.authlete.jaxrs.server.db.UserDao;
+import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpi;
 
 
 /**
@@ -76,20 +78,19 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
 
         // Retrieve some variables from the session. See the implementation
         // of AuthorizationRequestHandlerSpiImpl.getAuthorizationPage().
-        String   ticket        = (String)  takeAttribute(session, "ticket");
-        String[] claimNames    = (String[])takeAttribute(session, "claimNames");
-        String[] claimLocales  = (String[])takeAttribute(session, "claimLocales");
-        String   idTokenClaims = (String)  takeAttribute(session, "idTokenClaims");
-        String[] acrs          = (String[])takeAttribute(session, "acrs");
-        User user              = getUser(session, parameters);
-        Date authTime          = (Date)session.getAttribute("authTime");
-        Client client          = (Client)  takeAttribute(session, "client");
+        Params params = (Params)  takeAttribute(session, "params");
+        String[] acrs = (String[])takeAttribute(session, "acrs");
+        Client client = (Client)  takeAttribute(session, "client");
+        User user     = getUser(session, parameters);
+        Date authTime = (Date)session.getAttribute("authTime");
+
+        // Implementation of AuthorizationDecisionHandlerSpi.
+        AuthorizationDecisionHandlerSpi spi =
+            new AuthorizationDecisionHandlerSpiImpl(
+                parameters, user, authTime, params.getIdTokenClaims(), acrs, client);
 
         // Handle the end-user's decision.
-        return handle(AuthleteApiFactory.getDefaultApi(),
-                new AuthorizationDecisionHandlerSpiImpl(
-                        parameters, user, authTime, idTokenClaims, acrs, client),
-                ticket, claimNames, claimLocales);
+        return handle(AuthleteApiFactory.getDefaultApi(), spi, params);
     }
 
 

@@ -75,6 +75,70 @@
     </div>
     </c:if>
 
+    <c:if test="${model.identityAssuranceRequired}">
+    <h4 id="identity-assurance">Identity Assurance</h4>
+    <div class="indent">
+      <c:if test="${model.purpose != null}">
+      <h5>Purpose</h5>
+      <div class="indent">
+        <p>${model.purpose}</p>
+      </div>
+      </c:if>
+      <c:if test="${model.allVerifiedClaimsForIdTokenRequested || model.verifiedClaimsForIdToken != null}">
+      <h5>Verified claims requested for ID token</h5>
+      <div class="indent">
+        <c:if test="${model.allVerifiedClaimsForIdTokenRequested}">
+        All
+        </c:if>
+        <c:if test="${model.verifiedClaimsForIdToken != null}">
+        <table border="1" cellpadding="5" style="border-collapse: collapse;"class="verified-claims">
+          <thead>
+            <tr bgcolor="orange">
+              <th>claim</th>
+              <th>purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <c:forEach var="pair" items="${model.verifiedClaimsForIdToken}">
+            <tr>
+              <td>${pair.key}</td>
+              <td>${pair.value}</td>
+            </tr>
+            </c:forEach>
+          </tbody>
+        </table>
+        </c:if>
+      </div>
+      </c:if>
+      <c:if test="${model.allVerifiedClaimsForUserInfoRequested || model.verifiedClaimsForUserInfo != null}">
+      <h5>Verified claims requested for userinfo</h5>
+      <div class="indent">
+        <c:if test="${model.allVerifiedClaimsForUserInfoRequested}">
+        All
+        </c:if>
+        <c:if test="${model.verifiedClaimsForUserInfo != null}">
+        <table border="1" cellpadding="5" style="border-collapse: collapse;">
+          <thead>
+            <tr bgcolor="orange">
+              <th>claim</th>
+              <th>purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <c:forEach var="pair" items="${model.verifiedClaimsForUserInfo}">
+            <tr>
+              <td>${pair.key}</td>
+              <td>${pair.value}</td>
+            </tr>
+            </c:forEach>
+          </tbody>
+        </table>
+        </c:if>
+      </div>
+      </c:if>
+    </div>
+    </c:if>
+
     <c:if test="${model.authorizationDetails != null}">
     <h4 id="authorization-details">Authorization Details</h4>
     <div class="indent">

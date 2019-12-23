@@ -141,8 +141,13 @@ ID で置き換えてください。 クライアントアプリケーション�
 |:-----------:|:----------:|
 |     john    |    john    |
 |     jane    |    jane    |
+|     max     |    max     |
 
 もちろんこれらのログイン情報はダミーデータですので、ユーザーデータベースの実装をあなたの実装で置き換える必要があります。
+
+[OpenID Connect for Identity Assurance 1.0][IA10] をテストするためには `max`
+を使用してください。他のユーザーアカウント (`john` と `jane`) 用の verified claims
+はダミーデータベース内に存在しません。
 
 
 カスタマイズ
@@ -255,3 +260,4 @@ Authlete はユーザーアカウントを管理しないので、基本的に�
 [42]: https://maven.apache.org/
 [43]: http://tools.ietf.org/html/rfc7591
 [44]: http://tools.ietf.org/html/rfc7592
+[IA10]: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html

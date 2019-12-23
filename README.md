@@ -142,9 +142,14 @@ one of the following as login credentials.
 |:--------:|:--------:|
 |   john   |   john   |
 |   jane   |   jane   |
+|   max    |   max    |
 
 Of course, these login credentials are dummy data, so you need to replace
 the user database implementation with your own.
+
+Use `max` in order to test [OpenID Connect for Identity Assurance 1.0][IA10].
+Verified claims for other user accounts (`john` and `jane`) don't exist in the
+dummy database.
 
 
 Customization
@@ -259,3 +264,4 @@ Contact
 [42]: https://maven.apache.org/
 [43]: http://tools.ietf.org/html/rfc7591
 [44]: http://tools.ietf.org/html/rfc7592
+[IA10]: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html

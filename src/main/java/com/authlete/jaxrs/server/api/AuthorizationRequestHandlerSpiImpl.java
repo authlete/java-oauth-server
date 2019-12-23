@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2018 Authlete, Inc.
+ * Copyright (C) 2016-2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import com.authlete.common.dto.Client;
 import com.authlete.common.types.Prompt;
 import com.authlete.common.types.SubjectType;
 import com.authlete.common.types.User;
+import com.authlete.jaxrs.AuthorizationDecisionHandler.Params;
 import com.authlete.jaxrs.AuthorizationPageModel;
 import com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter;
 
@@ -97,12 +98,9 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
 
         // Store some variables into the session so that they can be
         // referred to later in AuthorizationDecisionEndpoint.
-        session.setAttribute("ticket",        info.getTicket());
-        session.setAttribute("claimNames",    info.getClaims());
-        session.setAttribute("claimLocales",  info.getClaimsLocales());
-        session.setAttribute("idTokenClaims", info.getIdTokenClaims());
-        session.setAttribute("acrs",          info.getAcrs());
-        session.setAttribute("client",        info.getClient());
+        session.setAttribute("params", Params.from(info));
+        session.setAttribute("acrs",   info.getAcrs());
+        session.setAttribute("client", info.getClient());
 
         mClient = info.getClient(); // update the client in case we need it with a no-interaction response
 

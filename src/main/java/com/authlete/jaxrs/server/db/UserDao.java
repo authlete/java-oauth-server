@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2016-2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,9 @@ public class UserDao
             new UserEntity("1001", "john", "john", "John Smith", "john@example.com",
                     new Address().setCountry("USA"), "+1 (425) 555-1212", "675325"),
             new UserEntity("1002", "jane", "jane", "Jane Smith", "jane@example.com",
-                    new Address().setCountry("Chile"), "+56 (2) 687 2400", "264209")
+                    new Address().setCountry("Chile"), "+56 (2) 687 2400", "264209"),
+            new UserEntity("1003", "max", "max", "Max Meier", "max@example.com",
+                    new Address().setCountry("Germany"), "+49 (30) 210 94-0", "12344"),
     };
 
 
