@@ -27,7 +27,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.BaseTokenEndpoint;
 
@@ -74,14 +73,19 @@ public class TokenEndpoint extends BaseTokenEndpoint
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response post(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
+            @HeaderParam("DPoP") String dpopHeader,
             MultivaluedMap<String, String> parameters,
             @Context HttpServletRequest request)
     {
         String[] clientCertificates = extractClientCertificateChain(request);
 
+        String htm = "post"; // we're bound to the "POST" method
+        String htu = request.getRequestURL().toString(); // reconstruct the request URL; this breaks behind proxies
+
         // Handle the token request.
         return handle(AuthleteApiFactory.getDefaultApi(),
-                new TokenRequestHandlerSpiImpl(), parameters, authorization, clientCertificates);
+                new TokenRequestHandlerSpiImpl(), parameters, authorization, clientCertificates,
+                dpopHeader, htm, htu);
     }
 
 }
