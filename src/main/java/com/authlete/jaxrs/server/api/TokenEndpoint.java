@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2016-2020 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.BaseTokenEndpoint;
+import com.authlete.jaxrs.TokenRequestHandler.Params;
 
 
 /**
@@ -73,19 +74,55 @@ public class TokenEndpoint extends BaseTokenEndpoint
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response post(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            @HeaderParam("DPoP") String dpopHeader,
+            @HeaderParam("DPoP") String dpop,
             MultivaluedMap<String, String> parameters,
             @Context HttpServletRequest request)
     {
-        String[] clientCertificates = extractClientCertificateChain(request);
-
-        String htm = "post"; // we're bound to the "POST" method
-        String htu = request.getRequestURL().toString(); // reconstruct the request URL; this breaks behind proxies
+        Params params = buildParams(request, parameters, authorization, dpop);
 
         // Handle the token request.
         return handle(AuthleteApiFactory.getDefaultApi(),
-                new TokenRequestHandlerSpiImpl(), parameters, authorization, clientCertificates,
-                dpopHeader, htm, htu);
+                new TokenRequestHandlerSpiImpl(), params);
     }
 
+
+    private Params buildParams(
+            HttpServletRequest request, MultivaluedMap<String, String> parameters,
+            String authorization, String dpop)
+    {
+        Params params = new Params();
+
+        // RFC 6749
+        // The OAuth 2.0 Authorization Framework
+        params.setParameters(parameters)
+              .setAuthorization(authorization)
+              ;
+
+        // MTLS
+        // RFC 8705 : OAuth 2.0 Mutual-TLS Client Authentication and Certificate-Bound Access Tokens
+        params.setClientCertificatePath(extractClientCertificateChain(request));
+
+        // DPoP
+        // OAuth 2.0 Demonstration of Proof-of-Possession at the Application Layer (DPoP)
+        params.setDpop(dpop)
+              .setHtm("POST")
+              //.setHtu(request.getRequestURL().toString())
+              ;
+
+        // We can reconstruct the URL of the token endpoint by calling
+        // request.getRequestURL().toString() and set it to params by the
+        // setHtu(String) method. However, the calculated URL may be invalid
+        // behind proxies.
+        //
+        // If "htu" is not set here, the "tokenEndpoint" property of "Service"
+        // (which can be configured by using Authlete's Service Owner Console)
+        // is referred to as the default value. Therefore, we don't call the
+        // setHtu(String) method here intentionally. Note that this means you
+        // have to set "tokenEndpoint" properly to support DPoP.
+
+        // Even the call of the setHtm(String) method can be omitted, too.
+        // When "htm" is not set, "POST" is used as the default value.
+
+        return params;
+    }
 }

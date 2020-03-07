@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Authlete, Inc.
+ * Copyright (C) 2016-2020 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.authlete.jaxrs.server.api;
 
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.MultivaluedMap;
 import com.authlete.common.assurance.VerifiedClaims;
@@ -350,7 +351,7 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
 
 
     @Override
-    public VerifiedClaims getVerifiedClaims(String subject, VerifiedClaimsConstraint constraint)
+    public List<VerifiedClaims> getVerifiedClaims(String subject, VerifiedClaimsConstraint constraint)
     {
         return VerifiedClaimsDao.get(subject, constraint);
     }
