@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Authlete, Inc.
+ * Copyright (C) 2019-2020 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@
 package com.authlete.jaxrs.server.db;
 
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import com.authlete.common.assurance.Claims;
 import com.authlete.common.assurance.Document;
@@ -78,11 +80,13 @@ public class VerifiedClaimsDao
     }
 
 
-    public static VerifiedClaims get(String subject, VerifiedClaimsConstraint constraint)
+    public static List<VerifiedClaims> get(String subject, VerifiedClaimsConstraint constraint)
     {
         // NOTE:
         // Commercial implementations should have complex logic to construct
         // verified claims based on the constraint.
-        return sVerifiedClaimsDB.get(subject);
+        VerifiedClaims vc = sVerifiedClaimsDB.get(subject);
+
+        return Arrays.asList(vc);
     }
 }
