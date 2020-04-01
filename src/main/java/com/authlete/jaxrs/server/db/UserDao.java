@@ -20,6 +20,10 @@ package com.authlete.jaxrs.server.db;
 import com.authlete.common.dto.Address;
 import com.authlete.common.types.User;
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.Date;
+
 
 /**
  * Operations to access the user database.
@@ -32,8 +36,12 @@ public class UserDao
      * Dummy user database.
      */
     private static final UserEntity[] sUserDB = {
-            new UserEntity("1001", "john", "john", "John Smith", "john@example.com",
-                    new Address().setCountry("USA"), "+1 (425) 555-1212", "675325"),
+            new UserEntity("1001", "john", "john", "John Flibble Smith", "john@example.com",
+                    new Address().setCountry("USA Flibble"), "+1 (425) 555-1212", "675325",
+                    "John", "Smith", "Doe", "Johnny",
+                    "https://example.com/john/profile", "https://example.com/john/me.jpg",
+                    "https://example.com/john/", "male", "Europe/London",
+                    "en-US", "john", "0000-03-22", Date.from(LocalDate.parse("2020-01-01").atStartOfDay().toInstant(ZoneOffset.UTC))),
             new UserEntity("1002", "jane", "jane", "Jane Smith", "jane@example.com",
                     new Address().setCountry("Chile"), "+56 (2) 687 2400", "264209"),
             new UserEntity("1003", "max", "max", "Max Meier", "max@example.com",
