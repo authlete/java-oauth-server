@@ -19,15 +19,21 @@ package com.authlete.jaxrs.server.ad;
 
 import static org.glassfish.jersey.client.ClientProperties.CONNECT_TIMEOUT;
 import static org.glassfish.jersey.client.ClientProperties.READ_TIMEOUT;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+
 import org.glassfish.jersey.client.ClientConfig;
+
 import com.authlete.jaxrs.server.ServerConfig;
 import com.authlete.jaxrs.server.ad.dto.AsyncAuthenticationRequest;
 import com.authlete.jaxrs.server.ad.dto.AsyncAuthenticationResponse;
+import com.authlete.jaxrs.server.ad.dto.PollAuthenticationRequest;
 import com.authlete.jaxrs.server.ad.dto.PollAuthenticationResponse;
+import com.authlete.jaxrs.server.ad.dto.PollAuthenticationResultRequest;
+import com.authlete.jaxrs.server.ad.dto.PollAuthenticationResultResponse;
 import com.authlete.jaxrs.server.ad.dto.SyncAuthenticationRequest;
 import com.authlete.jaxrs.server.ad.dto.SyncAuthenticationResponse;
 
@@ -57,10 +63,10 @@ public class AuthenticationDevice
     /**
      * Authlete CIBA authentication simulator API endpoints.
      */
-    private static final String SYNC_AUTHENTICATION_ENDPOINT_PATH        = "/api/authenticate/sync";
-    private static final String ASYNC_AUTHENTICATION_ENDPOINT_PATH       = "/api/authenticate/async";
-    private static final String POLL_AUTHENTICATION_ENDPOINT_PATH        = "/api/authenticate/poll";
-    private static final String POLL_AUTHENTICATION_RESULT_ENDPOINT_PATH = "/api/authenticate/result";
+    private static final String SYNC_ENDPOINT_PATH   = "/api/authenticate/sync";
+    private static final String ASYNC_ENDPOINT_PATH  = "/api/authenticate/async";
+    private static final String POLL_ENDPOINT_PATH   = "/api/authenticate/poll";
+    private static final String POLL_RESULT_ENDPOINT_PATH = "/api/authenticate/result";
 
 
     /**
@@ -74,6 +80,8 @@ public class AuthenticationDevice
     private static final int sAsyncReadTimeout          = ServerConfig.getAuthleteAdAsyncReadTimeout();
     private static final int sPollConnectTimeout        = ServerConfig.getAuthleteAdPollConnectTimeout();
     private static final int sPollReadTimeout           = ServerConfig.getAuthleteAdPollReadTimeout();
+    private static final int sPollResultConnectTimeout  = ServerConfig.getAuthleteAdPollResultConnectTimeout();
+    private static final int sPollResultReadTimeout     = ServerConfig.getAuthleteAdPollResultReadTimeout();
 
 
     private static Client createClient(int readTimeout, int connectTimeout)
@@ -114,7 +122,7 @@ public class AuthenticationDevice
      * @return
      *         A response from the authentication device.
      */
-    public static SyncAuthenticationResponse syncAuth(String subject, String message,
+    public static SyncAuthenticationResponse sync(String subject, String message,
             int authTimeout, String actionizeToken)
     {
         // Determine the read timeout in milliseconds based on the value of the
@@ -133,8 +141,8 @@ public class AuthenticationDevice
             .setTimeout(authTimeout)
             .setActionizeToken(actionizeToken);
 
-        // Send the request as a HTTP POST request.
-        return post(client, SYNC_AUTHENTICATION_ENDPOINT_PATH, request, SyncAuthenticationResponse.class);
+        // Send the request as an HTTP POST request.
+        return post(client, SYNC_ENDPOINT_PATH, request, SyncAuthenticationResponse.class);
     }
 
 
@@ -160,7 +168,7 @@ public class AuthenticationDevice
      * @return
      *         A response from the authentication device simulator.
      */
-    public static AsyncAuthenticationResponse asyncAuth(String subject, String message,
+    public static AsyncAuthenticationResponse async(String subject, String message,
             int authTimeout, String actionizeToken)
     {
         // Create a web client to communicate with the authentication device.
@@ -174,8 +182,8 @@ public class AuthenticationDevice
             .setTimeout(authTimeout)
             .setActionizeToken(actionizeToken);
 
-        // Send the request as a HTTP POST request.
-        return post(client, ASYNC_AUTHENTICATION_ENDPOINT_PATH, request, AsyncAuthenticationResponse.class);
+        // Send the request as an HTTP POST request.
+        return post(client, ASYNC_ENDPOINT_PATH, request, AsyncAuthenticationResponse.class);
     }
 
 
@@ -201,11 +209,47 @@ public class AuthenticationDevice
      * @return
      *         A response from the authentication device simulator.
      */
-    public PollAuthenticationResponse pollAuth(String subject, String message,
+    public static PollAuthenticationResponse poll(String subject, String message,
             int authTimeout, String actionizeToken)
     {
-        // TODO: Implement this.
-        return null;
+        // Create a web client to communicate with the authentication device.
+        Client client = createClient(sPollReadTimeout, sPollConnectTimeout);
+
+        // A request to be sent to the authentication device.
+        PollAuthenticationRequest request = new PollAuthenticationRequest()
+            .setWorkspace(sWorkspace)
+            .setUser(subject)
+            .setMessage(message)
+            .setTimeout(authTimeout)
+            .setActionizeToken(actionizeToken);
+
+        // Send the request as an HTTP POST request.
+        return post(client, POLL_ENDPOINT_PATH, request, PollAuthenticationResponse.class);
+    }
+
+
+    /**
+     * Send a request to the authentication device simulator for fetching the result
+     * of the end-user authentication and authorization in poll mode.
+     *
+     * @param requestId
+     *         A request ID that was returned from the authentication simlator's
+     *         poll result endpoint ({@code /api/authenticate/result}).
+     *
+     * @return
+     *         A response from the authentication device simulator.
+     */
+    public static PollAuthenticationResultResponse pollResult(String requestId)
+    {
+        // Create a web client to communicate with the authentication device.
+        Client client = createClient(sPollResultReadTimeout, sPollResultConnectTimeout);
+
+        // A request to be sent to the authentication device.
+        PollAuthenticationResultRequest request = new PollAuthenticationResultRequest()
+            .setRequestId(requestId);
+
+        // Send the request as an HTTP POST request.
+        return post(client, POLL_RESULT_ENDPOINT_PATH, request, PollAuthenticationResultResponse.class);
     }
 
 
@@ -215,15 +259,11 @@ public class AuthenticationDevice
         try
         {
             // Send the request to the authentication device as a HTTP Post request.
-            Response response = client
+            return client
                 .target(sBaseUrl)
                 .path(path)
                 .request()
-                .post(Entity.json(request));
-
-            // Read the message entity as an instance of the specified response
-            // class.
-            return response.readEntity(responseClass);
+                .post(Entity.json(request), responseClass);
         }
         finally
         {

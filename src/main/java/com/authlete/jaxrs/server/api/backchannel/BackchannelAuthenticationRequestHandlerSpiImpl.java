@@ -207,7 +207,7 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
         //
         // For example, in synchronous mode, the authorization server ask the AD
         // to authenticate the user and get authorization from the user by sending
-        // a HTTP request and wait to get the HTTP response that contains a authentication
+        // a HTTP request and wait to get the HTTP response that contains an authentication
         // and authorization result. These are processed by SyncAuthenticationDeviceProcessor.
         // We also have other types of processors for other modes. For more details,
         // see 'com.authlete.jaxrs.server.api.backchannel.XxxProcessor'.

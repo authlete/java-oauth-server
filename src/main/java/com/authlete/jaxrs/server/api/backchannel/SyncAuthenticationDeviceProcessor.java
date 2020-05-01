@@ -82,7 +82,7 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
         {
             // Perform the end-user authentication and authorization by communicating
             // with the authentication device in the sync mode.
-            response = AuthenticationDevice.syncAuth(mUser.getSubject(), buildMessage(),
+            response = AuthenticationDevice.sync(mUser.getSubject(), buildMessage(),
                     computeAuthTimeout(), mAuthReqId);
         }
         catch (Throwable t)
