@@ -62,7 +62,7 @@ public class PollAuthenticationResultResponse implements Serializable
      * @param status
      *         The status of end-user authentication and authorization.
      */
-    public PollAuthenticationResultResponse setAuthenticationStatus(Status status)
+    public PollAuthenticationResultResponse setStatus(Status status)
     {
         this.status = status;
 
@@ -93,7 +93,7 @@ public class PollAuthenticationResultResponse implements Serializable
      * @return
      *         {@code this} object.
      */
-    public PollAuthenticationResultResponse setAuthenticationResult(Result result)
+    public PollAuthenticationResultResponse setResult(Result result)
     {
         this.result = result;
 

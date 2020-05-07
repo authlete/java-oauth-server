@@ -20,6 +20,7 @@ package com.authlete.jaxrs.server.api.backchannel;
 import java.util.Date;
 import com.authlete.common.dto.Scope;
 import com.authlete.common.types.User;
+import com.authlete.jaxrs.server.ServerConfig;
 import com.authlete.jaxrs.server.ad.AuthenticationDevice;
 import com.authlete.jaxrs.server.ad.dto.PollAuthenticationResponse;
 import com.authlete.jaxrs.server.ad.dto.PollAuthenticationResultResponse;
@@ -40,6 +41,19 @@ import com.authlete.jaxrs.server.ad.dto.PollAuthenticationResultResponse;
  */
 public class PollAuthenticationDeviceProcessor extends BaseAuthenticationDeviceProcessor
 {
+    /**
+     * The maximum number of polling trials.
+     */
+    int POLL_MAX_COUNT = ServerConfig.getAuthleteAdPollMaxCount();
+
+
+    /**
+     * The period of time in milliseconds for which this authorization server waits
+     * between polling trials.
+     */
+    int POLL_INTERVAL  = ServerConfig.getAuthleteAdPollInterval();
+
+
     /**
      * Construct a processor that communicates with the authentication device
      * simulator for end-user authentication and authorization in poll mode.
@@ -128,18 +142,15 @@ public class PollAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
 
         // Start polling to the authentication device to fetch the result of the
         // end-user authentication and authorization.
-        pollResult(requestId);
+        poll(requestId);
     }
 
 
-    private void pollResult(String requestId)
+    private void poll(String requestId)
     {
-        int pollCountMax = 10;
-        int pollInterval = 5000;
-
         PollAuthenticationResultResponse response = null;
 
-        for (int count = 1; count <= pollCountMax; count++)
+        for (int count = 1; count <= POLL_MAX_COUNT; count++)
         {
             try
             {
@@ -151,7 +162,7 @@ public class PollAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
             {
                 // Failed to fetch the result.
                 completeWithTransactionFailed(
-                        "Failed to fetch the result of the end-user authentication"
+                        "Failed to fetch the result of the end-user authentication "
                       + "and authorization from the authentication device");
                 return;
             }
@@ -176,25 +187,26 @@ public class PollAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
                 // been done yet.
                 //
                 case active:
-                    if (count == pollCountMax)
+                    if (count == POLL_MAX_COUNT)
                     {
                         // The poll trial count reached the maximum count.
                         completeWithTransactionFailed(
-                                "The authentication device returned status of active "
-                                + "but the authorization server gave up polling the result"
-                                + "since the poll trial count reached the maximum count.");
+                                "The authentication device returned status of 'active' "
+                              + "but the authorization server gave up polling the "
+                              + "result of the end-user authentication and authorization "
+                              + "since polling count reached the maximum count.");
                         return;
                     }
 
                     // Retry to fetch the result after an interval.
-                    sleepForInterval(pollInterval);
+                    sleepForInterval(POLL_INTERVAL);
                     break;
 
                 //
                 // When the end-user authentication and authorization was done.
                 //
                 case complete:
-                    completeWithAuthorized(new Date());
+                    handleResult(response.getResult());
                     return;
 
                 //
@@ -203,7 +215,7 @@ public class PollAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
                 //
                 case timeout:
                     completeWithTransactionFailed(
-                            "The authentication device returned an unrecognizable status.");
+                            "The task delegated to the authentication device timed out.");
                     return;
 
                 //

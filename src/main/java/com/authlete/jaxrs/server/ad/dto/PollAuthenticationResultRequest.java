@@ -19,6 +19,8 @@ package com.authlete.jaxrs.server.ad.dto;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlElement;
+
 
 /**
  * A class representing a request to <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_result">
@@ -49,6 +51,7 @@ public class PollAuthenticationResultRequest implements Serializable
     private static final long serialVersionUID = 1L;
 
 
+    @XmlElement(name = "request_id")
     private String requestId;
 
 

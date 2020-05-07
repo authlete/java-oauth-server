@@ -46,6 +46,8 @@ public class ServerConfig
     private static final String AUTHLETE_AD_POLL_RESULT_READ_TIMEOUT_KEY     = "authlete.ad.poll.read_timeout";
     private static final String AUTHLETE_AD_POLL_RESULT_CONNECT_TIMEOUT_KEY  = "authlete.ad.poll.result.connect_timeout";
     private static final String AUTHLETE_AD_POLL_READ_TIMEOUT_KEY            = "authlete.ad.poll.result.read_timeout";
+    private static final String AUTHLETE_AD_POLL_MAX_COUNT_KEY               = "authlete.ad.poll.max_count";
+    private static final String AUTHLETE_AD_POLL_INTERVAL_KEY                = "authlete.ad.poll.interval";
     private static final String AUTHLETE_AD_AUTH_TIMEOUT_RATIO_KEY           = "authlete.ad.auth_timeout_ratio";
 
 
@@ -61,6 +63,8 @@ public class ServerConfig
     private static final int DEFAULT_AUTHLETE_AD_POLL_READ_TIMEOUT            = 10000; // 10000 milliseconds.
     private static final int DEFAULT_AUTHLETE_AD_POLL_RESULT_CONNECT_TIMEOUT  = 10000; // 10000 milliseconds.
     private static final int DEFAULT_AUTHLETE_AD_POLL_RESULT_READ_TIMEOUT     = 10000; // 10000 milliseconds.
+    private static final int DEFAULT_AUTHLETE_AD_POLL_MAX_COUNT               = 10;
+    private static final int DEFAULT_AUTHLETE_AD_POLL_INTERVAL                = 5000; // 5000 milliseconds.
     private static final float DEFALUT_AUTHLETE_AD_AUTH_TIMEOUT_RATIO         = 0.8f;
 
 
@@ -77,6 +81,8 @@ public class ServerConfig
     private static final int AUTHLETE_AD_POLL_READ_TIMEOUT            = sProperties.getInt(AUTHLETE_AD_POLL_READ_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_POLL_READ_TIMEOUT);
     private static final int AUTHLETE_AD_POLL_RESULT_CONNECT_TIMEOUT  = sProperties.getInt(AUTHLETE_AD_POLL_RESULT_CONNECT_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_POLL_RESULT_CONNECT_TIMEOUT);
     private static final int AUTHLETE_AD_POLL_RESULT_READ_TIMEOUT     = sProperties.getInt(AUTHLETE_AD_POLL_RESULT_READ_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_POLL_RESULT_READ_TIMEOUT);
+    private static final int AUTHLETE_AD_POLL_MAX_COUNT               = sProperties.getInt(AUTHLETE_AD_POLL_MAX_COUNT_KEY, DEFAULT_AUTHLETE_AD_POLL_MAX_COUNT);
+    private static final int AUTHLETE_AD_POLL_INTERVAL                = sProperties.getInt(AUTHLETE_AD_POLL_INTERVAL_KEY, DEFAULT_AUTHLETE_AD_POLL_INTERVAL);
     private static final float AUTHLETE_AD_AUTH_TIMEOUT_RATIO         = sProperties.getFloat(AUTHLETE_AD_AUTH_TIMEOUT_RATIO_KEY, DEFALUT_AUTHLETE_AD_AUTH_TIMEOUT_RATIO);
 
 
@@ -262,8 +268,6 @@ public class ServerConfig
     }
 
 
-
-
     /**
      * Get the connect timeout value (in milliseconds) used when the authorization
      * server makes a request to <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_result">
@@ -309,18 +313,63 @@ public class ServerConfig
 
 
     /**
+     * Get the maximum number of polling trials against <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_result">
+     * /api/authenticate/result API</a> of <a href="https://cibasim.authlete.com">
+     * Authlete CIBA authentication device simulator</a>.
+     *
+     * @return
+     *         The maximum number of polling trials against <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_result">
+     *         /api/authenticate/result API</a> of <a href="https://cibasim.authlete.com">
+     *         Authlete CIBA authentication device simulator</a>.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">/api/authenticate/poll API</a>
+     */
+    public static int getAuthleteAdPollMaxCount()
+    {
+        return AUTHLETE_AD_POLL_MAX_COUNT;
+    }
+
+
+    /**
+     * Get the period of time in milliseconds for which this authorization server
+     * waits between polling trials against <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_result">
+     * /api/authenticate/result API</a> of <a href="https://cibasim.authlete.com">
+     * Authlete CIBA authentication device simulator</a>.
+     *
+     * @return
+     *         The period of time in milliseconds for which this authorization
+     *         server waits between polling trials against <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_result">
+     *         /api/authenticate/result API</a> of <a href="https://cibasim.authlete.com">
+     *         Authlete CIBA authentication device simulator</a>.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim/1.0.0#/default/post_api_authenticate_poll">/api/authenticate/poll API</a>
+     */
+    public static int getAuthleteAdPollInterval()
+    {
+        return AUTHLETE_AD_POLL_INTERVAL;
+    }
+
+
+    /**
      * Get the ratio of timeout for end-user authentication/authorization on the
      * authentication device (<a href="https://cibasim.authlete.com">Authlete CIBA
      * authentication device simulator</a>) to the duration of an <code>'auth_req_id'</code>.
      * Must be specified between 0.0 and 1.0.
      *
      * <p>
-     * This value is used to compute the timeout value based on the duration of
-     * an <code>'auth_req_id'</code> as below.
+     * This value is used to compute the timeout value for end-user authentication/authorization
+     * on the authentication device based on the duration of an <code>'auth_req_id'</code>
+     * as below.
      * </p>
      *
      * <p style="border: solid 1px black; padding: 0.5em;">
-     * (timeout in seconds) = (the value returned by this method) * (the duration of an <code>'auth_req_id'</code> in seconds)
+     * (timeout for end-user authentication/authorization on the authentication
+     * device in seconds) = (the value returned by this method) * (the duration
+     * of an <code>'auth_req_id'</code> in seconds)
      * </p>
      *
      * For more details, see {@link com.authlete.jaxrs.server.api.backchannel.BaseAuthenticationDeviceProcessor#computeAuthTimeout
