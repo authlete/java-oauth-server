@@ -19,14 +19,10 @@ package com.authlete.jaxrs.server.ad;
 
 import static org.glassfish.jersey.client.ClientProperties.CONNECT_TIMEOUT;
 import static org.glassfish.jersey.client.ClientProperties.READ_TIMEOUT;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
-
 import org.glassfish.jersey.client.ClientConfig;
-
 import com.authlete.jaxrs.server.ServerConfig;
 import com.authlete.jaxrs.server.ad.dto.AsyncAuthenticationRequest;
 import com.authlete.jaxrs.server.ad.dto.AsyncAuthenticationResponse;

@@ -17,7 +17,6 @@
 package com.authlete.jaxrs.server.api.backchannel;
 
 
-import java.util.Date;
 import com.authlete.common.dto.Scope;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.server.ServerConfig;
@@ -140,8 +139,8 @@ public class PollAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
             return;
         }
 
-        // Start polling to the authentication device to fetch the result of the
-        // end-user authentication and authorization.
+        // Start polling against the authentication device to fetch the result of
+        // the end-user authentication and authorization.
         poll(requestId);
     }
 

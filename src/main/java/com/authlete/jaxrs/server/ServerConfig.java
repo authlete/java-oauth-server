@@ -17,6 +17,7 @@
 package com.authlete.jaxrs.server;
 
 
+import com.authlete.jaxrs.server.ad.type.Mode;
 import com.authlete.jaxrs.server.util.ServerProperties;
 
 
@@ -38,6 +39,7 @@ public class ServerConfig
      */
     private static final String AUTHLETE_AD_BASE_URL_KEY                     = "authlete.ad.base_url";
     private static final String AUTHLETE_AD_WORKSPACE_KEY                    = "authlete.ad.workspace";
+    private static final String AUTHLETE_AD_MODE_KEY                         = "authlete.ad.mode";
     private static final String AUTHLETE_AD_SYNC_CONNECT_TIMEOUT_KEY         = "authlete.ad.sync.connect_timeout";
     private static final String AUTHLETE_AD_SYNC_ADDITIONAL_READ_TIMEOUT_KEY = "authlete.ad.sync.additional_read_timeout";
     private static final String AUTHLETE_AD_ASYNC_CONNECT_TIMEOUT_KEY        = "authlete.ad.async.connect_timeout";
@@ -55,6 +57,7 @@ public class ServerConfig
      * Default configuration values.
      */
     private static final String DEFAULT_AUTHLETE_AD_BASE_URL                  = "https://cibasim.authlete.com";
+    private static final Mode DEFAULT_AUTHLETE_AD_MODE                        = Mode.SYNC;
     private static final int DEFAULT_AUTHLETE_AD_SYNC_CONNECT_TIMEOUT         = 10000; // 10000 milliseconds.
     private static final int DEFAULT_AUTHLETE_AD_SYNC_ADDITIONAL_READ_TIMEOUT = 10000; // 10000 milliseconds.
     private static final int DEFAULT_AUTHLETE_AD_ASYNC_CONNECT_TIMEOUT        = 10000; // 10000 milliseconds.
@@ -73,6 +76,7 @@ public class ServerConfig
      */
     private static final String AUTHLETE_AD_BASE_URL                  = sProperties.getString(AUTHLETE_AD_BASE_URL_KEY, DEFAULT_AUTHLETE_AD_BASE_URL);
     private static final String AUTHLETE_AD_WORKSPACE                 = sProperties.getString(AUTHLETE_AD_WORKSPACE_KEY);
+    private static final Mode AUTHLETE_AD_MODE                        = determineAuthleteAdMode();
     private static final int AUTHLETE_AD_SYNC_CONNECT_TIMEOUT         = sProperties.getInt(AUTHLETE_AD_SYNC_CONNECT_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_SYNC_CONNECT_TIMEOUT);
     private static final int AUTHLETE_AD_SYNC_ADDITIONAL_READ_TIMEOUT = sProperties.getInt(AUTHLETE_AD_SYNC_ADDITIONAL_READ_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_SYNC_ADDITIONAL_READ_TIMEOUT);
     private static final int AUTHLETE_AD_ASYNC_CONNECT_TIMEOUT        = sProperties.getInt(AUTHLETE_AD_ASYNC_CONNECT_TIMEOUT_KEY, DEFAULT_AUTHLETE_AD_ASYNC_CONNECT_TIMEOUT);
@@ -84,6 +88,29 @@ public class ServerConfig
     private static final int AUTHLETE_AD_POLL_MAX_COUNT               = sProperties.getInt(AUTHLETE_AD_POLL_MAX_COUNT_KEY, DEFAULT_AUTHLETE_AD_POLL_MAX_COUNT);
     private static final int AUTHLETE_AD_POLL_INTERVAL                = sProperties.getInt(AUTHLETE_AD_POLL_INTERVAL_KEY, DEFAULT_AUTHLETE_AD_POLL_INTERVAL);
     private static final float AUTHLETE_AD_AUTH_TIMEOUT_RATIO         = sProperties.getFloat(AUTHLETE_AD_AUTH_TIMEOUT_RATIO_KEY, DEFALUT_AUTHLETE_AD_AUTH_TIMEOUT_RATIO);
+
+
+    private static Mode determineAuthleteAdMode()
+    {
+        String value = sProperties.getString(AUTHLETE_AD_MODE_KEY);
+
+        if ("sync".equals(value))
+        {
+            return Mode.SYNC;
+        }
+        else if ("async".equals(value))
+        {
+            return Mode.ASYNC;
+        }
+        else if ("poll".equals(value))
+        {
+            return Mode.POLL;
+        }
+        else
+        {
+            return DEFAULT_AUTHLETE_AD_MODE;
+        }
+    }
 
 
     /**
@@ -117,6 +144,27 @@ public class ServerConfig
     public static String getAuthleteAdWorkspace()
     {
         return AUTHLETE_AD_WORKSPACE;
+    }
+
+
+    /**
+     * Get the mode in which the authorization server communicates with
+     * <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>.
+     * Possible values are 'sync', 'async' and 'poll'. The default value is 'sync'.
+     * For more details, see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">
+     * API document for CIBA authentication device simulator</a>.
+     *
+     * @return
+     *         The mode in which the authorization server communicates with
+     *         <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>.
+     *
+     * @see <a href="https://cibasim.authlete.com">Authlete CIBA authentication device simulator</a>
+     *
+     * @see <a href="https://app.swaggerhub.com/apis-docs/Authlete/cibasim">Authlete CIBA authentication device simulator API</a>
+     */
+    public static Mode getAuthleteAdMode()
+    {
+        return AUTHLETE_AD_MODE;
     }
 
 
