@@ -18,7 +18,6 @@ package com.authlete.jaxrs.server.ad.dto;
 
 
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlElement;
 
 

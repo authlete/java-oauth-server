@@ -86,7 +86,6 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
         }
         catch (Throwable t)
         {
-            t.printStackTrace();
             // An unexpected error occurred when communicating with the authentication
             // device.
             completeWithTransactionFailed(
@@ -94,7 +93,8 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
             return;
         }
 
-        // Handle the authentication result returned from the authentication device.
+        // Handle the authentication/authorization result returned from the authentication
+        // device.
         handleResult(response.getResult());
     }
 }

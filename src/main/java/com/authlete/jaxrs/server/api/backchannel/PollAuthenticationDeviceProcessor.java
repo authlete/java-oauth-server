@@ -43,14 +43,14 @@ public class PollAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
     /**
      * The maximum number of polling trials.
      */
-    int POLL_MAX_COUNT = ServerConfig.getAuthleteAdPollMaxCount();
+    private static final int POLL_MAX_COUNT = ServerConfig.getAuthleteAdPollMaxCount();
 
 
     /**
      * The period of time in milliseconds for which this authorization server waits
      * between polling trials.
      */
-    int POLL_INTERVAL  = ServerConfig.getAuthleteAdPollInterval();
+    private static final int POLL_INTERVAL  = ServerConfig.getAuthleteAdPollInterval();
 
 
     /**
