@@ -24,6 +24,7 @@ import com.authlete.common.dto.BackchannelAuthenticationResponse;
 import com.authlete.common.dto.Scope;
 import com.authlete.common.types.User;
 import com.authlete.common.types.UserIdentificationHintType;
+import com.authlete.jaxrs.server.ServerConfig;
 import com.authlete.jaxrs.server.ad.type.Mode;
 import com.authlete.jaxrs.server.db.UserDao;
 import com.authlete.jaxrs.spi.BackchannelAuthenticationRequestHandlerSpiAdapter;
@@ -207,7 +208,7 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
         //
         // For example, in synchronous mode, the authorization server ask the AD
         // to authenticate the user and get authorization from the user by sending
-        // a HTTP request and wait to get the HTTP response that contains a authentication
+        // a HTTP request and wait to get the HTTP response that contains an authentication
         // and authorization result. These are processed by SyncAuthenticationDeviceProcessor.
         // We also have other types of processors for other modes. For more details,
         // see 'com.authlete.jaxrs.server.api.backchannel.XxxProcessor'.
@@ -240,7 +241,7 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
 
         // The mode in which this authorization server communicates with the
         // authentication device.
-        Mode mode = getAuthenticationDeviceMode();
+        Mode mode = ServerConfig.getAuthleteAdMode();
 
         // Get a processor to process end-user authentication and authorization
         // by communicating with the authentication device.
@@ -249,15 +250,6 @@ public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelA
 
         // Start executing the process in the background.
         Executors.newSingleThreadExecutor().execute(new AuthTask(processor));
-    }
-
-
-    private Mode getAuthenticationDeviceMode()
-    {
-        // In this dummy implementation, we always use SYNC mode when communicating
-        // with the authentication device but you may change this behavior as you
-        // like (e.g. you may decide which mode to use depending on the ACRs values).
-        return Mode.SYNC;
     }
 
 

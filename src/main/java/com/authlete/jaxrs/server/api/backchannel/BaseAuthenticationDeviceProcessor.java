@@ -305,6 +305,53 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
 
     /**
+     * Handle the result of end-user authentication and authorization on the
+     * authentication device.
+     *
+     * @param result
+     *         The result the end-user authentication and authorization on the
+     *         authentication device.
+     */
+    protected void handleResult(com.authlete.jaxrs.server.ad.type.Result result)
+    {
+        if (result == null)
+        {
+            // The result returned from the authentication device is empty.
+            // This should never happen.
+            completeWithTransactionFailed(
+                    "The result returned from the authentication device is empty.");
+            return;
+        }
+
+        switch (result)
+        {
+            case allow:
+                // The user authorized the client.
+                completeWithAuthorized(new Date());
+                return;
+
+            case deny:
+                // The user denied the client.
+                completeWithAccessDenied(
+                        "The end-user denied the backchannel authentication request.");
+                return;
+
+            case timeout:
+                // Timeout occurred on the authentication device.
+                completeWithTransactionFailed(
+                        "The task delegated to the authentication device timed out.");
+                return;
+
+            default:
+                // An unknown result returned from the authentication device.
+                completeWithTransactionFailed(
+                        "The authentication device returned an unrecognizable result.");
+                return;
+        }
+    }
+
+
+    /**
      * Build a simple message to be shown to the end-user on the authentication
      * device.
      *

@@ -1,7 +1,6 @@
 package com.authlete.jaxrs.server.api.backchannel;
 
 
-import java.util.Date;
 import com.authlete.common.dto.Scope;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.server.ad.AuthenticationDevice;
@@ -82,7 +81,7 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
         {
             // Perform the end-user authentication and authorization by communicating
             // with the authentication device in the sync mode.
-            response = AuthenticationDevice.syncAuth(mUser.getSubject(), buildMessage(),
+            response = AuthenticationDevice.sync(mUser.getSubject(), buildMessage(),
                     computeAuthTimeout(), mAuthReqId);
         }
         catch (Throwable t)
@@ -94,42 +93,8 @@ public class SyncAuthenticationDeviceProcessor extends BaseAuthenticationDeviceP
             return;
         }
 
-        // The authentication result returned from the authentication device.
-        com.authlete.jaxrs.server.ad.type.Result result = response.getResult();
-
-        if (result == null)
-        {
-            // The result returned from the authentication device is empty.
-            // This should never happen.
-            completeWithTransactionFailed(
-                    "The result returned from the authentication device is empty.");
-            return;
-        }
-
-        switch (result)
-        {
-            case allow:
-                // The user authorized the client.
-                completeWithAuthorized(new Date());
-                return;
-
-            case deny:
-                // The user denied the client.
-                completeWithAccessDenied(
-                        "The end-user denied the backchannel authentication request.");
-                return;
-
-            case timeout:
-                // Timeout occurred on the authentication device.
-                completeWithTransactionFailed(
-                        "The task delegated to the authentication device timed out.");
-                return;
-
-            default:
-                // An unknown result returned from the authentication device.
-                completeWithTransactionFailed(
-                        "The authentication device returned an unrecognizable result.");
-                return;
-        }
+        // Handle the authentication/authorization result returned from the authentication
+        // device.
+        handleResult(response.getResult());
     }
 }

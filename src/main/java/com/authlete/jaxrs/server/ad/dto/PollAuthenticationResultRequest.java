@@ -18,6 +18,7 @@ package com.authlete.jaxrs.server.ad.dto;
 
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlElement;
 
 
 /**
@@ -49,6 +50,7 @@ public class PollAuthenticationResultRequest implements Serializable
     private static final long serialVersionUID = 1L;
 
 
+    @XmlElement(name = "request_id")
     private String requestId;
 
 
