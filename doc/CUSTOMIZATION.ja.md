@@ -335,45 +335,49 @@ class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
 - [authlete-java-jaxrs API][8] - JAX-RS (Java) 用 Authlete ライブラリの JavaDoc
 
 
-サポート
---------
+コンタクト
+----------
 
-[Authlete, Inc.][1]<br/>
-support@authlete.com
+| 目的 | メールアドレス       |
+|:-----|:---------------------|
+| 一般 | info@authlete.com    |
+| 営業 | sales@authlete.com   |
+| 広報 | pr@authlete.com      |
+| 技術 | support@authlete.com |
 
 
 [1]: https://www.authlete.com/
-[2]: http://tools.ietf.org/html/rfc6749
-[3]: http://openid.net/connect/
-[4]: https://www.authlete.com/documents/apis
+[2]: https://tools.ietf.org/html/rfc6749
+[3]: https://openid.net/connect/
+[4]: https://docs.authlete.com/
 [5]: https://github.com/authlete/authlete-java-common
 [6]: https://github.com/authlete/authlete-java-jaxrs
-[7]: http://authlete.github.io/authlete-java-common/
-[8]: http://authlete.github.io/authlete-java-jaxrs/
+[7]: https://authlete.github.io/authlete-java-common/
+[8]: https://authlete.github.io/authlete-java-jaxrs/
 [9]: https://jcp.org/en/jsr/detail?id=339
-[10]: http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
-[11]: http://openid.net/specs/openid-connect-core-1_0.html
+[10]: https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
+[11]: https://openid.net/specs/openid-connect-core-1_0.html
 [12]: https://jersey.java.net/
 [13]: https://www.authlete.com/documents/so_console/
 [14]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationEndpoint.java
-[15]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/AuthorizationRequestHandler.html
-[16]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationRequestHandlerSpi.html
-[17]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationRequestHandlerSpi.html#generateAuthorizationPage-com.authlete.common.dto.AuthorizationResponse-
+[15]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/AuthorizationRequestHandler.html
+[16]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationRequestHandlerSpi.html
+[17]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationRequestHandlerSpi.html#generateAuthorizationPage-com.authlete.common.dto.AuthorizationResponse-
 [18]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationRequestHandlerSpiImpl.java
-[19]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationRequestHandlerSpiAdapter.html
-[20]: http://authlete.github.io/authlete-java-common/com/authlete/common/dto/AuthorizationResponse.html
+[19]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationRequestHandlerSpiAdapter.html
+[20]: https://authlete.github.io/authlete-java-common/com/authlete/common/dto/AuthorizationResponse.html
 [21]: ../src/main/webapp/WEB-INF/template/authorization.jsp
-[22]: http://authlete.github.io/authlete-java-common/com/authlete/common/types/Display.html
+[22]: https://authlete.github.io/authlete-java-common/com/authlete/common/types/Display.html
 [23]: ../src/main/java/com/authlete/jaxrs/server/api/TokenEndpoint.java
-[24]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/TokenRequestHandler.html
-[25]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/TokenRequestHandlerSpi.html
+[24]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/TokenRequestHandler.html
+[25]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/TokenRequestHandlerSpi.html
 [26]: https://tools.ietf.org/html/rfc6749#section-4.3
 [27]: ../src/main/java/com/authlete/jaxrs/server/api/TokenRequestHandlerSpiImpl.java
-[28]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/TokenRequestHandlerSpiAdapter.html
+[28]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/TokenRequestHandlerSpiAdapter.html
 [29]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationDecisionEndpoint.java
-[30]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/AuthorizationDecisionHandler.html
-[31]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationDecisionHandlerSpi.html
+[30]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/AuthorizationDecisionHandler.html
+[31]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationDecisionHandlerSpi.html
 [32]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationDecisionHandlerSpiImpl.java
-[33]: http://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationDecisionHandlerSpiAdapter.html
+[33]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationDecisionHandlerSpiAdapter.html
 [34]: ../src/main/java/com/authlete/jaxrs/server/api/IntrospectionEndpoint.java
-[35]: http://tools.ietf.org/html/rfc7662
+[35]: https://tools.ietf.org/html/rfc7662
