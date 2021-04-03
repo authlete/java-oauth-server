@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020 Authlete, Inc.
+ * Copyright (C) 2016-2021 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,11 @@ package com.authlete.jaxrs.server.api;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import com.authlete.common.assurance.VerifiedClaims;
 import com.authlete.common.assurance.constraint.VerifiedClaimsConstraint;
 import com.authlete.common.dto.Client;
@@ -29,6 +33,7 @@ import com.authlete.common.types.SubjectType;
 import com.authlete.common.types.User;
 import com.authlete.common.util.Utils;
 import com.authlete.jaxrs.server.db.VerifiedClaimsDao;
+import com.authlete.jaxrs.server.util.ResponseUtil;
 import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpiAdapter;
 
 
@@ -46,6 +51,12 @@ import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpiAdapter;
  */
 class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSpiAdapter
 {
+    // The pattern of "openbanking_intent_id".
+    // See openbanking/AccountRequestsEndpoint.java in java-resource-server.
+    private static final Pattern OPENBANKING_INTENT_ID_PATTERN
+        = Pattern.compile("^([0-9]+):.*$");
+
+
     /**
      * The flag to indicate whether the client application has been granted
      * permissions by the user.
@@ -261,10 +272,66 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
             // request contains the "openbanking_intent_id" claim and
             // the authorization server embeds the value of the claim
             // in an ID token.
-            return getValueFromIdTokenClaims(claimName);
+            return getOpenBankingIntentIdFromIdTokenClaims(claimName);
         }
 
         return null;
+    }
+
+
+    private Object getOpenBankingIntentIdFromIdTokenClaims(String claimName)
+    {
+        // Get the value of "openbanking_intent_id" from "id_token" property
+        // in the "claims" request parameter.
+        Object intentId = getValueFromIdTokenClaims(claimName);
+
+        // If the value of "openbanking_intent_id" is null.
+        if (intentId == null)
+        {
+            throw badRequest("The value of 'openbanking_intent_id' is not available.");
+        }
+
+        // Validate the value of the intent ID.
+        validateOpenBankingIntentId(intentId);
+
+        // Return the validated intent ID.
+        return intentId;
+    }
+
+
+    private void validateOpenBankingIntentId(Object value)
+    {
+        // If the type of "openbanking_intent_id" is not String.
+        if (!(value instanceof String))
+        {
+            throw badRequest("The value of 'openbanking_intent_id' is not a string.");
+        }
+
+        String intentId = (String)value;
+
+        // Matcher that checks whether the value of openbanking_intent_id
+        // matches the pattern "{ClientId}:...".
+        Matcher matcher = OPENBANKING_INTENT_ID_PATTERN.matcher(intentId);
+
+        // If the openbanking_intent_id does not match the pattern.
+        if (!matcher.matches())
+        {
+            // No validation on the value.
+            return;
+        }
+
+        // The client ID embedded in the openbanking_intent_id.
+        String clientId = matcher.group(1);
+
+        // If the client ID embedded in the openbanking_intent_id matches
+        // the ID of the client that has made the authorization request.
+        if (clientId.equals(String.valueOf(mClient.getClientId())))
+        {
+            // OK. The intent ID is being used by the legitimate client.
+            return;
+        }
+
+        throw badRequest("The 'openbanking_intent_id' is not for the client.");
     }
 
 
@@ -354,5 +421,18 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
     public List<VerifiedClaims> getVerifiedClaims(String subject, VerifiedClaimsConstraint constraint)
     {
         return VerifiedClaimsDao.get(subject, constraint);
+    }
+
+
+    private WebApplicationException badRequest(String description)
+    {
+        // The body of the response.
+        String content = String.format(
+                "{\"error\":\"invalid_request\", \"error_description\":\"%s\"}", description);
+
+        // A response with 400 Bad Request and application/json.
+        Response response = ResponseUtil.badRequest(content);
+
+        return new WebApplicationException(response);
     }
 }
