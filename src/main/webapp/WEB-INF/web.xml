@@ -26,21 +26,22 @@
     <init-param>
       <param-name>jersey.config.server.provider.classnames</param-name>
       <param-value>
+        com.authlete.jaxrs.server.api.AppleAppSiteAssociation,
         com.authlete.jaxrs.server.api.AuthorizationDecisionEndpoint,
         com.authlete.jaxrs.server.api.AuthorizationEndpoint,
-        com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationEndpoint,
-        com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationCallbackEndpoint,
+        com.authlete.jaxrs.server.api.ClientRegistrationEndpoint,
         com.authlete.jaxrs.server.api.ConfigurationEndpoint,
-        com.authlete.jaxrs.server.api.AppleAppSiteAssociation,
-        com.authlete.jaxrs.server.api.device.DeviceAuthorizationEndpoint,
-        com.authlete.jaxrs.server.api.device.DeviceVerificationEndpoint,
-        com.authlete.jaxrs.server.api.device.DeviceCompleteEndpoint,
         com.authlete.jaxrs.server.api.IntrospectionEndpoint,
         com.authlete.jaxrs.server.api.JwksEndpoint,
+        com.authlete.jaxrs.server.api.PushedAuthReqEndpoint,
         com.authlete.jaxrs.server.api.RevocationEndpoint,
         com.authlete.jaxrs.server.api.TokenEndpoint,
-        com.authlete.jaxrs.server.api.ClientRegistrationEndpoint,
-        com.authlete.jaxrs.server.api.PushedAuthReqEndpoint,
+        com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationCallbackEndpoint,
+        com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationEndpoint,
+        com.authlete.jaxrs.server.api.device.DeviceAuthorizationEndpoint,
+        com.authlete.jaxrs.server.api.device.DeviceCompleteEndpoint,
+        com.authlete.jaxrs.server.api.device.DeviceVerificationEndpoint,
+        com.authlete.jaxrs.server.api.obb.ClientRegistrationEndpoint,
         org.glassfish.jersey.moxy.json.MoxyJsonFeature,
         org.glassfish.jersey.server.mvc.jsp.JspMvcFeature
       </param-value>
