@@ -18,7 +18,6 @@ package com.authlete.jaxrs.server.api.obb;
 
 
 import static com.authlete.jaxrs.server.api.obb.ClientRegistrationConstants.CLIENT_AUTHENTICATION_METHODS;
-import static com.authlete.jaxrs.server.api.obb.ClientRegistrationConstants.CLIENT_CERTIFICATE_EXTRACTORS;
 import static com.authlete.jaxrs.server.api.obb.ClientRegistrationConstants.JWE_ALG_CLIENT_METADATA;
 import static com.authlete.jaxrs.server.api.obb.ClientRegistrationConstants.JWE_ENC_CLIENT_METADATA;
 import static com.authlete.jaxrs.server.api.obb.ClientRegistrationConstants.JWS_ALG_CLIENT_METADATA;
@@ -39,7 +38,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import com.authlete.common.util.Utils;
-import com.authlete.jaxrs.ClientCertificateExtractor;
+import com.authlete.jaxrs.util.CertificateUtils;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSVerifier;
@@ -117,7 +116,7 @@ class ClientRegisterProcessor
         // before the request reaches here.
 
         // Extract the client certificate from the request.
-        String certificate = extractClientCertificate(request);
+        String certificate = CertificateUtils.extract(request);
 
         // If no client certificate is available.
         if (certificate == null)
@@ -144,26 +143,6 @@ class ClientRegisterProcessor
         //
 
         return certificate;
-    }
-
-
-    private String extractClientCertificate(HttpServletRequest request)
-    {
-        // Loop until a client certificate is successfully extracted.
-        for (ClientCertificateExtractor extractor : CLIENT_CERTIFICATE_EXTRACTORS)
-        {
-            // Try to extract a certificate chain from the HTTP request.
-            String[] chain = extractor.extractClientCertificateChain(request);
-
-            // If a certificate chain was found in the HTTP request.
-            if (chain != null && 0 < chain.length)
-            {
-                // The first element in the chain is a client certificate.
-                return chain[0];
-            }
-        }
-
-        return null;
     }
 
 

@@ -21,38 +21,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import com.authlete.jaxrs.ClientCertificateExtractor;
-import com.authlete.jaxrs.HeaderClientCertificateExtractor;
-import com.authlete.jaxrs.HttpsRequestClientCertificateExtractor;
 
 
 class ClientRegistrationConstants
 {
-    // A list of implementations each of which extracts a client certificate
-    // from HttpServletRequest.
-    //
-    // There are several ways for a web application to receive a client certificate.
-    //
-    // In a typical case, a web application sits behind a reverse proxy and the
-    // client certificate used in the mutual TLS connection between the client
-    // application and the reverse proxy is passed to the web application via a
-    // special HTTP header such as "X-Ssl-Cert". However, it depends on how the
-    // reverse proxy is configured.
-    //
-    // Note that there is a specification draft that tries to standardize the
-    // name of the HTTP header and the format of its value.
-    //
-    //   Client-Cert HTTP Header Field: Conveying Client Certificate Information
-    //   from TLS Terminating Reverse Proxies to Origin Server Applications
-    //
-    //     https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-cert-field/
-    //
-    public static final List<ClientCertificateExtractor> CLIENT_CERTIFICATE_EXTRACTORS = toList(
-            new HttpsRequestClientCertificateExtractor(),
-            new HeaderClientCertificateExtractor()
-    );
-
-
     // Client authentication methods allowed in the context of FAPI 1.0 Advanced.
     public static final Set<String> CLIENT_AUTHENTICATION_METHODS = toSet(
             "private_key_jwt",
