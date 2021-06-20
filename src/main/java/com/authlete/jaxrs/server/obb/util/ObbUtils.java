@@ -332,4 +332,35 @@ public class ObbUtils
         return internalServerErrorException(
                 outgoingInteractionId, code, detail);
     }
+
+
+    public static String extractConsentScope(IntrospectionResponse info)
+    {
+        if (info == null)
+        {
+            return null;
+        }
+
+        String[] scopes = info.getScopes();
+
+        if (scopes == null)
+        {
+            return null;
+        }
+
+        for (String scope : scopes)
+        {
+            if (scope == null)
+            {
+                continue;
+            }
+
+            if (scope.startsWith("consent:"))
+            {
+                return scope;
+            }
+        }
+
+        return null;
+    }
 }

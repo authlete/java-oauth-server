@@ -29,6 +29,19 @@ public class Resource implements Serializable
     private String status;
 
 
+    public Resource()
+    {
+    }
+
+
+    public Resource(String resourceId, String type, String status)
+    {
+        this.resourceId = resourceId;
+        this.type       = type;
+        this.status     = status;
+    }
+
+
     public String getResourceId()
     {
         return resourceId;

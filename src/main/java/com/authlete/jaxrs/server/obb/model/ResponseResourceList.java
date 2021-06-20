@@ -35,6 +35,19 @@ public class ResponseResourceList implements Serializable
     private Meta meta;
 
 
+    public ResponseResourceList()
+    {
+    }
+
+
+    public ResponseResourceList(Resource[] data, Links links, Meta meta)
+    {
+        this.data  = data;
+        this.links = links;
+        this.meta  = meta;
+    }
+
+
     public Resource[] getData()
     {
         return data;
