@@ -334,15 +334,19 @@ public class ObbUtils
     }
 
 
-    public static String extractConsentScope(IntrospectionResponse info)
+    public static String extractConsentScope(IntrospectionResponse response)
     {
-        if (info == null)
+        if (response == null)
         {
             return null;
         }
 
-        String[] scopes = info.getScopes();
+        return extractConsentScope(response.getScopes());
+    }
 
+
+    public static String extractConsentScope(String[] scopes)
+    {
         if (scopes == null)
         {
             return null;
