@@ -591,21 +591,21 @@ class ClientRegisterProcessor
                 ssClaims, "software_redirect_uris", REQUIRED, NOT_NULL, FROM_SS);
 
         // Convert the list of redirect URIs into a Set instance for faster lookup.
-        Set<String> redirectUriSet = new HashSet<>(redirectUris);
+        Set<String> softwareRedirectUriSet = new HashSet<>(softwareRedirectUris);
 
-        for (int i = 0; i < softwareRedirectUris.size(); i++)
+        for (int i = 0; i < redirectUris.size(); i++)
         {
-            // If the value in 'software_redirect_uris' is included in 'redirect_uris'.
-            if (redirectUriSet.contains(softwareRedirectUris.get(i)))
+            // If the value in 'redirect_uris' is included in 'software_redirect_uris'.
+            if (softwareRedirectUriSet.contains(redirectUris.get(i)))
             {
                 // Okay.
                 continue;
             }
 
             throw invalidRedirectUri(
-                    "The 'redirect_uris' parameter in the request body does not include " +
-                    "the value at the '%d' index of the 'software_redirect_uris' claim " +
-                    "in the software statement.", i);
+                    "The 'software_redirect_uris' claim in the software statement " +
+                    "does not include the value at the '%d' index of the " +
+                    "'redirect_uris' parameter in the request body.", i);
         }
     }
 
