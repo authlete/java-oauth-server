@@ -41,6 +41,7 @@
         com.authlete.jaxrs.server.api.device.DeviceAuthorizationEndpoint,
         com.authlete.jaxrs.server.api.device.DeviceCompleteEndpoint,
         com.authlete.jaxrs.server.api.device.DeviceVerificationEndpoint,
+        com.authlete.jaxrs.server.api.obb.AccountsEndpoint,
         com.authlete.jaxrs.server.api.obb.ClientRegistrationEndpoint,
         com.authlete.jaxrs.server.api.obb.ConsentsEndpoint,
         com.authlete.jaxrs.server.api.obb.ResourcesEndpoint,
