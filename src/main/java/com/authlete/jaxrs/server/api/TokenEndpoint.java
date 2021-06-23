@@ -17,9 +17,9 @@
 package com.authlete.jaxrs.server.api;
 
 
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -27,7 +27,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.common.util.Utils;
 import com.authlete.jaxrs.BaseTokenEndpoint;
 import com.authlete.jaxrs.TokenRequestHandler.Params;
 
@@ -73,29 +75,43 @@ public class TokenEndpoint extends BaseTokenEndpoint
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response post(
-            @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            @HeaderParam("DPoP") String dpop,
-            MultivaluedMap<String, String> parameters,
-            @Context HttpServletRequest request)
+            @Context HttpServletRequest request,
+            MultivaluedMap<String, String> parameters)
     {
-        Params params = buildParams(request, parameters, authorization, dpop);
+        // Authlete API
+        AuthleteApi authleteApi = AuthleteApiFactory.getDefaultApi();
+
+        // Process the token request in a standard way.
+        Response response = processTokenRequest(authleteApi, request, parameters);
+
+        // Do additional tasks as necessary.
+        doTasks(authleteApi, request, parameters, response);
+
+        return response;
+    }
+
+
+    private Response processTokenRequest(
+            AuthleteApi authleteApi, HttpServletRequest request,
+            MultivaluedMap<String, String> parameters)
+    {
+        // Parameters for Authlete's /api/auth/token API.
+        Params params = buildParams(request, parameters);
 
         // Handle the token request.
-        return handle(AuthleteApiFactory.getDefaultApi(),
-                new TokenRequestHandlerSpiImpl(), params);
+        return handle(authleteApi, new TokenRequestHandlerSpiImpl(), params);
     }
 
 
     private Params buildParams(
-            HttpServletRequest request, MultivaluedMap<String, String> parameters,
-            String authorization, String dpop)
+            HttpServletRequest request, MultivaluedMap<String, String> parameters)
     {
         Params params = new Params();
 
         // RFC 6749
         // The OAuth 2.0 Authorization Framework
         params.setParameters(parameters)
-              .setAuthorization(authorization)
+              .setAuthorization(request.getHeader(HttpHeaders.AUTHORIZATION))
               ;
 
         // MTLS
@@ -104,7 +120,7 @@ public class TokenEndpoint extends BaseTokenEndpoint
 
         // DPoP
         // OAuth 2.0 Demonstration of Proof-of-Possession at the Application Layer (DPoP)
-        params.setDpop(dpop)
+        params.setDpop(request.getHeader("DPoP"))
               .setHtm("POST")
               //.setHtu(request.getRequestURL().toString())
               ;
@@ -124,5 +140,20 @@ public class TokenEndpoint extends BaseTokenEndpoint
         // When "htm" is not set, "POST" is used as the default value.
 
         return params;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private void doTasks(
+            AuthleteApi authleteApi, HttpServletRequest request,
+            MultivaluedMap<String, String> requestParams, Response response)
+    {
+        // The entity conforms to the token response defined in RFC 6749.
+        Map<String, Object> responseParams =
+                Utils.fromJson((String)response.getEntity(), Map.class);
+
+        // A task specific to Open Banking Brasil.
+        new OBBTokenTask().process(
+                authleteApi, request, requestParams, response, responseParams);
     }
 }
