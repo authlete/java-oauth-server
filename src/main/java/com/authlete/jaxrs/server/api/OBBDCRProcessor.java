@@ -930,14 +930,46 @@ public class OBBDCRProcessor
 
     private void adjustClientMetadata(Map<String, Object> merged, Map<String, Object> ssClaims)
     {
-        // By definition, ID Tokens are always signed.
         // Open Banking Brasil requires that JWS alg be always "PS256".
+
+        // By definition, ID Tokens are always signed.
         merged.putIfAbsent("id_token_signed_response_alg", "PS256");
+
+        // FAPI 1.0 Advanced requires that a Request Object be always used
+        // and signed. The "require_signed_request_object" client metadata
+        // is defined in JWT Secured Authorization Request (JAR).
+        //
+        // Setting true to "require_signed_request_object" will require
+        // that the authorization server process Request Objects based on
+        // the rules defined in JAR. See the following article for details.
+        //
+        //   Implementer’s note about JAR (JWT Secured Authorization Request)
+        //   https://darutk.medium.com/implementers-note-about-jar-fff4cbd158fe
+        //
+        merged.putIfAbsent("request_object_signing_alg", "PS256");
+        merged.putIfAbsent("require_signed_request_object", Boolean.TRUE);
 
         // Open Banking Brasil requires that Request Objects be encrypted
         // with "RSA-OAEP" and "A256GCM".
         merged.putIfAbsent("request_object_encryption_alg", "RSA-OAEP");
         merged.putIfAbsent("request_object_encryption_enc", "A256GCM");
+
+        // The "token_endpoint_auth_signing_alg" client metadata has a meaning
+        // only when a client assertion is used for client authentication.
+        merged.putIfAbsent("token_endpoint_auth_signing_alg", "PS256");
+
+        // The "backchannel_authentication_request_signing_alg" client metadata
+        // has a meaning only when a backchannel authentication request contains
+        // the "request" request parameter.
+        merged.putIfAbsent("backchannel_authentication_request_signing_alg", "PS256");
+
+        // The "authorization_signed_response_alg" client metadata has a meaning
+        // only when "response_mode=[[query|fragment|form_post].]jwt" is given.
+        merged.putIfAbsent("authorization_signed_response_alg", "PS256");
+
+        // Note that the default value is not set for "userinfo_signed_response_alg".
+        // It's because setting an algorithm to the client metadata would change
+        // the format of responses from the UserInfo endpoint.
 
         // Open Banking Brasil Financial-grade API is based on
         // "FAPI 1.0 Advanced" which requires certificate-bound access tokens.
