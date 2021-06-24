@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the
  * License.
  */
-package com.authlete.jaxrs.server.api.obb;
+package com.authlete.jaxrs.server.api;
 
 
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 
-class ClientRegistrationConstants
+public class OBBDCRConstants
 {
     // Client authentication methods allowed in the context of FAPI 1.0 Advanced.
     public static final Set<String> CLIENT_AUTHENTICATION_METHODS = toSet(

@@ -14,15 +14,15 @@
  * language governing permissions and limitations under the
  * License.
  */
-package com.authlete.jaxrs.server.api.obb;
+package com.authlete.jaxrs.server.api;
 
 
-import static com.authlete.jaxrs.server.api.obb.ClientRegistrationConstants.CLIENT_AUTHENTICATION_METHODS;
-import static com.authlete.jaxrs.server.api.obb.ClientRegistrationConstants.JWE_ALG_CLIENT_METADATA;
-import static com.authlete.jaxrs.server.api.obb.ClientRegistrationConstants.JWE_ENC_CLIENT_METADATA;
-import static com.authlete.jaxrs.server.api.obb.ClientRegistrationConstants.JWS_ALG_CLIENT_METADATA;
-import static com.authlete.jaxrs.server.api.obb.ClientRegistrationConstants.RECOGNIZED_CLIENT_METADATA;
-import static com.authlete.jaxrs.server.api.obb.ClientRegistrationConstants.TLS_CLIENT_AUTH_SAN_CLIENT_METADATA;
+import static com.authlete.jaxrs.server.api.OBBDCRConstants.CLIENT_AUTHENTICATION_METHODS;
+import static com.authlete.jaxrs.server.api.OBBDCRConstants.JWE_ALG_CLIENT_METADATA;
+import static com.authlete.jaxrs.server.api.OBBDCRConstants.JWE_ENC_CLIENT_METADATA;
+import static com.authlete.jaxrs.server.api.OBBDCRConstants.JWS_ALG_CLIENT_METADATA;
+import static com.authlete.jaxrs.server.api.OBBDCRConstants.RECOGNIZED_CLIENT_METADATA;
+import static com.authlete.jaxrs.server.api.OBBDCRConstants.TLS_CLIENT_AUTH_SAN_CLIENT_METADATA;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
@@ -64,7 +64,7 @@ import com.nimbusds.jwt.SignedJWT;
  * @see <a href="https://openbanking-brasil.github.io/specs-seguranca/open-banking-brasil-dynamic-client-registration-1_ID1.html"
  *      >Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0 Implementers Draft 1</a>
  */
-class ClientRegisterProcessor
+public class OBBDCRProcessor
 {
     // Named boolean values just for code readability.
     private static boolean OPTIONAL  = true;

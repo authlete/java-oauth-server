@@ -17,6 +17,7 @@
 package com.authlete.jaxrs.server.api;
 
 
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -30,7 +31,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.common.util.Utils;
 import com.authlete.jaxrs.BaseClientRegistrationEndpoint;
+import com.authlete.jaxrs.server.obb.util.ObbUtils;
 
 
 /**
@@ -63,6 +66,9 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
             String json,
             @Context HttpServletRequest httpServletRequest)
     {
+        // Pre-process the request as necessary.
+        json = preprocessRegister(httpServletRequest, json);
+
         return handleRegister(AuthleteApiFactory.getDefaultApi(), json, authorization);
     }
 
@@ -108,5 +114,26 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
             @Context HttpServletRequest httpServletRequest)
     {
         return handleDelete(AuthleteApiFactory.getDefaultApi(), clientId, authorization);
+    }
+
+
+    private static String preprocessRegister(HttpServletRequest request, String requestBody)
+    {
+        // If the request body seems a Dynamic Client Registration request
+        // for Open Banking Brasil.
+        if (ObbUtils.isObbDcr(requestBody))
+        {
+            // Perform validation specific to Open Banking Brasil.
+            // The resultant map holds client metadata.
+            Map<String, Object> metadata =
+                    new OBBDCRProcessor().process(request, requestBody);
+
+            return Utils.toJson(metadata);
+        }
+        else
+        {
+            // No pre-processing.
+            return requestBody;
+        }
     }
 }

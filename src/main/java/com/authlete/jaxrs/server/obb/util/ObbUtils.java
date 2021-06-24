@@ -19,6 +19,7 @@ package com.authlete.jaxrs.server.obb.util;
 import static com.authlete.common.util.FapiUtils.X_FAPI_INTERACTION_ID;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
@@ -38,6 +39,7 @@ import com.authlete.common.web.BearerToken;
 import com.authlete.common.web.DpopToken;
 import com.authlete.jaxrs.server.obb.model.ResponseError;
 import com.authlete.jaxrs.util.CertificateUtils;
+import com.nimbusds.jwt.SignedJWT;
 
 
 public class ObbUtils
@@ -366,5 +368,96 @@ public class ObbUtils
         }
 
         return null;
+    }
+
+
+    /**
+     * Judge whether the given request body represents a Dynamic Client
+     * Registration request for Open Banking Brasil.
+     *
+     * @param requestBody
+     *         The request body of an HTTP request.
+     *
+     * @return
+     *         {@code true} if the given request body seems a Dynamic
+     *         Client Registration request for Open Banking Brasil.
+     *
+     * @see <a href="https://openbanking-brasil.github.io/specs-seguranca/open-banking-brasil-dynamic-client-registration-1_ID1.html"
+     *      >Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0 Implementers Draft 1</a>
+     */
+    @SuppressWarnings("unchecked")
+    public static boolean isObbDcr(String requestBody)
+    {
+        // If the request does not have a body.
+        if (requestBody == null)
+        {
+            return false;
+        }
+
+        Map<String, Object> params;
+
+        try
+        {
+            // Try to parse the request body as JSON.
+            params = Utils.fromJson(requestBody, Map.class);
+        }
+        catch (Exception e)
+        {
+            // Failed to parse the request body as JSON.
+            return false;
+        }
+
+        // If the request body does not contain "software_statement".
+        if (!params.containsKey("software_statement"))
+        {
+            // A DCR request of Open Banking Brasil always contains a software statement.
+            return false;
+        }
+
+        SignedJWT jwt;
+
+        try
+        {
+            // Parse the value of "software_statement" as a signed JWT.
+            jwt = SignedJWT.parse((String)params.get("software_statement"));
+        }
+        catch (Exception e)
+        {
+            // Failed to parse the "software_statement" as a signed JWT.
+            return false;
+        }
+
+        String softwareJwksUri;
+
+        try
+        {
+            // Get the value of the "software_jwks_uri" claim from the software statement.
+            softwareJwksUri = jwt.getJWTClaimsSet().getStringClaim("software_jwks_uri");
+        }
+        catch (Exception e)
+        {
+            // Failed to retrieve the value of "software_jwks_uri".
+            return false;
+        }
+
+        // If the software statement does not include the "software_jwks_uri" claim.
+        if (softwareJwksUri == null)
+        {
+            // A software statement issued from the Directory of Open Banking Brasil
+            // always contains "software_jwks_uri".
+            return false;
+        }
+
+        // If the "software_jwks_uri" does not include "openbankingbrasil".
+        if (softwareJwksUri.indexOf("openbankingbrasil") < 0)
+        {
+            // JWK Sets of Open Banking Brasil are hosted on
+            // "https://keystore[.sandbox].directory.openbankingbrasil.org.br/"
+            return false;
+        }
+
+        // The given request body seems to be a Dynamic Client Registration request
+        // for Open Banking Brasil.
+        return true;
     }
 }
