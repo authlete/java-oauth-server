@@ -16,7 +16,6 @@
 package com.authlete.jaxrs.server.obb.database;
 
 
-import java.util.Collections;
 import java.util.UUID;
 import com.authlete.jaxrs.server.obb.model.Consent;
 import com.authlete.jaxrs.server.obb.model.CreateConsent;
@@ -36,7 +35,7 @@ public class ConsentDao
     private ConsentDao(String namespace)
     {
         mNamespace = namespace;
-        mStore     = (ConsentStore)Collections.synchronizedMap(new ConsentStore());
+        mStore     = new ConsentStore();
     }
 
 
@@ -81,13 +80,13 @@ public class ConsentDao
     }
 
 
-    public Consent read(String consentId)
+    public synchronized Consent read(String consentId)
     {
         return getStore().get(consentId);
     }
 
 
-    public void update(Consent consent)
+    public synchronized void update(Consent consent)
     {
         consent.setStatusUpdateDateTime(ObbUtils.formatNow());
 
@@ -95,7 +94,7 @@ public class ConsentDao
     }
 
 
-    public void delete(String consentId)
+    public synchronized void delete(String consentId)
     {
         getStore().remove(consentId);
     }
