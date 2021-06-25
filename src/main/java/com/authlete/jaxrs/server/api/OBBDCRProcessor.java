@@ -954,6 +954,48 @@ public class OBBDCRProcessor
         merged.putIfAbsent("request_object_encryption_alg", "RSA-OAEP");
         merged.putIfAbsent("request_object_encryption_enc", "A256GCM");
 
+        // The explanation of the "request_object_encryption_alg" client
+        // metadata in "OpenID Connect Dynamic Client Registration 1.0"
+        // states as follows:
+        //
+        //   request_object_encryption_alg
+        //
+        //     OPTIONAL. JWE [JWE] alg algorithm [JWA] the RP is declaring
+        //     that it may use for encrypting Request Objects sent to the OP.
+        //     This parameter SHOULD be included when symmetric encryption
+        //     will be used, since this signals to the OP that a client_secret
+        //     value needs to be returned from which the symmetric key will be
+        //     derived, that might not otherwise be returned. The RP MAY still
+        //     use other supported encryption algorithms or send unencrypted
+        //     Request Objects, even when this parameter is present. If both
+        //     signing and encryption are requested, the Request Object will
+        //     be signed then encrypted, with the result being a Nested JWT,
+        //     as defined in [JWT]. The default, if omitted, is that the RP is
+        //     not declaring whether it might encrypt any Request Objects.
+        //
+        // According to this explanation, setting the client metadata does not
+        // mean forcing the client to use the specified algorithm. It cannot
+        // even force the client to encrypt request objects.
+        //
+        // Therefore, to meet the following requirement of Open Banking Brasil,
+        //
+        //   Open Banking Brasil Financial-grade API Security Profile 1.0
+        //   5.2.2. Authorization server
+        //
+        //     1. shall support a signed and encrypted JWE request object passed
+        //        by value or shall require pushed authorization requests PAR;
+        //
+        // non-standard mechanisms are needed. Authlete fulfills the requirement
+        // by Authlete-specific client properties. See the JavaDoc of the Client
+        // class for details.
+        //
+        //   JavaDoc of authlete-java-common library
+        //   https://authlete.github.io/authlete-java-common/
+        //
+        merged.putIfAbsent("authlete:frontChannelRequestObjectEncryptionRequired", Boolean.TRUE);
+        merged.putIfAbsent("authlete:requestObjectEncryptionAlgMatchRequired", Boolean.TRUE);
+        merged.putIfAbsent("authlete:requestObjectEncryptionEncMatchRequired", Boolean.TRUE);
+
         // The "token_endpoint_auth_signing_alg" client metadata has a meaning
         // only when a client assertion is used for client authentication.
         merged.putIfAbsent("token_endpoint_auth_signing_alg", "PS256");
