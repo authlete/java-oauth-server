@@ -8,6 +8,10 @@
   id="java-oauth-server"
   version="3.0">
 
+  <listener>
+    <listener-class>com.authlete.jaxrs.server.core.AppContextListener</listener-class>
+  </listener>
+
   <filter>
     <filter-name>API</filter-name>
 
