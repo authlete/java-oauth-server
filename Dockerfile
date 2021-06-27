@@ -7,6 +7,13 @@ ADD . /authlete/app
 
 WORKDIR /authlete/app
 
-RUN mvn -s /usr/share/maven/ref/settings-docker.xml clean install
+RUN mvn -s /usr/share/maven/ref/settings-docker.xml clean install && \
+    # Import the root certificate of Open Banking Brasil Sandbox
+    keytool -noprompt \
+            -storepass changeit \
+            -importcert \
+            -alias OpenBankingBrasilSandbox \
+            -keystore $JAVA_HOME/jre/lib/security/cacerts \
+            -file certs/open-banking-brasil-sandbox.pem
 
 CMD ["mvn", "-s", "/usr/share/maven/ref/settings-docker.xml", "clean", "jetty:run"]
