@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +39,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import com.authlete.common.util.Utils;
+import com.authlete.jaxrs.server.obb.util.ObbUtils;
 import com.authlete.jaxrs.util.CertificateUtils;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -496,7 +498,8 @@ public class OBBDCRProcessor
         //      more than 5 minutes prior to the request being received;
 
         // Extract the value of the "iat" claim from the software statement.
-        long iat = extractAsLong(ssClaims, "iat", REQUIRED, NOT_NULL, FROM_SS);
+        Date iat  = extractAsDate(ssClaims, "iat", REQUIRED, NOT_NULL, FROM_SS);
+        long iat_ = iat.getTime();
 
         // The difference between the current time and the 'iat' in milliseconds.
         //
@@ -504,18 +507,26 @@ public class OBBDCRProcessor
         // which is "A JSON numeric value representing the number of seconds
         // from 1970-01-01T00:00:00Z UTC until the specified UTC date/time,
         // ignoring leap seconds."
-        long diff = System.currentTimeMillis() - iat * 1000L;
+        //
+        // Date.getTime() returns the number of milliseconds elapsed since the
+        // Unix epoch.
+        //
+        Date now  = new Date();
+        long now_ = now.getTime();
+        long diff = now_ - iat_;
 
         if (diff < 0L)
         {
             throw invalidSoftwareStatement(
-                    "The issue time of the software statement is pointing to the future.");
+                    "The issue time of the software statement is pointing to the future: now=%s(%d), iat=%s(%d)",
+                    ObbUtils.formatDate(now), now_, ObbUtils.formatDate(iat), iat_);
         }
 
         if (300000L < diff)
         {
             throw invalidSoftwareStatement(
-                    "More than 5 minutes have passed since the issue time of the software statement.");
+                    "More than 5 minutes have passed since the issue time of the software statement: now=%s(%d), iat=%s(%d)",
+                    ObbUtils.formatDate(now), now_, ObbUtils.formatDate(iat), iat_);
         }
     }
 
@@ -1108,8 +1119,9 @@ public class OBBDCRProcessor
         if (!(value instanceof String))
         {
             throw invalidClientMetadata(isSoftwareStatement,
-                    "The value of the '%s' claim in the software statement is not a string.",
-                    "The value of the '%s' parameter in the request body is not a string.", key);
+                    "The value of the '%s' claim in the software statement is not a string: class=%s",
+                    "The value of the '%s' parameter in the request body is not a string: class=%s",
+                    key, value.getClass().getName());
         }
 
         // The map includes an entry for the key and its value is a string.
@@ -1117,6 +1129,7 @@ public class OBBDCRProcessor
     }
 
 
+    @SuppressWarnings("unused")
     private Long extractAsLong(
             Map<String, Object> map, String key, boolean optional, boolean nullable, boolean isSoftwareStatement)
     {
@@ -1132,12 +1145,38 @@ public class OBBDCRProcessor
         if (!(value instanceof Number))
         {
             throw invalidClientMetadata(isSoftwareStatement,
-                    "The value of the '%s' claim in the software statement is not a number.",
-                    "The value of the '%s' parameter in the request body is not a number.", key);
+                    "The value of the '%s' claim in the software statement is not a number: class=%s",
+                    "The value of the '%s' parameter in the request body is not a number: class=%s",
+                    key, value.getClass().getName());
         }
 
         // The map includes an entry for the key and its value can be interpreted as Long.
         return ((Number)value).longValue();
+    }
+
+
+    private Date extractAsDate(
+            Map<String, Object> map, String key, boolean optional, boolean nullable, boolean isSoftwareStatement)
+    {
+        // Extract the object from the map
+        Object value = extractAsObject(map, key, optional, nullable, isSoftwareStatement);
+        if (value == null)
+        {
+            // The existence of the key is optional or null is allowed.
+            return null;
+        }
+
+        // If the type of the value is not a Date.
+        if (!(value instanceof Date))
+        {
+            throw invalidClientMetadata(isSoftwareStatement,
+                    "The value of the '%s' claim in the software statement is not a date: class=%s",
+                    "The value of the '%s' parameter in the request body is not a date: class=%s",
+                    key, value.getClass().getName());
+        }
+
+        // The map includes an entry for the key and its value can be interpreted as Date.
+        return (Date)value;
     }
 
 
@@ -1156,8 +1195,9 @@ public class OBBDCRProcessor
         if (!(value instanceof List))
         {
             throw invalidClientMetadata(isSoftwareStatement,
-                    "The value of the '%s' claim in the software statement is not an array.",
-                    "The value of the '%s' parameter in the request body is not an array.", key);
+                    "The value of the '%s' claim in the software statement is not an array: class=%s",
+                    "The value of the '%s' parameter in the request body is not an array: class=%s",
+                    key, value.getClass().getName());
         }
 
         List<?> list = (List<?>)value;
@@ -1177,8 +1217,9 @@ public class OBBDCRProcessor
             }
 
             throw invalidClientMetadata(isSoftwareStatement,
-                    "The value at the index '%d' of the '%s' claim in the software statement is not a string.",
-                    "The value at the index '%d' of the '%s' parameter in the request body is not a string.", i, key);
+                    "The value at the index '%d' of the '%s' claim in the software statement is not a string: class=%s",
+                    "The value at the index '%d' of the '%s' parameter in the request body is not a string: class=%s",
+                    i, key, element.getClass().getName());
         }
 
         return result;
