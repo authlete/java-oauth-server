@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Authlete, Inc.
+ * Copyright (C) 2019-2021 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
@@ -90,7 +91,7 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
     /**
      * Dynamic client registration management endpoint, "update" functionality.
      */
-    @POST
+    @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(
