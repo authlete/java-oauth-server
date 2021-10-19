@@ -100,6 +100,8 @@ This implementation exposes endpoints as listed in the table below.
 | Revocation Endpoint                  | `/api/revocation`                   |
 | Introspection Endpoint               | `/api/introspection`                |
 | Dynamic Client Registration Endpoint | `/api/register`                     |
+| Pushed Authorization Request Endpoint| `/api/par`                          |
+| Grant Management Endpoint            | `/api/gm/{grantId}`                 |
 
 The authorization endpoint and the token endpoint accept parameters described
 in [RFC 6749][1], [OpenID Connect Core 1.0][13],
@@ -121,6 +123,13 @@ tokens and refresh tokens. Its behavior is defined in [RFC 7662][32].
 
 The dynamic client registration endpoint is a Web API to register and update
 client applications. Its behavior is defined in [RFC 7591][43] and [RFC 7592][44].
+
+The pushed authorization request endpoint (a.k.a. PAR endpoint) is a Web API
+to register an authorization request in advance and obtain a request URI.
+Its behavior is defined in [RFC 9126][45].
+
+The grant management endpoint is a Web API to get information about a grant ID
+and revoke a grant ID. Its behavior is defined in [Grant Management for OAuth 2.0][46].
 
 
 Authorization Request Example
@@ -192,6 +201,7 @@ Related Specifications
 - [RFC 7592][44] - OAuth 2.0 Dynamic Client Registration Management Protocol
 - [RFC 7636][31] - Proof Key for Code Exchange by OAuth Public Clients
 - [RFC 7662][32] - OAuth 2.0 Token Introspection
+- [RFC 9126][45] - OAuth 2.0 Pushed Authorization Requests
 - [OAuth 2.0 Multiple Response Type Encoding Practices][33]
 - [OAuth 2.0 Form Post Response Mode][34]
 - [OpenID Connect Core 1.0][13]
@@ -264,4 +274,6 @@ Contact
 [42]: https://maven.apache.org/
 [43]: https://tools.ietf.org/html/rfc7591
 [44]: https://tools.ietf.org/html/rfc7592
+[45]: https://www.rfc-editor.org/rfc/rfc9126.html
+[46]: https://openid.net/specs/fapi-grant-management.html
 [IA10]: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html
