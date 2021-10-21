@@ -83,7 +83,7 @@ public class OBBDCRProcessor
     private static Map<String, List<String>> ROLE_TO_SCOPE_MAP = Map.of(
     	    "DADOS", List.of("openid","accounts","credit-cards-accounts","consents",
     	    		"customers","invoice-financings","financings","loans",
-    	    		"unarranged-accounts-overdraft resources"),
+    	    		"unarranged-accounts-overdraft","resources"),
     	    "PAGTO", List.of("openid","payments","consents","resources"),
     	    "CONTA", List.of("openid"),
     	    "CCORR", List.of("openid")
@@ -775,14 +775,20 @@ public class OBBDCRProcessor
     	//    Regulatory Role: CCORR
     	//    Allowed Scopes: openid 
     	
-    	List<String> roles = extractAsStringList(ssClaims, "software_roles", false, false, true);
-    	List<String> scopes_from_roles = roles.stream()
+    	List<String> roles = extractAsStringList(ssClaims, "software_roles", false, false, true)
+    			.stream()
 				.map(c -> c.toUpperCase())
+				.collect(Collectors.toList());
+    	
+    	List<String> scopes_from_roles = roles
+    			.stream()
 				.map(c-> {return ROLE_TO_SCOPE_MAP.get(c);})
 				.flatMap(List::stream)
 				.distinct()
 				.collect(Collectors.toList());
 		
+    	
+    	
     	if(scopes == null || scopes.isEmpty()) {
     		
     		// Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
@@ -794,9 +800,15 @@ public class OBBDCRProcessor
         	//    Server Defaults section
             //   
         	
-    		requestParams.put("scope", scopes_from_roles);
+    		
+    		scopes = scopes_from_roles;
     		
     	} else {
+    		
+    		//making sure that the dynamic scope is not included by the client
+        	scopes.remove("consent");
+        	
+        	
     		
             // Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
             // 7.1. Authorization server
@@ -804,17 +816,31 @@ public class OBBDCRProcessor
             //   9. shall validate that requested scopes are appropriate for the
             //      softwares authorized regulatory roles;
     		
-    		if(scopes_from_roles.containsAll(scopes)) {
+    		if(!scopes_from_roles.containsAll(scopes)) {
     			
-    			//every scope on the DCR request is included on the scopes of 
+    			// not every scope on the DCR request is included on the scopes of 
     			// the roles
-    			
-    			return;
-    		} else {
+    		
     			throw invalidClientMetadata(
     	                "The requested scopes is not appropriate for the regulatory roles");
-    		}	
+    		}		
     	}
+    	
+    	
+    	//
+    	// Here we are using the approach described on
+    	// https://darutk.medium.com/implementers-note-about-open-banking-brasil-78d3d612dfaf
+    	// for the dynamic consent.
+    	// 
+    	// The service on Authlete needs to be configured with a scope "consent"
+    	//   and one of its attributes should be "regex" with value "^consent:.+$"
+    	//
+    	if(roles.contains("DADOS") || roles.contains("PAGTO")) {
+    		scopes.add("consent");
+    	}
+    	
+    	
+    	requestParams.put("scope", scopes);
     }
 
 
