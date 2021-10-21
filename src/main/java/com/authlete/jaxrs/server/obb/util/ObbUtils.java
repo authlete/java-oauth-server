@@ -30,6 +30,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiException;
+import com.authlete.common.dto.Client;
 import com.authlete.common.dto.IntrospectionRequest;
 import com.authlete.common.dto.IntrospectionResponse;
 import com.authlete.common.dto.IntrospectionResponse.Action;
@@ -458,6 +459,96 @@ public class ObbUtils
 
         // The given request body seems to be a Dynamic Client Registration request
         // for Open Banking Brasil.
+        return true;
+    }
+
+
+    /**
+     * Judge whether the client identified by the client ID is a client that
+     * has been dynamically registered for Open Banking Brasil.
+     *
+     * @param api
+     *         An implementation of {@link AuthleteApi}.
+     *
+     * @param clientId
+     *         A client ID.
+     *
+     * @return
+     *         {@code true} if the client identified by the client ID is a
+     *         client that has been dynamically registered for Open Banking
+     *         Brasil.
+     *
+     * @see <a href="https://openbanking-brasil.github.io/specs-seguranca/open-banking-brasil-dynamic-client-registration-1_ID1.html"
+     *      >Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0 Implementers Draft 1</a>
+     */
+    @SuppressWarnings("unchecked")
+    public static boolean isObbDynamicClient(AuthleteApi api, String clientId)
+    {
+        Client client;
+
+        try
+        {
+            // Get information about the client identified by the client ID
+            // by calling Authlete's /api/client/get/{clientIdentifier} API.
+            client = api.getClient(clientId);
+        }
+        catch (Exception e)
+        {
+            // The API call failed.
+            return false;
+        }
+
+        if (client == null)
+        {
+            // Client information is not available.
+            return false;
+        }
+
+        // Custom metadata of the client. This implementation assumes that
+        // a client is registered with some client metadata.
+        String json = client.getCustomMetadata();
+
+        if (json == null)
+        {
+            // The client does not have custom metadata.
+            return false;
+        }
+
+        Map<String, Object> metadata;
+
+        try
+        {
+            // Parse the string as JSON.
+            metadata = Utils.fromJson(json, Map.class);
+        }
+        catch (Exception e)
+        {
+            // Failed to parse the string as JSON.
+            return false;
+        }
+
+        // This implementation assumes that the client's custom metadata
+        // contains "software_roles". This assumption requires that the
+        // configuration of "Supported Custom Client Metadata" property
+        // of your Authlete 'Service' has been properly set up. The
+        // property must include "software_roles" so that it can be
+        // registered as custom metadata on dynamic client registration.
+
+        // If the custom metadata does not contain "software_roles".
+        if (!metadata.containsKey("software_roles"))
+        {
+            return false;
+        }
+
+        // The current implementation regards the client as a client
+        // of Open Banking Brasil if the client's custom metadata
+        // contains "software_roles". However, if other open banking
+        // ecosystems start to use "software_roles", further logic
+        // needs to be added here. For example, checking whether the
+        // "software_roles" array contains an OBB-specific value such
+        // as "DADOS" and "PAGTO". But, checking the presence of
+        // "software_roles" is enough for now.
+
         return true;
     }
 }

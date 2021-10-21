@@ -31,6 +31,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.util.Utils;
 import com.authlete.jaxrs.BaseClientRegistrationEndpoint;
@@ -62,29 +63,40 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response post(
+    public Response register(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
             String json,
             @Context HttpServletRequest httpServletRequest)
     {
-        // Pre-process the request as necessary.
-        json = preprocessRegister(httpServletRequest, json);
+        // The interface of Authlete APIs.
+        AuthleteApi api = AuthleteApiFactory.getDefaultApi();
 
-        return handleRegister(AuthleteApiFactory.getDefaultApi(), json, authorization);
+        // Pre-process the request body as necessary.
+        json = preprocessRequestBody(httpServletRequest, json);
+
+        // Execute the "register" operation.
+        return handleRegister(api, json, authorization);
     }
 
 
     /**
-     * Dynamic client registration management endpoint, "get" functionality.
+     * Dynamic client registration management endpoint, "read" functionality.
      */
     @GET
     @Path("/{id}")
-    public Response get(
+    public Response read(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
             @PathParam("id") String clientId,
             @Context HttpServletRequest httpServletRequest)
     {
-        return handleGet(AuthleteApiFactory.getDefaultApi(), clientId, authorization);
+        // The interface of Authlete APIs.
+        AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+
+        // Extra process before executing the "read" operation.
+        preprocessClient(httpServletRequest, api, clientId);
+
+        // Execute the "read" operation.
+        return handleGet(api, clientId, authorization);
     }
 
 
@@ -100,7 +112,14 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
             String json,
             @Context HttpServletRequest httpServletRequest)
     {
-        return handleUpdate(AuthleteApiFactory.getDefaultApi(), clientId, json, authorization);
+        // The interface of Authlete APIs.
+        AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+
+        // Pre-process the request body as necessary.
+        json = preprocessRequestBody(httpServletRequest, json);
+
+        // Execute the "update" operation.
+        return handleUpdate(api, clientId, json, authorization);
     }
 
 
@@ -114,16 +133,39 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
             @PathParam("id") String clientId,
             @Context HttpServletRequest httpServletRequest)
     {
-        return handleDelete(AuthleteApiFactory.getDefaultApi(), clientId, authorization);
+        // The interface of Authlete APIs.
+        AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+
+        // Extra process before executing the "delete" operation.
+        preprocessClient(httpServletRequest, api, clientId);
+
+        // Execute the "delete" operation.
+        return handleDelete(api, clientId, authorization);
     }
 
 
-    private static String preprocessRegister(HttpServletRequest request, String requestBody)
+    private static void preprocessClient(
+            HttpServletRequest request, AuthleteApi api, String clientId)
+    {
+        // If the client identified by the client ID seems a client
+        // that has been dynamically registered for Open Banking Brasil.
+        if (ObbUtils.isObbDynamicClient(api, clientId))
+        {
+            // Validate the client certificate.
+            new OBBCertValidator().validate(request);
+        }
+    }
+
+
+    private static String preprocessRequestBody(HttpServletRequest request, String requestBody)
     {
         // If the request body seems a Dynamic Client Registration request
         // for Open Banking Brasil.
         if (ObbUtils.isObbDcr(requestBody))
         {
+            // Validate the client certificate.
+            new OBBCertValidator().validate(request);
+
             // Perform validation specific to Open Banking Brasil.
             // The resultant map holds client metadata.
             Map<String, Object> metadata =
