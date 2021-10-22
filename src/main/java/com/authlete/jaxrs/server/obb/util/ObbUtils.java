@@ -408,6 +408,12 @@ public class ObbUtils
             return false;
         }
 
+        if (params == null)
+        {
+            // Failed to create a Map instance from the request body?
+            return false;
+        }
+
         // If the request body does not contain "software_statement".
         if (!params.containsKey("software_statement"))
         {
