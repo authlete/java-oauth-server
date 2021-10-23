@@ -22,6 +22,7 @@ import static com.authlete.jaxrs.server.api.OBBDCRConstants.JWE_ALG_CLIENT_METAD
 import static com.authlete.jaxrs.server.api.OBBDCRConstants.JWE_ENC_CLIENT_METADATA;
 import static com.authlete.jaxrs.server.api.OBBDCRConstants.JWS_ALG_CLIENT_METADATA;
 import static com.authlete.jaxrs.server.api.OBBDCRConstants.RECOGNIZED_CLIENT_METADATA;
+import static com.authlete.jaxrs.server.api.OBBDCRConstants.ROLE_TO_SCOPES;
 import static com.authlete.jaxrs.server.api.OBBDCRConstants.TLS_CLIENT_AUTH_SAN_CLIENT_METADATA;
 import java.io.IOException;
 import java.net.URL;
@@ -744,33 +745,75 @@ public class OBBDCRProcessor
         //   9. shall validate that requested scopes are appropriate for the
         //      softwares authorized regulatory roles;
 
-        // Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
-        // 7.2. Regulatory Roles to OpenID and OAuth 2.0 Mappings
-        //
-        //   If the scopes are omitted during the DCR process, the authorization
-        //   server shall grant the complete set of potential scopes based on the
-        //   registering bank's regulatory roles, as described in the Server
-        //   Defaults section.
-        //
+        // Extract "scope".
+        String scope = obtainAsString(requestParams, ssClaims, "scope");
 
-        // It is unclear what the OBB DCR requirements exactly expect the client
-        // registration endpoint to do for scopes.
-        //
-        // The discussion in Issue 106 indicates that each bank has to determine
-        // details of scope assignment rules.
-        //
-        //   [OpenBanking-Brasil/specs-seguranca] Issue 106
-        //   Question: If the scopes are omitted during the DCR process?
-        //
-        //     https://github.com/OpenBanking-Brasil/specs-seguranca/issues/106
-        //
-        // At least, the process of access token issuance must look into details
-        // of "consent" in order to assign scopes properly to access tokens.
-        //
-        // In any case, the real work needs to be done in implementations of
-        // the authorization endpoint, the backchannel authentication endpoint,
-        // and/or the token endpoint. So, this DCR implementation does nothing
-        // for scopes.
+        // If the metadata does not contain 'scope' or its value is empty.
+        if (scope == null || scope.length() == 0)
+        {
+            // Nothing to validate here.
+            return;
+        }
+
+        // True if the scope originates from the software statement.
+        boolean fromSS = ssClaims.containsKey("scope");
+
+        // The value of 'scope' is space-separated scope names.
+        String[] requestedScopes = scope.split(" +");
+
+        // Extract "software_roles" from the software statement.
+        List<String> roles = extractAsStringList(
+                ssClaims, "software_roles", REQUIRED, NOT_NULL, FROM_SS);
+
+        // For each requested scope.
+        for (String requestedScope : requestedScopes)
+        {
+            // Check if the requested scope is allowed for the roles.
+            validateScopeWithRoles(requestedScope, roles, fromSS);
+        }
+
+        // Okay. All the requested scopes are allowed.
+    }
+
+
+    private void validateScopeWithRoles(
+            String requestedScope, List<String> roles, boolean fromSS)
+    {
+        // For each role.
+        for (String role : roles)
+        {
+            // The scopes allowed for the role.
+            Set<String> allowedScopes = getAllowedScopesForRole(role);
+
+            // If the set of allowed scopes contains the requested scope.
+            if (allowedScopes.contains(requestedScope))
+            {
+                // Okay. The requested scopes is allowed by the role.
+                return;
+            }
+        }
+
+        throw this.invalidClientMetadata(fromSS,
+                "'%s' in the 'scope' claim in the software statement is not allowed by any role in 'software_roles'.",
+                "'%s' in the 'scope' parameter in the request body is not allowed by any role in 'software_roles'.",
+                requestedScope);
+    }
+
+
+    private Set<String> getAllowedScopesForRole(String role)
+    {
+        // The scopes allowed for the role.
+        Set<String> allowedScopes = ROLE_TO_SCOPES.get(role);
+
+        // If allowed scopes for the role are not available.
+        if (allowedScopes == null)
+        {
+            // This means that the role is unknown to this implementation.
+            throw invalidSoftwareStatement(
+                    "The role '%s' included in 'software_roles' is unknown.", role);
+        }
+
+        return allowedScopes;
     }
 
 
@@ -1042,6 +1085,9 @@ public class OBBDCRProcessor
         useAsDefault(merged, ssClaims, "software_policy_uri",         "policy_uri");
         useAsDefault(merged, ssClaims, "software_client_uri",         "client_uri");
         useAsDefault(merged, ssClaims, "software_logo_uri",           "logo_uri");
+
+        // Adjust "scope".
+        adjustScope(merged);
     }
 
 
@@ -1063,6 +1109,75 @@ public class OBBDCRProcessor
 
         // Use the value in the software statement as the default value.
         merged.put(targetKey, ssClaims.get(sourceKey));
+    }
+
+
+    private void adjustScope(Map<String, Object> merged)
+    {
+        // Extract "software_roles". The software statement must include it.
+        List<String> roles = extractAsStringList(
+                merged, "software_roles", REQUIRED, NOT_NULL, FROM_SS);
+
+        // The "scope" in the merged client metadata.
+        String scope = (String)merged.get("scope");
+
+        if (scope == null)
+        {
+            // Prepare scopes based on the regulatory roles which are
+            // listed in the "software_roles" claim.
+            scope = prepareScopeByRoles(roles);
+        }
+
+        // Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
+        // Regulatory Roles to dynamic OAuth 2.0 scope Mappings
+        //
+        //   -----------------------------------------
+        //   | Regulatory Role | Allowed Scopes      |
+        //   |-----------------+---------------------|
+        //   | DADOS           | consent:{ConsentId} |
+        //   | PAGTO           | consent:{ConsentId} |
+        //   -----------------------------------------
+        //
+        // To support the "Dynamic Consent Scope" defined in OBB FAPI, we add
+        // "consent" to the scope on the assumption that your service defines
+        // the "consent" scope as a dynamic scope in order to support the
+        // "Dynamic Consent Scope".
+        //
+        // See the following articles for details.
+        //
+        //   [Blog] Implementer’s note about Open Banking Brasil
+        //     https://darutk.medium.com/implementers-note-about-open-banking-brasil-78d3d612dfaf
+        //
+        //   [Authlete Knowledge Base] Using “parameterized scopes”
+        //     https://kb.authlete.com/en/s/oauth-and-openid-connect/a/parameterized-scopes
+        //
+
+        if (roles.contains("DADOS") || roles.contains("PAGTO"))
+        {
+            scope = scope + " consent";
+        }
+
+        // Add or renew "scope".
+        merged.put("scope", scope);
+    }
+
+
+    private String prepareScopeByRoles(List<String> roles)
+    {
+        Set<String> scopes = new HashSet<String>();
+
+        // For each role listed in "software_roles".
+        for (String role : roles)
+        {
+            // The scopes allowed for the role.
+            Set<String> allowedScopes = getAllowedScopesForRole(role);
+
+            // Accumulate the allowed scopes without duplicates.
+            scopes.addAll(allowedScopes);
+        }
+
+        // Concatenate the scopes with spaces.
+        return String.join(" ", scopes);
     }
 
 

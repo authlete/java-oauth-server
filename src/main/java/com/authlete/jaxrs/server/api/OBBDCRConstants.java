@@ -18,8 +18,10 @@ package com.authlete.jaxrs.server.api;
 
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -137,7 +139,7 @@ public class OBBDCRConstants
             // "client_name",                   // Duplicate
             // "client_uri",                    // Duplicate
             // "logo_uri",                      // Duplicate
-            // "scope",                         // This implementation ignores this.
+            "scope",
             // "contacts",                      // Duplicate
             // "tos_uri",                       // Duplicate
             // "policy_uri",                    // Duplicate
@@ -226,6 +228,37 @@ public class OBBDCRConstants
     );
 
 
+    // Mapping from a role to scopes.
+    //
+    //   Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
+    //   7.2. Regulatory Roles to OpenID and OAuth 2.0 Mappings
+    //
+    //     ---------------------------------------------------------------------
+    //     | Regulatory Roles | Allowed Scopes                                 |
+    //     |------------------+------------------------------------------------|
+    //     | DADOS            | openid accounts credit-cards-accounts consents |
+    //     |                  | customers invoice-financings financings loans  |
+    //     |                  | unarranged-accounts-overdraft resources        |
+    //     |------------------+------------------------------------------------|
+    //     | PAGTO            | openid payments consents resources             |
+    //     |------------------+------------------------------------------------|
+    //     | CONTA            | openid                                         |
+    //     |------------------+------------------------------------------------|
+    //     | CCORR            | openid                                         |
+    //     ---------------------------------------------------------------------
+    //
+    public static final Map<String, Set<String>> ROLE_TO_SCOPES = toMap(
+            "DADOS", toSet(
+                         "openid", "accounts", "credit-cards-accounts", "consents",
+                         "customers", "invoice-financings", "financings", "loans",
+                         "unarranged-accounts-overdraft", "resources"
+                     ),
+            "PAGTO", toSet("openid", "payments", "consents", "resources"),
+            "CONTA", toSet("openid"),
+            "CCORR", toSet("openid")
+    );
+
+
     @SuppressWarnings("unchecked")
     private static <T> List<T> toList(T... elements)
     {
@@ -237,5 +270,19 @@ public class OBBDCRConstants
     private static <T> Set<T> toSet(T... elements)
     {
         return new HashSet<T>(Arrays.asList(elements));
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private static <TKey, TValue> Map<TKey, TValue> toMap(Object... elements)
+    {
+        Map<TKey, TValue> map = new HashMap<TKey, TValue>();
+
+        for (int i = 0; i < elements.length; i += 2)
+        {
+            map.put((TKey)elements[i], (TValue)elements[i+1]);
+        }
+
+        return map;
     }
 }
