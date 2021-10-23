@@ -33,8 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -78,16 +76,6 @@ public class OBBDCRProcessor
     private static boolean FROM_SS   = true;
     private static boolean FROM_BODY = false;
 
-    //the map below is defined on https://openbanking-brasil.github.io/specs-seguranca/open-banking-brasil-dynamic-client-registration-1_ID2-ptbr.html
-    // section 7.2
-    private static Map<String, List<String>> ROLE_TO_SCOPE_MAP = Map.of(
-    	    "DADOS", List.of("openid","accounts","credit-cards-accounts","consents",
-    	    		"customers","invoice-financings","financings","loans",
-    	    		"unarranged-accounts-overdraft","resources"),
-    	    "PAGTO", List.of("openid","payments","consents","resources"),
-    	    "CONTA", List.of("openid"),
-    	    "CCORR", List.of("openid")
-    	);
 
     public Map<String, Object> process(HttpServletRequest request, String requestBody)
     {
@@ -750,97 +738,39 @@ public class OBBDCRProcessor
     private void validateScopesWithRoles(
             Map<String, Object> requestParams, Map<String, Object> ssClaims)
     {
+        // Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
+        // 7.1. Authorization server
+        //
+        //   9. shall validate that requested scopes are appropriate for the
+        //      softwares authorized regulatory roles;
 
-        
-    	// Retrieving the list of scopes requested by the client on the DCR 
-    	List<String> scopes = extractAsStringList(requestParams, "scope", true, true, false);
-    	
-    	
-    	//  We need to calculate the list of scopes based on the roles of the 
-    	//    client on the directory.
-    	//  This will be used as default value of the scopes or the max scopes
-    	//    that a client can request.
-    	//
-    	//    Regulatory Role: DADOS
-    	//    Allowed Scopes: openid accounts credit-cards-accounts consents 
-    	//                    customers invoice-financings financings loans  
-    	//                    unarranged-accounts-overdraft resources
-    	//
-    	//    Regulatory Role: PAGTO
-    	//    Allowed Scopes: openid payments consents resources
-    	//
-    	//    Regulatory Role: CONTA
-    	//    Allowed Scopes: openid 
-    	//
-    	//    Regulatory Role: CCORR
-    	//    Allowed Scopes: openid 
-    	
-    	List<String> roles = extractAsStringList(ssClaims, "software_roles", false, false, true)
-    			.stream()
-				.map(c -> c.toUpperCase())
-				.collect(Collectors.toList());
-    	
-    	List<String> scopes_from_roles = roles
-    			.stream()
-				.map(c-> {return ROLE_TO_SCOPE_MAP.get(c);})
-				.flatMap(List::stream)
-				.distinct()
-				.collect(Collectors.toList());
-		
-    	
-    	
-    	if(scopes == null || scopes.isEmpty()) {
-    		
-    		// Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
-            // 7.2. Regulatory Roles to OpenID and OAuth 2.0 Mappings
-            //
-            //   If the scopes are omitted during the DCR process, the authorization 
-        	//    server shall grant the complete set of potential scopes based on  
-        	//    the registering bank’s regulatory roles, as described in the  
-        	//    Server Defaults section
-            //   
-        	
-    		
-    		scopes = scopes_from_roles;
-    		
-    	} else {
-    		
-    		//making sure that the dynamic scope is not included by the client
-        	scopes.remove("consent");
-        	
-        	
-    		
-            // Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
-            // 7.1. Authorization server
-            //
-            //   9. shall validate that requested scopes are appropriate for the
-            //      softwares authorized regulatory roles;
-    		
-    		if(!scopes_from_roles.containsAll(scopes)) {
-    			
-    			// not every scope on the DCR request is included on the scopes of 
-    			// the roles
-    		
-    			throw invalidClientMetadata(
-    	                "The requested scopes is not appropriate for the regulatory roles");
-    		}		
-    	}
-    	
-    	
-    	//
-    	// Here we are using the approach described on
-    	// https://darutk.medium.com/implementers-note-about-open-banking-brasil-78d3d612dfaf
-    	// for the dynamic consent.
-    	// 
-    	// The service on Authlete needs to be configured with a scope "consent"
-    	//   and one of its attributes should be "regex" with value "^consent:.+$"
-    	//
-    	if(roles.contains("DADOS") || roles.contains("PAGTO")) {
-    		scopes.add("consent");
-    	}
-    	
-    	
-    	requestParams.put("scope", scopes);
+        // Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
+        // 7.2. Regulatory Roles to OpenID and OAuth 2.0 Mappings
+        //
+        //   If the scopes are omitted during the DCR process, the authorization
+        //   server shall grant the complete set of potential scopes based on the
+        //   registering bank's regulatory roles, as described in the Server
+        //   Defaults section.
+        //
+
+        // It is unclear what the OBB DCR requirements exactly expect the client
+        // registration endpoint to do for scopes.
+        //
+        // The discussion in Issue 106 indicates that each bank has to determine
+        // details of scope assignment rules.
+        //
+        //   [OpenBanking-Brasil/specs-seguranca] Issue 106
+        //   Question: If the scopes are omitted during the DCR process?
+        //
+        //     https://github.com/OpenBanking-Brasil/specs-seguranca/issues/106
+        //
+        // At least, the process of access token issuance must look into details
+        // of "consent" in order to assign scopes properly to access tokens.
+        //
+        // In any case, the real work needs to be done in implementations of
+        // the authorization endpoint, the backchannel authentication endpoint,
+        // and/or the token endpoint. So, this DCR implementation does nothing
+        // for scopes.
     }
 
 
