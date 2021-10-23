@@ -152,6 +152,7 @@ public class OBBDCRConstants
             // RFC 7592 OAuth 2.0 Dynamic Client Registration Management Protocol
             //-----------------------------------------------------------------------------------------
             "client_id",
+            "client_secret",
 
             //-----------------------------------------------------------------------------------------
             // RFC 8705 OAuth 2.0 Mutual-TLS Client Authentication and Certificate-Bound Access Tokens
