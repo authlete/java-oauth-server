@@ -22,12 +22,14 @@ import static com.authlete.jaxrs.server.api.OBBDCRConstants.JWE_ALG_CLIENT_METAD
 import static com.authlete.jaxrs.server.api.OBBDCRConstants.JWE_ENC_CLIENT_METADATA;
 import static com.authlete.jaxrs.server.api.OBBDCRConstants.JWS_ALG_CLIENT_METADATA;
 import static com.authlete.jaxrs.server.api.OBBDCRConstants.RECOGNIZED_CLIENT_METADATA;
+import static com.authlete.jaxrs.server.api.OBBDCRConstants.ROLE_TO_EXTRA_SCOPES;
 import static com.authlete.jaxrs.server.api.OBBDCRConstants.ROLE_TO_SCOPES;
 import static com.authlete.jaxrs.server.api.OBBDCRConstants.TLS_CLIENT_AUTH_SAN_CLIENT_METADATA;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -729,8 +731,12 @@ public class OBBDCRProcessor
             // The scopes allowed for the role.
             Set<String> allowedScopes = getAllowedScopesForRole(role);
 
+            // The extra implementation-specific scopes allowed for the role.
+            Set<String> allowedExtraScopes = getAllowedExtraScopesForRole(role);
+
             // If the set of allowed scopes contains the requested scope.
-            if (allowedScopes.contains(requestedScope))
+            if (allowedScopes.contains(requestedScope) ||
+                allowedExtraScopes.contains(requestedScope))
             {
                 // Okay. The requested scopes is allowed by the role.
                 return;
@@ -758,6 +764,21 @@ public class OBBDCRProcessor
         }
 
         return allowedScopes;
+    }
+
+
+    private Set<String> getAllowedExtraScopesForRole(String role)
+    {
+        // The extra implementation-specific scopes allowed for the role.
+        Set<String> allowedExtraScopes = ROLE_TO_EXTRA_SCOPES.get(role);
+
+        // If extra scopes for the role are not available.
+        if (allowedExtraScopes == null)
+        {
+            allowedExtraScopes = Collections.emptySet();
+        }
+
+        return allowedExtraScopes;
     }
 
 
@@ -1087,7 +1108,15 @@ public class OBBDCRProcessor
         // the "consent" scope as a dynamic scope in order to support the
         // "Dynamic Consent Scope".
         //
-        // See the following articles for details.
+        // The "consent" scope must have a scope attribute whose name is "regex"
+        // and whose value is a regular expression that matches "consent:{ConsentId}"
+        // (e.g. "^consent:.+$").
+        //
+        // The "scope attribute" feature is specific to Authlete. Other solutions
+        // provide different approaches for the "Dynamic Consent Scope".
+        //
+        // See the following articles for details about Authlete's approach for
+        // dynamic scopes.
         //
         //   [Blog] Implementer’s note about Open Banking Brasil
         //     https://darutk.medium.com/implementers-note-about-open-banking-brasil-78d3d612dfaf

@@ -265,6 +265,45 @@ public class OBBDCRConstants
     );
 
 
+    // Implementation-specific extra scopes allowed per role.
+    //
+    // Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
+    // Regulatory Roles to dynamic OAuth 2.0 scope Mappings
+    //
+    //   -----------------------------------------
+    //   | Regulatory Role | Allowed Scopes      |
+    //   |-----------------+---------------------|
+    //   | DADOS           | consent:{ConsentId} |
+    //   | PAGTO           | consent:{ConsentId} |
+    //   -----------------------------------------
+    //
+    // To support the "Dynamic Consent Scope" defined in OBB FAPI, we add
+    // "consent" to the scope on the assumption that your service defines
+    // the "consent" scope as a dynamic scope in order to support the
+    // "Dynamic Consent Scope".
+    //
+    // The "consent" scope must have a scope attribute whose name is "regex"
+    // and whose value is a regular expression that matches "consent:{ConsentId}"
+    // (e.g. "^consent:.+$").
+    //
+    // The "scope attribute" feature is specific to Authlete. Other solutions
+    // provide different approaches for the "Dynamic Consent Scope".
+    //
+    // See the following articles for details about Authlete's approach for
+    // dynamic scopes.
+    //
+    //   [Blog] Implementer’s note about Open Banking Brasil
+    //     https://darutk.medium.com/implementers-note-about-open-banking-brasil-78d3d612dfaf
+    //
+    //   [Authlete Knowledge Base] Using “parameterized scopes”
+    //     https://kb.authlete.com/en/s/oauth-and-openid-connect/a/parameterized-scopes
+    //
+    public static final Map<String, Set<String>> ROLE_TO_EXTRA_SCOPES = toMap(
+            "DADOS", toSet("consent"),
+            "PAGTO", toSet("consent")
+    );
+
+
     @SuppressWarnings("unchecked")
     private static <T> List<T> toList(T... elements)
     {
