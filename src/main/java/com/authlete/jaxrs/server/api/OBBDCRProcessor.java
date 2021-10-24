@@ -41,7 +41,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import com.authlete.common.util.Utils;
 import com.authlete.jaxrs.server.obb.util.ObbUtils;
-import com.authlete.jaxrs.util.CertificateUtils;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSVerifier;
@@ -80,9 +79,6 @@ public class OBBDCRProcessor
 
     public Map<String, Object> process(HttpServletRequest request, String requestBody)
     {
-        // Validate the client certificate used in the mutual TLS connection.
-        validateClientCertificate(request);
-
         // Parse the request body.
         Map<String, Object> requestParams = parseRequestBody(requestBody);
 
@@ -94,58 +90,6 @@ public class OBBDCRProcessor
 
         // Merge the client metadata.
         return mergeClientMetadata(requestParams, ssClaims);
-    }
-
-
-    private String validateClientCertificate(HttpServletRequest request)
-    {
-        // Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
-        // 7.1. Authorization server
-        //
-        //   1. shall reject dynamic client registration requests not performed
-        //      over a connection secured with mutual tls using certificates
-        //      issued by Brazil ICP (production) or the Directory of Participants
-        //      (sandbox);
-        //
-        // In addition to the above requirement, the sequence diagram in
-        // "9. Dynamic Client Registration Request Processing" indicates that the
-        // authorization server should check the revocation status of the client
-        // certificate by using OCSP of the ICP.
-
-        // There are several options as to where to perform the validation above.
-        // For example, it is possible to perform all the validation steps here
-        // programmatically. However, validation on a client certificate itself
-        // used in a mutual TLS connection should be performed at other layers
-        // before the request reaches here.
-
-        // Extract the client certificate from the request.
-        String certificate = CertificateUtils.extract(request);
-
-        // If no client certificate is available.
-        if (certificate == null)
-        {
-            // The request does not include a client certificate. This indicates
-            // (1) that the connection between the client application and the
-            // reverse proxy (or this server if the connection is established
-            // directly between the client and this server) is not a mutual TLS
-            // connection or (2) that the reverse proxy failed to pass a client
-            // certificate to this server.
-            throw invalidRequest("No client certificate is avaiable.");
-        }
-
-        // If we want to bind the registration access token being issued to the
-        // client certificate, we need to do more here. But currently, this
-        // implementation checks only whether a client certificate is available.
-        //
-        // See also:
-        //
-        //   [OpenBanking-Brasil/specs-seguranca] Issue 91
-        //   Question: Certificate-Bound Registration Access Token
-        //
-        //     https://github.com/OpenBanking-Brasil/specs-seguranca/issues/91
-        //
-
-        return certificate;
     }
 
 
@@ -1369,7 +1313,7 @@ public class OBBDCRProcessor
     }
 
 
-    private WebApplicationException badRequest(String code, String description)
+    public static WebApplicationException badRequest(String code, String description)
     {
         // RFC 7591 OAuth 2.0 Dynamic Client Registration Protocol
         // 3.2.2. Client Registration Error Response
@@ -1398,7 +1342,7 @@ public class OBBDCRProcessor
     }
 
 
-    private WebApplicationException invalidRequest(String format, Object... args)
+    public static WebApplicationException invalidRequest(String format, Object... args)
     {
         return badRequest("invalid_request", String.format(format, args));
     }

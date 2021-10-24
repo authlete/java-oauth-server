@@ -17,6 +17,7 @@
 package com.authlete.jaxrs.server.api;
 
 
+import java.security.GeneralSecurityException;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -152,7 +153,7 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
         if (ObbUtils.isObbDynamicClient(api, clientId))
         {
             // Validate the client certificate.
-            new OBBCertValidator().validate(request);
+            validateCertificate(request);
         }
     }
 
@@ -164,7 +165,7 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
         if (ObbUtils.isObbDcr(requestBody))
         {
             // Validate the client certificate.
-            new OBBCertValidator().validate(request);
+            validateCertificate(request);
 
             // Perform validation specific to Open Banking Brasil.
             // The resultant map holds client metadata.
@@ -177,6 +178,29 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
         {
             // No pre-processing.
             return requestBody;
+        }
+    }
+
+
+    private static void validateCertificate(HttpServletRequest request)
+    {
+        // Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
+        // 7.1. Authorization server
+        //
+        //   1. shall reject dynamic client registration requests not performed
+        //      over a connection secured with mutual tls using certificates
+        //      issued by Brazil ICP (production) or the Directory of Participants
+        //      (sandbox);
+
+        try
+        {
+            // Validate the client certificate.
+            OBBCertValidator.getInstance().validate(request);
+        }
+        catch (GeneralSecurityException e)
+        {
+            throw OBBDCRProcessor.invalidRequest(
+                    "Client certificate validation failed: %s", e.getMessage());
         }
     }
 }

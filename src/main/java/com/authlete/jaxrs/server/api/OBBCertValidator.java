@@ -17,13 +17,68 @@
 package com.authlete.jaxrs.server.api;
 
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import com.authlete.jaxrs.server.util.CertValidator;
 
 
-public class OBBCertValidator
+public class OBBCertValidator extends CertValidator
 {
-    public void validate(HttpServletRequest request)
+    // Root certificates issued by OBB Authority.
+    private static final Path[] ROOT_CERTIFICATES = {
+            Paths.get(pwd(), "certs", "Open_Banking_Brasil_Sandbox_Root_G1.pem")
+    };
+
+
+    private static OBBCertValidator sInstance;
+    private static boolean sInstantiationTried;
+
+
+    private OBBCertValidator()
+            throws CertificateException, InvalidAlgorithmParameterException,
+            NoSuchAlgorithmException, IOException
     {
-        // TODO
+        super(ROOT_CERTIFICATES);
+    }
+
+
+    private static String pwd()
+    {
+        return Paths.get("").toAbsolutePath().toString();
+    }
+
+
+    public static synchronized OBBCertValidator getInstance() throws GeneralSecurityException
+    {
+        if (sInstantiationTried)
+        {
+            if (sInstance != null)
+            {
+                return sInstance;
+            }
+
+            throw new GeneralSecurityException(
+                    "Certificate validator for Open Banking Brasil is not available.");
+        }
+
+        sInstantiationTried = true;
+
+        try
+        {
+            sInstance = new OBBCertValidator();
+            return sInstance;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+
+            throw new GeneralSecurityException(
+                    "Failed to create a certificate validator for Open Banking Brasil: " + e.getMessage(), e);
+        }
     }
 }
