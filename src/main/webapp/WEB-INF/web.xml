@@ -40,6 +40,7 @@
         com.authlete.jaxrs.server.api.JwksEndpoint,
         com.authlete.jaxrs.server.api.PushedAuthReqEndpoint,
         com.authlete.jaxrs.server.api.RevocationEndpoint,
+        com.authlete.jaxrs.server.api.TestEndpoint,
         com.authlete.jaxrs.server.api.TokenEndpoint,
         com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationCallbackEndpoint,
         com.authlete.jaxrs.server.api.backchannel.BackchannelAuthenticationEndpoint,
