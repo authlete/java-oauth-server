@@ -162,8 +162,10 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
     private static String preprocessRequestBody(HttpServletRequest request, String requestBody)
     {
         // If the request body seems a Dynamic Client Registration request
-        // for Open Banking Brasil.
-        if (ObbUtils.isObbDcr(requestBody))
+        // for Open Banking Brasil or if the request includes a client
+        // certificate for Open Banking Brasil.
+        if (ObbUtils.isObbDcr(requestBody) ||
+            ObbUtils.includesObbCertificate(request))
         {
             // Validate the client certificate.
             validateCertificate(request);

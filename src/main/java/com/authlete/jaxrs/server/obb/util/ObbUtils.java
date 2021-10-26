@@ -38,6 +38,7 @@ import com.authlete.common.util.FapiUtils;
 import com.authlete.common.util.Utils;
 import com.authlete.common.web.BearerToken;
 import com.authlete.common.web.DpopToken;
+import com.authlete.jaxrs.server.api.OBBCertValidator;
 import com.authlete.jaxrs.server.obb.model.ResponseError;
 import com.authlete.jaxrs.util.CertificateUtils;
 import com.nimbusds.jwt.SignedJWT;
@@ -556,5 +557,36 @@ public class ObbUtils
         // "software_roles" is enough for now.
 
         return true;
+    }
+
+
+    /**
+     * Judge whether the root certificate of the certificate chain that
+     * consists of the presented client certificate and intermediate
+     * certificates is a certificate issued by the authority of Open
+     * Banking Brasil.
+     *
+     * @param request
+     *         An HTTP request.
+     *
+     * @return
+     *         {@code true} if the request contains a client certificate
+     *         for Open Banking Brasil.
+     */
+    public static boolean includesObbCertificate(HttpServletRequest request)
+    {
+        try
+        {
+            // Validate the certificate chain included in the request.
+            OBBCertValidator.getInstance().validate(request);
+
+            // The request contains a client certificate issued for OBB.
+            return true;
+        }
+        catch (Exception e)
+        {
+            // The request does not contain a client certificate for OBB.
+            return false;
+        }
     }
 }
