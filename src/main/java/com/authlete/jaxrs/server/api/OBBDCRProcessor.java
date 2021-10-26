@@ -1312,16 +1312,8 @@ public class OBBDCRProcessor
     }
 
 
-    public static WebApplicationException badRequest(String code, String description)
+    public static WebApplicationException errorResponse(Status status, String code, String description)
     {
-        // RFC 7591 OAuth 2.0 Dynamic Client Registration Protocol
-        // 3.2.2. Client Registration Error Response
-        //
-        //   When a registration error condition occurs, the authorization
-        //   server returns an HTTP 400 status code (unless otherwise specified)
-        //   with content type "application/json" consisting of a JSON object
-        //   [RFC7159] describing the error in the response body.
-
         String body = String.format(
                 "{\n" +
                 "  \"error\": \"%s\",\n" +
@@ -1331,7 +1323,7 @@ public class OBBDCRProcessor
                 ;
 
         Response response = Response
-                .status(Status.BAD_REQUEST)
+                .status(status)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .entity(body)
                 .build()
@@ -1341,7 +1333,21 @@ public class OBBDCRProcessor
     }
 
 
-    public static WebApplicationException invalidRequest(String format, Object... args)
+    private static WebApplicationException badRequest(String code, String description)
+    {
+        // RFC 7591 OAuth 2.0 Dynamic Client Registration Protocol
+        // 3.2.2. Client Registration Error Response
+        //
+        //   When a registration error condition occurs, the authorization
+        //   server returns an HTTP 400 status code (unless otherwise specified)
+        //   with content type "application/json" consisting of a JSON object
+        //   [RFC7159] describing the error in the response body.
+        //
+        return errorResponse(Status.BAD_REQUEST, code, description);
+    }
+
+
+    private static WebApplicationException invalidRequest(String format, Object... args)
     {
         return badRequest("invalid_request", String.format(format, args));
     }

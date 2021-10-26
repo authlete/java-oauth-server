@@ -32,6 +32,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.util.Utils;
@@ -199,7 +200,7 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
         }
         catch (GeneralSecurityException e)
         {
-            throw OBBDCRProcessor.invalidRequest(
+            throw OBBDCRProcessor.errorResponse(Status.UNAUTHORIZED,
                     "Client certificate validation failed: %s", e.getMessage());
         }
     }
