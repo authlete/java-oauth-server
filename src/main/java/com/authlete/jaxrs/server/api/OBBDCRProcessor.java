@@ -1070,6 +1070,7 @@ public class OBBDCRProcessor
             // Prepare scopes based on the regulatory roles which are
             // listed in the "software_roles" claim.
             scope = prepareScopeByRoles(roles);
+            merged.put("scope", scope);
         }
 
         // Open Banking Brasil Financial-grade API Dynamic Client Registration 1.0
