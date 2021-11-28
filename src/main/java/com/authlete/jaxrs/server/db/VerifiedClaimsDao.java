@@ -75,6 +75,7 @@ public class VerifiedClaimsDao
                 .putClaim("given_name","Max")
                 .putClaim("family_name", "Meier")
                 .putClaim("birthdate", "1956-01-28")
+                .putClaim("nationalities", Arrays.asList("USA", "DEU"))
             )
         );
     }

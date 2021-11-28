@@ -19,6 +19,7 @@ package com.authlete.jaxrs.server.db;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.Date;
 import com.authlete.common.dto.Address;
 import com.authlete.common.types.User;
@@ -49,7 +50,8 @@ public class UserDao
                     "Max", "Meier", null, null,
                     "https://example.com/max/profile", "https://example.com/max/me.jpg",
                     "https://example.com/max/", "male", "Europe/Berlin", "de",
-                    "max", "1956-01-28", toDate("2021-11-28")),
+                    "max", "1956-01-28", toDate("2021-11-28"))
+                    .setNationalities(Arrays.asList("USA", "DEU")),
     };
 
 

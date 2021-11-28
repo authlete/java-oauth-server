@@ -17,11 +17,11 @@
 package com.authlete.jaxrs.server.db;
 
 
+import java.util.Date;
+import java.util.List;
 import com.authlete.common.dto.Address;
 import com.authlete.common.types.StandardClaims;
 import com.authlete.common.types.User;
-
-import java.util.Date;
 
 
 /**
@@ -94,6 +94,11 @@ public class UserEntity implements User
     private String preferredUsername;
     private String birthdate;
     private Date updatedAt;
+
+
+    // Custom claims
+    private List<String> nationalities;
+
 
     /**
      * Constructor with initial values.
@@ -251,6 +256,9 @@ public class UserEntity implements User
             case StandardClaims.PREFERRED_USERNAME:
                 return preferredUsername;
 
+            case "nationalities":
+                return nationalities;
+
             default:
                 // Unsupported claim.
                 return null;
@@ -276,5 +284,19 @@ public class UserEntity implements User
                 // Unsupported attribute.
                 return null;
         }
+    }
+
+
+    public List<String> getNationalities()
+    {
+        return nationalities;
+    }
+
+
+    public UserEntity setNationalities(List<String> nationalities)
+    {
+        this.nationalities = nationalities;
+
+        return this;
     }
 }
