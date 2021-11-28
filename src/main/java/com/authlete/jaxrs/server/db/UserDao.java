@@ -17,12 +17,11 @@
 package com.authlete.jaxrs.server.db;
 
 
-import com.authlete.common.dto.Address;
-import com.authlete.common.types.User;
-
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Date;
+import com.authlete.common.dto.Address;
+import com.authlete.common.types.User;
 
 
 /**
@@ -41,12 +40,23 @@ public class UserDao
                     "John", "Smith", "Doe", "Johnny",
                     "https://example.com/john/profile", "https://example.com/john/me.jpg",
                     "https://example.com/john/", "male", "Europe/London",
-                    "en-US", "john", "0000-03-22", Date.from(LocalDate.parse("2020-01-01").atStartOfDay().toInstant(ZoneOffset.UTC))),
+                    "en-US", "john", "0000-03-22", toDate("2020-01-01")),
             new UserEntity("1002", "jane", "jane", "Jane Smith", "jane@example.com",
                     new Address().setCountry("Chile"), "+56 (2) 687 2400", "264209"),
             new UserEntity("1003", "max", "max", "Max Meier", "max@example.com",
-                    new Address().setCountry("Germany"), "+49 (30) 210 94-0", "12344"),
+                    new Address().setCountry("Germany").setRegion("Bavaria").setLocality("Augsburg"),
+                    "+49 (30) 210 94-0", "12344",
+                    "Max", "Meier", null, null,
+                    "https://example.com/max/profile", "https://example.com/max/me.jpg",
+                    "https://example.com/max/", "male", "Europe/Berlin", "de",
+                    "max", "1956-01-28", toDate("2021-11-28")),
     };
+
+
+    private static Date toDate(String input)
+    {
+        return Date.from(LocalDate.parse(input).atStartOfDay().toInstant(ZoneOffset.UTC));
+    }
 
 
     /**

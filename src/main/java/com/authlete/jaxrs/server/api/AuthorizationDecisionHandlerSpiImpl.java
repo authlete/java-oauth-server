@@ -275,6 +275,17 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
             return getOpenBankingIntentIdFromIdTokenClaims(claimName);
         }
 
+        // If the name indicates that the claim is a transformed claim.
+        // See "OpenID Connect Advanced Syntax for Claims (ASC) 1.0"
+        // for details about transformed claims.
+        if (claimName.startsWith(":"))
+        {
+            // The value of the transformed claim will be computed by
+            // Authlete later. The value returned here is not so
+            // important.
+            return "placeholder";
+        }
+
         return null;
     }
 
