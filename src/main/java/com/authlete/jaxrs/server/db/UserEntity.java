@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2016-2022 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,25 @@
 package com.authlete.jaxrs.server.db;
 
 
+import java.io.Serializable;
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import com.authlete.common.dto.Address;
 import com.authlete.common.types.StandardClaims;
 import com.authlete.common.types.User;
+import com.nimbusds.openid.connect.sdk.claims.Gender;
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 
 
 /**
  * Dummy user entity that represents a user record.
- *
- * @author Takahiko Kawasaki
  */
-public class UserEntity implements User
+public class UserEntity implements User, Serializable
 {
+    private static final long serialVersionUID = 1L;
+
+
     /**
      * The subject (unique identifier) of the user.
      */
@@ -117,6 +122,7 @@ public class UserEntity implements User
         this.code        = code;
     }
 
+
     public UserEntity(
             String subject, String loginId, String password, String name,
             String email, Address address, String phoneNumber, String code,
@@ -149,6 +155,81 @@ public class UserEntity implements User
     }
 
 
+    public UserEntity(UserInfo userInfo)
+    {
+        if (userInfo == null)
+        {
+            return;
+        }
+
+        this.subject           = userInfo.getSubject().getValue();
+        this.loginId           = null;
+        this.password          = null;
+        this.name              = userInfo.getName();
+        this.email             = userInfo.getEmailAddress();
+        this.address           = extractAddress(userInfo);
+        this.phoneNumber       = userInfo.getPhoneNumber();
+        this.code              = null;
+        this.givenName         = userInfo.getGivenName();
+        this.familyName        = userInfo.getFamilyName();
+        this.middleName        = userInfo.getMiddleName();
+        this.nickName          = userInfo.getNickname();
+        this.profile           = toString(userInfo.getProfile());
+        this.picture           = toString(userInfo.getPicture());
+        this.website           = toString(userInfo.getWebsite());
+        this.gender            = extractGender(userInfo);
+        this.zoneinfo          = userInfo.getZoneinfo();
+        this.locale            = userInfo.getLocale();
+        this.preferredUsername = userInfo.getPreferredUsername();
+        this.birthdate         = userInfo.getBirthdate();
+        this.updatedAt         = userInfo.getUpdatedTime();
+    }
+
+
+    private static Address extractAddress(UserInfo userInfo)
+    {
+        com.nimbusds.openid.connect.sdk.claims.Address addr = userInfo.getAddress();
+
+        if (addr == null)
+        {
+            return null;
+        }
+
+        return new Address()
+                .setCountry(addr.getCountry())
+                .setFormatted(addr.getFormatted())
+                .setLocality(addr.getLocality())
+                .setPostaCode(addr.getPostalCode())
+                .setRegion(addr.getRegion())
+                .setStreetAddress(addr.getStreetAddress())
+                ;
+    }
+
+
+    private static String extractGender(UserInfo userInfo)
+    {
+        Gender gender = userInfo.getGender();
+
+        if (gender == null)
+        {
+            return null;
+        }
+
+        return gender.getValue();
+    }
+
+
+    private static String toString(URI uri)
+    {
+        if (uri == null)
+        {
+            return null;
+        }
+
+        return uri.toString();
+    }
+
+
     /**
      * Get the login ID.
      *
@@ -177,6 +258,14 @@ public class UserEntity implements User
     public String getSubject()
     {
         return subject;
+    }
+
+
+    public UserEntity setSubject(String subject)
+    {
+        this.subject = subject;
+
+        return this;
     }
 
 

@@ -31,7 +31,7 @@ import com.authlete.common.types.Prompt;
 import com.authlete.common.types.SubjectType;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.AuthorizationDecisionHandler.Params;
-import com.authlete.jaxrs.AuthorizationPageModel;
+import com.authlete.jaxrs.server.federation.FederationManager;
 import com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter;
 
 
@@ -111,10 +111,16 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
         User user = (User)session.getAttribute("user");
 
         // Prepare a model object which contains information needed to
-        // render the authorization page. Feel free to create a subclass
-        // of AuthorizationPageModel or define another different class
-        // according to what you need in the authorization page.
-        AuthorizationPageModel model = new AuthorizationPageModel(info, user);
+        // render the authorization page.
+        AuthzPageModel model = new AuthzPageModel(info, user,
+                FederationManager.getInstance().getConfigurations());
+
+        // Prepare another model object which contains information only
+        // from the AuthorizationResponse instance. This model will be
+        // used in FederationEndpoint if the end-user chooses to use an
+        // external OpenID Provider at the authorization page.
+        AuthzPageModel model2 = new AuthzPageModel(info, null, null);
+        session.setAttribute("authzPageModel", model2);
 
         // Create a Viewable instance that represents the authorization
         // page. Viewable is a class provided by Jersey for MVC.

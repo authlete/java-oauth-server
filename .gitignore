@@ -4,6 +4,7 @@ target/
 .classpath
 .project
 local.authlete.properties
+local.federations.json
 nohup.out
 .idea/
 java-oauth-server.iml

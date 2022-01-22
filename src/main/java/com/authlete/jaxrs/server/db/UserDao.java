@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Authlete, Inc.
+ * Copyright (C) 2016-2022 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,21 +21,25 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import com.authlete.common.dto.Address;
 import com.authlete.common.types.User;
 
 
 /**
  * Operations to access the user database.
- *
- * @author Takahiko Kawasaki
  */
 public class UserDao
 {
     /**
      * Dummy user database.
      */
-    private static final UserEntity[] sUserDB = {
+    private static final Map<String, UserEntity> sUserDB = new HashMap<>();
+
+    static
+    {
+        addAll(
             new UserEntity("1001", "john", "john", "John Flibble Smith", "john@example.com",
                     new Address().setCountry("USA Flibble"), "+1 (425) 555-1212", "675325",
                     "John", "Smith", "Doe", "Johnny",
@@ -51,7 +55,8 @@ public class UserDao
                     "https://example.com/max/profile", "https://example.com/max/me.jpg",
                     "https://example.com/max/", "male", "Europe/Berlin", "de",
                     "max", "1956-01-28", toDate("2021-11-28"))
-                    .setNationalities(Arrays.asList("USA", "DEU")),
+                    .setNationalities(Arrays.asList("USA", "DEU"))
+        );
     };
 
 
@@ -82,7 +87,7 @@ public class UserDao
     private static User get(SearchCondition condition)
     {
         // For each user.
-        for (UserEntity ue : sUserDB)
+        for (UserEntity ue : sUserDB.values())
         {
             // If the condition is satisfied.
             if (condition.check(ue))
@@ -117,8 +122,12 @@ public class UserDao
             @Override
             public boolean check(UserEntity ue)
             {
+                String registeredLoginId  = ue.getLoginId();
+                String registeredPassword = ue.getPassword();
+
                 // Check if the user's credentials are the target ones.
-                return ue.getLoginId().equals(loginId) && ue.getPassword().equals(password);
+                return ((registeredLoginId  != null) && registeredLoginId .equals(loginId )) &&
+                       ((registeredPassword != null) && registeredPassword.equals(password));
             }
         });
     }
@@ -199,5 +208,23 @@ public class UserDao
                 return ph != null && ph.equals(phoneNumber);
             }
         });
+    }
+
+
+    /**
+     * Add a user.
+     */
+    public static void add(UserEntity entity)
+    {
+        sUserDB.put(entity.getSubject(), entity);
+    }
+
+
+    private static void addAll(UserEntity... entities)
+    {
+        for (UserEntity entity : entities)
+        {
+            add(entity);
+        }
     }
 }

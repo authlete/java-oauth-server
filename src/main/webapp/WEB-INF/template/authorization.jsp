@@ -155,16 +155,33 @@ ${model.authorizationDetails}
       <form id="authorization-form" action="/api/authorization/decision" method="POST">
         <c:if test="${model.user == null}">
         <div id="login-fields" class="indent">
-          <div id="login-prompt">Input Login ID and password.</div>
+          <div id="login-prompt">Input Login ID and Password.</div>
           <input type="text" id="loginId" name="loginId" placeholder="Login ID"
                  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-                 class="font-default" required value="${model.loginId}" ${model.loginIdReadOnly}>
+                 class="font-default" value="${model.loginId}" ${model.loginIdReadOnly}>
           <input type="password" id="password" name="password" placeholder="Password"
-                 class="font-default" required>
+                 class="font-default">
+        </div>
+        <c:if test="${model.federations != null}">
+        <div id="federations" class="indent">
+          <div id="federations-prompt">ID federation using an external OpenID Provider</div>
+          <c:if test="${model.federationMessage != null}">
+          <div id="federation-message">${model.federationMessage}</div>
+          </c:if>
+          <ul>
+          <c:forEach var="federation" items="${model.federations}">
+            <li><a href="/api/federation/initiation/${federation.id}">${federation.server.name}</a>
+          </c:forEach>
+          </ul>
         </div>
         </c:if>
+        </c:if>
         <c:if test="${model.user != null}">
-        <div id="login-user"><i>Logged in as <c:out value="${model.user.subject}" /></i></div>
+        <div id="login-user" class="indent">
+          Logged in as <b><c:out value="${model.user.subject}" /></b>.
+          If re-authentication is needed, append <code>&amp;prompt=login</code>
+          to the authorization request.
+        </div>
         </c:if>
         <div id="authorization-form-buttons">
           <input type="submit" name="authorized" id="authorize-button" value="Authorize" class="font-default"/>
