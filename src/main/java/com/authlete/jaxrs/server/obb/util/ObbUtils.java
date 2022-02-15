@@ -96,6 +96,10 @@ public class ObbUtils
 
         // Extract the client certificate.
         String clientCertificate = CertificateUtils.extract(request);
+        String dpop = request.getHeader("DPoP");
+        String htm = request.getMethod();
+        // Putting "RequestHeader set X-Forwarded-Proto https" into the reverse proxy apache config may avoid this
+        String htu = request.getRequestURL().toString().replace("http://", "https://");
 
         IntrospectionResponse response;
 
@@ -103,7 +107,7 @@ public class ObbUtils
         {
             // Call Authlete's /api/auth/introspection API.
             response = callIntrospection(
-                    authleteApi, accessToken, requiredScopes, clientCertificate);
+                    authleteApi, accessToken, requiredScopes, dpop, htm, htu, clientCertificate);
         }
         catch (AuthleteApiException e)
         {
@@ -179,12 +183,15 @@ public class ObbUtils
 
     private static IntrospectionResponse callIntrospection(
             AuthleteApi authleteApi, String accessToken,
-            String[] requiredScopes, String clientCertificate) throws AuthleteApiException
+            String[] requiredScopes, String dpop, String htm, String htu, String clientCertificate) throws AuthleteApiException
     {
         // Create a request to Authlete's /api/auth/introspection API.
         IntrospectionRequest request = new IntrospectionRequest()
                 .setToken(accessToken)
                 .setScopes(requiredScopes)
+                .setDpop(dpop)
+                .setHtm(htm)
+                .setHtu(htu)
                 .setClientCertificate(clientCertificate)
                 ;
 

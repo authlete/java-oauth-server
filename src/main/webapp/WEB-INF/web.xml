@@ -49,6 +49,7 @@
         com.authlete.jaxrs.server.api.device.DeviceCompleteEndpoint,
         com.authlete.jaxrs.server.api.device.DeviceVerificationEndpoint,
         com.authlete.jaxrs.server.api.obb.AccountsEndpoint,
+        com.authlete.jaxrs.server.api.obb.FAPI2BaseAccountsEndpoint,
         com.authlete.jaxrs.server.api.obb.ConsentsEndpoint,
         com.authlete.jaxrs.server.api.obb.ResourcesEndpoint,
         org.glassfish.jersey.moxy.json.MoxyJsonFeature,
