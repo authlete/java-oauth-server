@@ -96,10 +96,15 @@ public class ObbUtils
 
         // Extract the client certificate.
         String clientCertificate = CertificateUtils.extract(request);
+
+        // Extract information required to validate any DPoP proof
         String dpop = request.getHeader("DPoP");
         String htm = request.getMethod();
-        // Putting "RequestHeader set X-Forwarded-Proto https" into the reverse proxy apache config may avoid this
-        String htu = request.getRequestURL().toString().replace("http://", "https://");
+        // This assumes that jetty has the correct incoming url; if running behind a reverse proxy it is important that
+        // the jetty ForwardedRequestCustomizer is enabled and that the reverse proxy sets the relevants headers so
+        // that jetty can determine the original url - e.g. in apache "RequestHeader set X-Forwarded-Proto https" is
+        // required
+        String htu = request.getRequestURL().toString();
 
         IntrospectionResponse response;
 
