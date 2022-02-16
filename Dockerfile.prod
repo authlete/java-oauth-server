@@ -1,0 +1,18 @@
+# Production-friendly Dockerfile with multi-stage build and decent layer caching
+
+FROM maven:3.8.4-openjdk-8-slim AS builder
+
+WORKDIR /build
+COPY pom.xml .
+RUN mvn -Dmaven.test.skip=true -Dmaven.javadoc.skip=true dependency:go-offline
+COPY src/ /build/src/
+RUN mvn -Dmaven.test.skip=true -Dmaven.javadoc.skip=true package
+
+
+FROM jetty:9.4.45-jre8-slim
+
+USER root
+COPY certs/ certs/
+RUN certs/import-certificate.sh certs/Open_Banking_Brasil_Sandbox_Root_G1.pem
+USER jetty
+COPY --from=builder /build/target/*.war /var/lib/jetty/webapps/ROOT.war

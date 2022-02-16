@@ -2,7 +2,9 @@
 
 
 KEYSTORE=$JAVA_HOME/jre/lib/security/cacerts
-
+if [[ ! -f $KEYSTORE ]]; then
+    KEYSTORE=$JAVA_HOME/lib/security/cacerts
+fi
 
 __import_certificate()
 {
