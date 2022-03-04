@@ -97,13 +97,22 @@ public class ObbUtils
         // Extract the client certificate.
         String clientCertificate = CertificateUtils.extract(request);
 
+        // Extract information required to validate any DPoP proof
+        String dpop = request.getHeader("DPoP");
+        String htm = request.getMethod();
+        // This assumes that jetty has the correct incoming url; if running behind a reverse proxy it is important that
+        // the jetty ForwardedRequestCustomizer is enabled and that the reverse proxy sets the relevants headers so
+        // that jetty can determine the original url - e.g. in apache "RequestHeader set X-Forwarded-Proto https" is
+        // required
+        String htu = request.getRequestURL().toString();
+
         IntrospectionResponse response;
 
         try
         {
             // Call Authlete's /api/auth/introspection API.
             response = callIntrospection(
-                    authleteApi, accessToken, requiredScopes, clientCertificate);
+                    authleteApi, accessToken, requiredScopes, dpop, htm, htu, clientCertificate);
         }
         catch (AuthleteApiException e)
         {
@@ -179,12 +188,15 @@ public class ObbUtils
 
     private static IntrospectionResponse callIntrospection(
             AuthleteApi authleteApi, String accessToken,
-            String[] requiredScopes, String clientCertificate) throws AuthleteApiException
+            String[] requiredScopes, String dpop, String htm, String htu, String clientCertificate) throws AuthleteApiException
     {
         // Create a request to Authlete's /api/auth/introspection API.
         IntrospectionRequest request = new IntrospectionRequest()
                 .setToken(accessToken)
                 .setScopes(requiredScopes)
+                .setDpop(dpop)
+                .setHtm(htm)
+                .setHtu(htu)
                 .setClientCertificate(clientCertificate)
                 ;
 
