@@ -22,9 +22,8 @@ This is achieved by using [Authlete][7] as a backend service.
 
 Access tokens issued by this authorization server can be used at a resource
 server which uses Authlete as a backend service. [java-resource-server][40]
-is such a resource server implementation. It supports a [userinfo endpoint][41]
-defined in [OpenID Connect Core 1.0][13] and includes an example implementation
-of a protected resource endpoint, too.
+is such a resource server implementation. It includes an example implementation
+of protected resource endpoint.
 
 
 License
@@ -90,6 +89,7 @@ the system property `authlete.configuration.file` like the following.
 
     $ mvn -Dauthlete.configuration.file=local.authlete.properties jetty:run &
 
+
 Endpoints
 ---------
 
@@ -103,6 +103,7 @@ This implementation exposes endpoints as listed in the table below.
 | Configuration Endpoint               | `/.well-known/openid-configuration` |
 | Revocation Endpoint                  | `/api/revocation`                   |
 | Introspection Endpoint               | `/api/introspection`                |
+| UserInfo Endpoint                    | `/api/userinfo`                     |
 | Dynamic Client Registration Endpoint | `/api/register`                     |
 | Pushed Authorization Request Endpoint| `/api/par`                          |
 | Grant Management Endpoint            | `/api/gm/{grantId}`                 |
@@ -124,6 +125,10 @@ tokens. Its behavior is defined in [RFC 7009][21].
 
 The introspection endpoint is a Web API to get information about access
 tokens and refresh tokens. Its behavior is defined in [RFC 7662][32].
+
+The userinfo endpoint is a Web API to get information about an end-user.
+Its behavior is defined in [Section 5.3. UserInfo Endpoint][41] of
+[OpenID Connect Core 1.0][13].
 
 The dynamic client registration endpoint is a Web API to register and update
 client applications. Its behavior is defined in [RFC 7591][43] and [RFC 7592][44].
@@ -156,13 +161,20 @@ one of the following as login credentials.
 |   john   |   john   |
 |   jane   |   jane   |
 |   max    |   max    |
+|   inga   |   inga   |
 
 Of course, these login credentials are dummy data, so you need to replace
 the user database implementation with your own.
 
-Use `max` in order to test [OpenID Connect for Identity Assurance 1.0][IA10].
-Verified claims for other user accounts (`john` and `jane`) don't exist in the
-dummy database.
+The account `max` is for the old draft of
+[OpenID Connect for Identity Assurance 1.0][IDA] (IDA). The account holds
+_verified claims_ in the old format. Authlete 2.2 accepts the old format
+but Authlete 2.3 onwards will reject it.
+
+The account `inga` is for the third Implementer's Draft of [IDA][IDA] onwards.
+Use `inga` for testing the latest IDA specification. However, note that
+the third Implementer's Draft onwards is supported from Authlete 2.3.
+Older Authlete versions do not support the latest IDA specification.
 
 
 Customization
@@ -171,7 +183,7 @@ Customization
 How to customize this implementation is described in [CUSTOMIZATION.md][39].
 Basically, you need to do programming for _end-user authentication_ because
 Authlete does not manage end-user accounts. This is by design. The
-architecture of Authlete carefully seperates authorization from authentication
+architecture of Authlete carefully separates authorization from authentication
 so that you can add OAuth 2.0 and OpenID Connect functionalities seamlessly
 into even an existing web service which may already have a mechanism for
 end-user authentication.
@@ -234,7 +246,7 @@ Contact
 | Technical | support@authlete.com |
 
 
-[1]: https://tools.ietf.org/html/rfc6749
+[1]: https://www.rfc-editor.org/rfc/rfc6749.html
 [2]: https://openid.net/connect/
 [3]: https://github.com/authlete/authlete-java-jaxrs
 [4]: https://jcp.org/en/jsr/detail?id=339
@@ -244,28 +256,28 @@ Contact
 [8]: https://www.authlete.com/developers/overview/
 [9]: https://so.authlete.com/accounts/signup
 [10]: https://www.authlete.com/developers/getting_started/
-[11]: https://tools.ietf.org/html/rfc6749#section-3.1
-[12]: https://tools.ietf.org/html/rfc6749#section-3.2
+[11]: https://www.rfc-editor.org/rfc/rfc6749.html#section-3.1
+[12]: https://www.rfc-editor.org/rfc/rfc6749.html#section-3.2
 [13]: https://openid.net/specs/openid-connect-core-1_0.html
-[14]: https://tools.ietf.org/html/rfc7636
+[14]: https://www.rfc-editor.org/rfc/rfc7636.html
 [15]: https://www.authlete.com/developers/pkce/
-[16]: https://tools.ietf.org/html/rfc6749#section-4.2
+[16]: https://www.rfc-editor.org/rfc/rfc6749.html#section-4.2
 [17]: https://www.authlete.com/developers/cd_console/
 [18]: https://jersey.java.net/
-[19]: https://tools.ietf.org/html/rfc6750
-[20]: https://tools.ietf.org/html/rfc6819
-[21]: https://tools.ietf.org/html/rfc7009
-[22]: https://tools.ietf.org/html/rfc7033
-[23]: https://tools.ietf.org/html/rfc7515
-[24]: https://tools.ietf.org/html/rfc7516
-[25]: https://tools.ietf.org/html/rfc7517
-[26]: https://tools.ietf.org/html/rfc7518
-[27]: https://tools.ietf.org/html/rfc7519
-[28]: https://tools.ietf.org/html/rfc7521
-[29]: https://tools.ietf.org/html/rfc7522
-[30]: https://tools.ietf.org/html/rfc7523
-[31]: https://tools.ietf.org/html/rfc7636
-[32]: https://tools.ietf.org/html/rfc7662
+[19]: https://www.rfc-editor.org/rfc/rfc6750.html
+[20]: https://www.rfc-editor.org/rfc/rfc6819.html
+[21]: https://www.rfc-editor.org/rfc/rfc7009.html
+[22]: https://www.rfc-editor.org/rfc/rfc7033.html
+[23]: https://www.rfc-editor.org/rfc/rfc7515.html
+[24]: https://www.rfc-editor.org/rfc/rfc7516.html
+[25]: https://www.rfc-editor.org/rfc/rfc7517.html
+[26]: https://www.rfc-editor.org/rfc/rfc7518.html
+[27]: https://www.rfc-editor.org/rfc/rfc7519.html
+[28]: https://www.rfc-editor.org/rfc/rfc7521.html
+[29]: https://www.rfc-editor.org/rfc/rfc7522.html
+[30]: https://www.rfc-editor.org/rfc/rfc7523.html
+[31]: https://www.rfc-editor.org/rfc/rfc7636.html
+[32]: https://www.rfc-editor.org/rfc/rfc7662.html
 [33]: https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html
 [34]: https://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html
 [35]: https://openid.net/specs/openid-connect-discovery-1_0.html
@@ -276,8 +288,8 @@ Contact
 [40]: https://github.com/authlete/java-resource-server
 [41]: https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
 [42]: https://maven.apache.org/
-[43]: https://tools.ietf.org/html/rfc7591
-[44]: https://tools.ietf.org/html/rfc7592
+[43]: https://www.rfc-editor.org/rfc/rfc7591.html
+[44]: https://www.rfc-editor.org/rfc/rfc7592.html
 [45]: https://www.rfc-editor.org/rfc/rfc9126.html
 [46]: https://openid.net/specs/fapi-grant-management.html
-[IA10]: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html
+[IDA]: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html
