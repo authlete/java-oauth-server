@@ -20,8 +20,7 @@ authlete-java-jaxrs は [authlete-java-common][5] ライブラリを使用して
 この認可サーバーにより発行されたアクセストークンは、Authlete
 をバックエンドサービスとして利用しているリソースサーバーに対して使うことができます。
 [java-resource-server][40] はそのようなリソースサーバーの実装です。
-[OpenID Connect Core 1.0][13] で定義されている[ユーザー情報エンドポイント][41]をサポートし、
-保護リソースエンドポイントの実装例も含んでいます。
+保護リソースエンドポイントの実装例を含んでいます。
 
 
 ライセンス
@@ -103,6 +102,7 @@ Docker を利用する場合は, ステップ 2 の後に以下のコマンド�
 | 設定エンドポイント                 | `/.well-known/openid-configuration` |
 | 取り消しエンドポイント             | `/api/revocation`                   |
 | イントロスペクションエンドポイント | `/api/introspection`                |
+| ユーザー情報エンドポイント         | `/api/userinfo`                     |
 | 動的クライアント登録エンドポイント | `/api/register`                     |
 | PAR エンドポイント                 | `/api/par`                          |
 | グラント管理エンドポイント         | `/api/gm/{grantId}`                 |
@@ -124,6 +124,9 @@ Web API です。 その動作は [RFC 7009][21] で定義されています。
 
 イントロスペクションエンドポイントはアクセストークンやリフレッシュトークンの情報を取得するための
 Web API です。 その動作は [RFC 7662][32] で定義されています。
+
+ユーザー情報エンドポイントはユーザーの情報を取得するための Web API です。その動作は
+[OpenID Connect Core 1.0][13] の [Section 5.3. UserInfo Endpoint][41] で定義されています。
 
 動的クライアント登録エンドポイントは、クライアントアプリケーションの登録・更新をおこなうための
 Web API です。 その動作は [RFC 7591][43] および [RFC 7592][44] で定義されています。
@@ -155,12 +158,18 @@ ID で置き換えてください。 クライアントアプリケーション�
 |     john    |    john    |
 |     jane    |    jane    |
 |     max     |    max     |
+|     inga    |    inga    |
 
 もちろんこれらのログイン情報はダミーデータですので、ユーザーデータベースの実装をあなたの実装で置き換える必要があります。
 
-[OpenID Connect for Identity Assurance 1.0][IA10] をテストするためには `max`
-を使用してください。他のユーザーアカウント (`john` と `jane`) 用の verified claims
-はダミーデータベース内に存在しません。
+アカウント `max` は [OpenID Connect for Identity Assurance 1.0][IDA] (IDA)
+の古いドラフト用のものです。当アカウントは verified claims を古いフォーマットで保持しています。
+Authlete 2.2 は古いフォーマットを受け付けますが、Authlete 2.3 以降は拒否します。
+
+アカウント `inga` は IDA 仕様の実装者向けドラフト第三版以降のためのものです。
+最新の IDA 仕様をテストする際は `inga` を利用してください。
+ただし、実装者向けドラフト第三版以降がサポートされるのは Authlete 2.3 からということにご留意ください。
+古い Authlete は最新の IDA 仕様はサポートしません。
 
 
 カスタマイズ
@@ -230,7 +239,7 @@ Authlete はユーザーアカウントを管理しないので、基本的に�
 | 技術 | support@authlete.com |
 
 
-[1]: https://tools.ietf.org/html/rfc6749
+[1]: https://www.rfc-editor.org/rfc/rfc6749.html
 [2]: https://openid.net/connect/
 [3]: https://github.com/authlete/authlete-java-jaxrs
 [4]: https://jcp.org/en/jsr/detail?id=339
@@ -240,28 +249,28 @@ Authlete はユーザーアカウントを管理しないので、基本的に�
 [8]: https://www.authlete.com/ja/developers/overview/
 [9]: https://so.authlete.com/accounts/signup
 [10]: https://www.authlete.com/ja/developers/getting_started/
-[11]: https://tools.ietf.org/html/rfc6749#section-3.1
-[12]: https://tools.ietf.org/html/rfc6749#section-3.2
+[11]: https://www.rfc-editor.org/rfc/rfc6749.html#section-3.1
+[12]: https://www.rfc-editor.org/rfc/rfc6749.html#section-3.2
 [13]: https://openid.net/specs/openid-connect-core-1_0.html
-[14]: https://tools.ietf.org/html/rfc7636
+[14]: https://www.rfc-editor.org/rfc/rfc7636.html
 [15]: https://www.authlete.com/ja/developers/pkce/
-[16]: https://tools.ietf.org/html/rfc6749#section-4.2
+[16]: https://www.rfc-editor.org/rfc/rfc6749.html#section-4.2
 [17]: https://www.authlete.com/ja/developers/cd_console/
 [18]: https://jersey.java.net/
-[19]: https://tools.ietf.org/html/rfc6750
-[20]: https://tools.ietf.org/html/rfc6819
-[21]: https://tools.ietf.org/html/rfc7009
-[22]: https://tools.ietf.org/html/rfc7033
-[23]: https://tools.ietf.org/html/rfc7515
-[24]: https://tools.ietf.org/html/rfc7516
-[25]: https://tools.ietf.org/html/rfc7517
-[26]: https://tools.ietf.org/html/rfc7518
-[27]: https://tools.ietf.org/html/rfc7519
-[28]: https://tools.ietf.org/html/rfc7521
-[29]: https://tools.ietf.org/html/rfc7522
-[30]: https://tools.ietf.org/html/rfc7523
-[31]: https://tools.ietf.org/html/rfc7636
-[32]: https://tools.ietf.org/html/rfc7662
+[19]: https://www.rfc-editor.org/rfc/rfc6750.html
+[20]: https://www.rfc-editor.org/rfc/rfc6819.html
+[21]: https://www.rfc-editor.org/rfc/rfc7009.html
+[22]: https://www.rfc-editor.org/rfc/rfc7033.html
+[23]: https://www.rfc-editor.org/rfc/rfc7515.html
+[24]: https://www.rfc-editor.org/rfc/rfc7516.html
+[25]: https://www.rfc-editor.org/rfc/rfc7517.html
+[26]: https://www.rfc-editor.org/rfc/rfc7518.html
+[27]: https://www.rfc-editor.org/rfc/rfc7519.html
+[28]: https://www.rfc-editor.org/rfc/rfc7521.html
+[29]: https://www.rfc-editor.org/rfc/rfc7522.html
+[30]: https://www.rfc-editor.org/rfc/rfc7523.html
+[31]: https://www.rfc-editor.org/rfc/rfc7636.html
+[32]: https://www.rfc-editor.org/rfc/rfc7662.html
 [33]: https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html
 [34]: https://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html
 [35]: https://openid.net/specs/openid-connect-discovery-1_0.html
@@ -272,8 +281,9 @@ Authlete はユーザーアカウントを管理しないので、基本的に�
 [40]: https://github.com/authlete/java-resource-server
 [41]: https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
 [42]: https://maven.apache.org/
-[43]: https://tools.ietf.org/html/rfc7591
-[44]: https://tools.ietf.org/html/rfc7592
+[43]: https://www.rfc-editor.org/rfc/rfc7591.html
+[44]: https://www.rfc-editor.org/rfc/rfc7592.html
 [45]: https://www.rfc-editor.org/rfc/rfc9126.html
 [46]: https://openid.net/specs/fapi-grant-management.html
-[IA10]: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html
+[IDA]: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html
+
