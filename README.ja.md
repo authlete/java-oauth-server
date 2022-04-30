@@ -29,6 +29,11 @@ authlete-java-jaxrs は [authlete-java-common][5] ライブラリを使用して
 
   Apache License, Version 2.0
 
+  `src/main/resources/ekyc-ida` 以下の JSON ファイル群は
+  https://bitbucket.org/openid/ekyc-ida/src/master/examples/response/
+  からコピーしたものです。それらのライセンスについては、OpenID Foundation の
+  eKYC-IDA ワーキンググループにお尋ねください。
+
 
 ソースコード
 ------------

@@ -46,8 +46,10 @@ public class UserDao
                     "https://example.com/john/profile", "https://example.com/john/me.jpg",
                     "https://example.com/john/", "male", "Europe/London",
                     "en-US", "john", "0000-03-22", toDate("2020-01-01")),
+
             new UserEntity("1002", "jane", "jane", "Jane Smith", "jane@example.com",
                     new Address().setCountry("Chile"), "+56 (2) 687 2400", "264209"),
+
             new UserEntity("1003", "max", "max", "Max Meier", "max@example.com",
                     new Address().setCountry("Germany").setRegion("Bavaria").setLocality("Augsburg"),
                     "+49 (30) 210 94-0", "12344",
@@ -55,7 +57,19 @@ public class UserDao
                     "https://example.com/max/profile", "https://example.com/max/me.jpg",
                     "https://example.com/max/", "male", "Europe/Berlin", "de",
                     "max", "1956-01-28", toDate("2021-11-28"))
-                    .setNationalities(Arrays.asList("USA", "DEU"))
+                    .setNationalities(Arrays.asList("USA", "DEU")),
+
+            new UserEntity("1004", "inga", "inga", "Inga Silverstone", "inga@example.com",
+                    new Address()
+                        .setCountry("USA")
+                        .setLocality("Shoshone")
+                        .setStreetAddress("114 0ld State Hwy 127")
+                        .setPostaCode("CA 92384"),
+                    null, null, "Inga", "Silverstone", null, null,
+                    "https://example.com/inga/profile", "https://example.com/inga/me.jpg",
+                    "https://example.com/inga/", "female", "America/Toronto", "en-US",
+                    "inga", "1991-11-06", toDate("2022-04-30")
+            )
         );
     };
 

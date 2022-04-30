@@ -1,0 +1,76 @@
+{
+  "verified_claims": {
+    "verification": {
+      "trust_framework": "nist_800_63A",
+      "assurance_level": "ial2",
+      "assurance_process": {
+        "assurance_details": [
+          {
+            "assurance_type": "evidence_validation",
+            "assurance_classification": "strong",
+            "evidence_ref": [
+              {
+                "txn": "DL1-93h506th2f45hf"
+              }
+            ]
+          },
+          {
+            "assurance_type": "verification",
+            "assurance_classification": "strong",
+            "evidence_ref": [
+              {
+                "txn": "v-93jfk284ugjfj2093"
+              }
+            ]
+          }
+        ]
+      },
+      "time": "2021-06-06T05:32Z",
+      "verification_process": "7675D80F-57E0-AB14-9543-26B41FC22",
+      "evidence": [
+        {
+          "type": "document",
+          "check_details": [
+            {
+              "check_method": "vpiruv",
+              "organization": "doc_checker",
+              "txn": "DL1-93h506th2f45hf"
+            },
+            {
+              "check_method": "pvp",
+              "organization": "face_checker",
+              "txn": "v-93jfk284ugjfj2093"
+            }
+          ],         
+          "time": "2021-06-06T05:33Z",
+          "document_details": {
+            "type": "driving_permit",
+            "document_number": "I1234568",
+            "date_of_issuance": "2019-09-05",
+            "date_of_expiry": "2024-08-01",
+            "issuer": {
+                "name": "CA DMV",
+                "country": "US",
+                "country_code": "USA",
+                "jurisdiction": "CA"
+            }
+          }
+        }
+      ]
+    },
+    "claims": {
+      "given_name": "Inga",
+      "family_name": "Silverstone",
+      "birthdate": "1991-11-06",
+      "place_of_birth": {
+        "country": "USA"
+      },
+      "address": {
+        "locality": "Shoshone",
+        "postal_code": "CA 92384",
+        "country": "USA",
+        "street_address": "114 Old State Hwy 127"
+      }
+    }
+  }
+}
