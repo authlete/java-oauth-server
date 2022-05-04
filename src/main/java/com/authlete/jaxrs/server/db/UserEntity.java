@@ -21,9 +21,11 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import com.authlete.common.dto.Address;
 import com.authlete.common.types.StandardClaims;
 import com.authlete.common.types.User;
+import com.google.gson.Gson;
 import com.nimbusds.openid.connect.sdk.claims.Gender;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 
@@ -293,7 +295,7 @@ public class UserEntity implements User, Serializable
             case StandardClaims.ADDRESS:
                 // "address" claim. This claim can be requested by including "address"
                 // in "scope" parameter of an authorization request.
-                return address;
+                return toMap(address);
 
             case StandardClaims.PHONE_NUMBER:
                 // "phone_number" claim. This claim can be requested by including "phone"
@@ -387,5 +389,20 @@ public class UserEntity implements User, Serializable
         this.nationalities = nationalities;
 
         return this;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> toMap(Address address)
+    {
+        if (address == null)
+        {
+            return null;
+        }
+
+        // This Gson instance does not serialize properties with null values.
+        Gson gson = new Gson();
+
+        return (Map<String, Object>)gson.fromJson(gson.toJson(address), Map.class);
     }
 }
