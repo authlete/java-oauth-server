@@ -3,9 +3,9 @@
     "verification": {
       "trust_framework": "uk_tfida",
       "assurance_level": "medium",
-      "policy": "gpg45",
-      "procedure": "m1c",
       "assurance_process": {
+        "policy": "gpg45",
+        "procedure": "m1c",
         "assurance_details": [
           {
             "assurance_type": "evidence_validation",
@@ -39,12 +39,14 @@
             {
               "check_method": "vpiruv",
               "organization": "doc_checker",
-              "txn": "DL1-93h506th2f45hf"
+              "txn": "DL1-93h506th2f45hf",
+              "time": "2021-06-08T11:41Z"
             },
             {
               "check_method": "pvp",
               "organization": "face_checker",
-              "txn": "v-93jfk284ugjfj2093"
+              "txn": "v-93jfk284ugjfj2093",
+              "time": "2021-06-08T11:42Z"
             }
           ],         
           "time": "2021-06-06T05:33Z",
@@ -59,7 +61,21 @@
                 "country_code": "USA",
                 "jurisdiction": "CA"
             }
-          }
+          },
+          "attachments": [
+            {
+              "desc": "scan of driving_permit",
+              "content_type": "image/jpeg",
+              "txn": "DL1-93h506th2f45hf",
+              "content": "d16d2552e35582810e5a40e523716504525b6016ae96844ddc533163059b3067=="
+            },
+            {
+              "desc": "captured face",
+              "content_type": "image/jpeg",
+              "txn": "v-93jfk284ugjfj2093",
+              "content": "6954697405687029456098270457602984756098274509687204576=="
+            }
+          ]
         }
       ]
     },
