@@ -54,12 +54,11 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
     public Response get(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
             @HeaderParam("DPoP") String dpop,
-            @QueryParam("access_token") String accessToken,
             @Context HttpServletRequest request)
     {
         // Select either the access token embedded in the Authorization header
         // or the access token in the query component.
-        accessToken = extractAccessToken(authorization, accessToken);
+        String accessToken = extractAccessToken(authorization, null);
 
         // Handle the userinfo request.
         return handle(request, accessToken, dpop);
