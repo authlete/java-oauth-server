@@ -99,7 +99,7 @@ public class TokenEndpoint extends BaseTokenEndpoint
         Params params = buildParams(request, parameters);
 
         // Handle the token request.
-        return handle(authleteApi, new TokenRequestHandlerSpiImpl(), params);
+        return handle(authleteApi, new TokenRequestHandlerSpiImpl(authleteApi), params);
     }
 
 

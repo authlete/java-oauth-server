@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2016-2022 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,10 @@
 package com.authlete.jaxrs.server.api;
 
 
+import javax.ws.rs.core.Response;
+import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.dto.Property;
+import com.authlete.common.dto.TokenResponse;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.server.db.UserDao;
 import com.authlete.jaxrs.spi.TokenRequestHandlerSpiAdapter;
@@ -33,6 +36,15 @@ import com.authlete.jaxrs.spi.TokenRequestHandlerSpiAdapter;
  */
 class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
 {
+    private final AuthleteApi mAuthleteApi;
+
+
+    public TokenRequestHandlerSpiImpl(AuthleteApi authleteApi)
+    {
+        mAuthleteApi = authleteApi;
+    }
+
+
     @Override
     public String authenticateUser(String username, String password)
     {
@@ -60,5 +72,13 @@ class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
         // Properties returned from this method will be associated with an
         // access token that will be issued as a result of the token request.
         return null;
+    }
+
+
+    @Override
+    public Response tokenExchange(TokenResponse tokenResponse)
+    {
+        // Handle the token exchange request (RFC 8693).
+        return new TokenExchanger(mAuthleteApi, tokenResponse).handle();
     }
 }
