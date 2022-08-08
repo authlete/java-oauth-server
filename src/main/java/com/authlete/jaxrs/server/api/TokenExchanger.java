@@ -296,13 +296,34 @@ class TokenExchanger
                 "  \"scope\":\"%s\",\n" +
                 "  \"refresh_token\":\"%s\"\n" +
                 "}\n",
-                tcResponse.getAccessToken(),
+                extractAccessToken(tcResponse),
                 tcResponse.getExpiresIn(),
                 buildScope(tcResponse),
                 tcResponse.getRefreshToken()
                 );
 
         return toJsonResponse(Status.OK, content);
+    }
+
+
+    private String extractAccessToken(TokenCreateResponse tcResponse)
+    {
+        // If a JWT access token has been issued, it takes precedence over
+        // a random-string access token.
+
+        // An access token in the JWT format. This response parameter holds
+        // a non-null value when Service.accessTokenSignAlg is not null.
+        String at = tcResponse.getJwtAccessToken();
+
+        // If an access token in the JWT format has not been issued.
+        if (at == null)
+        {
+            // An access token whose format is just a random string.
+            at = tcResponse.getAccessToken();
+        }
+
+        // The newly issued access token.
+        return at;
     }
 
 
