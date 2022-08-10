@@ -355,14 +355,14 @@ class TokenExchanger
     }
 
 
-    private WebApplicationException toException(Status status, String error, String message)
+    private WebApplicationException toException(Status status, String error, String description)
     {
         String content = String.format(
                 "{\n" +
                 "  \"error\":\"%s\",\n" +
-                "  \"error_message\":\"%s\"\n" +
+                "  \"error_description\":\"%s\"\n" +
                 "}\n",
-                error, message);
+                error, description);
 
         Response response = toJsonResponse(status, content);
 
