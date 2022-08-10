@@ -81,4 +81,13 @@ class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
         // Handle the token exchange request (RFC 8693).
         return new TokenExchanger(mAuthleteApi, tokenResponse).handle();
     }
+
+
+    @Override
+    public Response jwtBearer(TokenResponse tokenResponse)
+    {
+        // Handle the token request that uses the grant type
+        // "urn:ietf:params:oauth:grant-type:jwt-bearer" (RFC 7523).
+        return new JwtAuthzGrantProcessor(mAuthleteApi, tokenResponse).process();
+    }
 }
