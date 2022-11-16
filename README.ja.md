@@ -106,6 +106,7 @@ Docker を利用する場合は, ステップ 2 の後に以下のコマンド�
 | 動的クライアント登録エンドポイント | `/api/register`                     |
 | PAR エンドポイント                 | `/api/par`                          |
 | グラント管理エンドポイント         | `/api/gm/{grantId}`                 |
+| フェデレーション設定エンドポイント | `/.well-known/openid-federation`    |
 
 認可エンドポイントとトークンエンドポイントは、[RFC 6749][1]、[OpenID Connect Core 1.0][13]、
 [OAuth 2.0 Multiple Response Type Encoding Practices][33]、[RFC 7636][14] ([PKCE][15])、
@@ -136,6 +137,10 @@ Web API です。 その動作は [RFC 9126][45] で定義されています。
 
 グラント管理エンドポイントは、グラント ID の情報取得や失効をおこなうための Web API です。
 その動作は [Grant Management for OAuth 2.0][46] で定義されています。
+
+フェデレーション設定エンドポイントは、認可サーバーのエンティティコンフィギュレーションを
+JWT 形式で返す Web API です。その動作は [OpenID Connect Federation 1.0][OIDC_FED]
+で定義されています。
 
 
 認可リクエストの例
@@ -286,4 +291,5 @@ Authlete はユーザーアカウントを管理しないので、基本的に�
 [45]: https://www.rfc-editor.org/rfc/rfc9126.html
 [46]: https://openid.net/specs/fapi-grant-management.html
 [IDA]: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html
+[OIDC_FED]: https://openid.net/specs/openid-connect-federation-1_0.html
 
