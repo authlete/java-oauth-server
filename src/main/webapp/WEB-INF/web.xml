@@ -37,6 +37,7 @@
         com.authlete.jaxrs.server.api.ConfigurationEndpoint,
         com.authlete.jaxrs.server.api.FederationConfigurationEndpoint,
         com.authlete.jaxrs.server.api.FederationEndpoint,
+        com.authlete.jaxrs.server.api.FederationRegistrationEndpoint,
         com.authlete.jaxrs.server.api.GrantManagementEndpoint,
         com.authlete.jaxrs.server.api.IntrospectionEndpoint,
         com.authlete.jaxrs.server.api.JwksEndpoint,
