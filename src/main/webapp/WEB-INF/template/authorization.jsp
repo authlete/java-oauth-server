@@ -1,7 +1,7 @@
 <!doctype html>
 <!--<%
 /*
- * Copyright (C) 2016-2019 Authlete, Inc.
+ * Copyright (C) 2016-2023 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,6 +72,28 @@
         <dd>${scope.description}</dd>
         </c:forEach>
       </dl>
+    </div>
+    </c:if>
+
+    <c:if test="${model.claimsForIdToken != null}">
+    <h4 id="claims-for-id_token">Claims for ID Token</h4>
+    <div class="indent">
+      <ul>
+        <c:forEach var="claim" items="${model.claimsForIdToken}">
+        <li>${claim}
+        </c:forEach>
+      </ul>
+    </div>
+    </c:if>
+
+    <c:if test="${model.claimsForUserInfo != null}">
+    <h4 id="claims-for-userinfo">Claims for UserInfo</h4>
+    <div class="indent">
+      <ul>
+        <c:forEach var="claim" items="${model.claimsForUserInfo}">
+        <li>${claim}
+        </c:forEach>
+      </ul>
     </div>
     </c:if>
 
