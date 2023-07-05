@@ -33,6 +33,7 @@
         com.authlete.jaxrs.server.api.AppleAppSiteAssociation,
         com.authlete.jaxrs.server.api.AuthorizationDecisionEndpoint,
         com.authlete.jaxrs.server.api.AuthorizationEndpoint,
+        com.authlete.jaxrs.server.api.CredentialOfferIssueEndpoint,
         com.authlete.jaxrs.server.api.ClientRegistrationEndpoint,
         com.authlete.jaxrs.server.api.ConfigurationEndpoint,
         com.authlete.jaxrs.server.api.FederationConfigurationEndpoint,

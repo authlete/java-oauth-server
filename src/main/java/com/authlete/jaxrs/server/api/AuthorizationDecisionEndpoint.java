@@ -34,6 +34,7 @@ import com.authlete.common.types.User;
 import com.authlete.jaxrs.AuthorizationDecisionHandler.Params;
 import com.authlete.jaxrs.BaseAuthorizationDecisionEndpoint;
 import com.authlete.jaxrs.server.db.UserDao;
+import com.authlete.jaxrs.server.util.ProcessingUtil;
 import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpi;
 
 
@@ -74,15 +75,15 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
             MultivaluedMap<String, String> parameters)
     {
         // Get the existing session.
-        HttpSession session = getSession(request);
+        HttpSession session = ProcessingUtil.getSession(request);
 
         // Retrieve some variables from the session. See the implementation
         // of AuthorizationRequestHandlerSpiImpl.getAuthorizationPage().
         Params params = (Params)  takeAttribute(session, "params");
         String[] acrs = (String[])takeAttribute(session, "acrs");
         Client client = (Client)  takeAttribute(session, "client");
-        User user     = getUser(session, parameters);
-        Date authTime = (Date)session.getAttribute("authTime");
+        User user     = ProcessingUtil.getUser(session, parameters);
+        Date authTime = (Date)    session.getAttribute("authTime");
 
         // Implementation of AuthorizationDecisionHandlerSpi.
         AuthorizationDecisionHandlerSpi spi =
@@ -93,50 +94,4 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         return handle(AuthleteApiFactory.getDefaultApi(), spi, params);
     }
 
-
-    /**
-     * Get the existing session.
-     */
-    private HttpSession getSession(HttpServletRequest request)
-    {
-        // Get the existing session.
-        HttpSession session = request.getSession(false);
-
-        // If there exists a session.
-        if (session != null)
-        {
-            // OK.
-            return session;
-        }
-
-        // A session does not exist. Make a response of "400 Bad Request".
-        throw badRequestException("A session does not exist.");
-    }
-
-
-    /**
-     * Look up an end-user.
-     */
-    private static User getUser(HttpSession session, MultivaluedMap<String, String> parameters)
-    {
-        // Look up the user in the session to see if they're already logged in.
-        User sessionUser = (User) session.getAttribute("user");
-
-        if (sessionUser != null)
-        {
-            return sessionUser;
-        }
-
-        // Look up an end-user who has the login credentials.
-        User loginUser = UserDao.getByCredentials(parameters.getFirst("loginId"),
-                parameters.getFirst("password"));
-
-        if (loginUser != null)
-        {
-            session.setAttribute("user", loginUser);
-            session.setAttribute("authTime", new Date());
-        }
-
-        return loginUser;
-    }
 }
