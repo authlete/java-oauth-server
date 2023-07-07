@@ -28,7 +28,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.glassfish.jersey.server.mvc.Viewable;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiFactory;
@@ -44,9 +43,7 @@ import com.authlete.jaxrs.server.util.ProcessingUtil;
 public class CredentialOfferIssueEndpoint extends BaseEndpoint
 {
     @GET
-    public Response get(
-            @Context HttpServletRequest request,
-            @Context UriInfo uriInfo)
+    public Response get()
     {
         // Create a Viewable instance that represents the credential offer page.
         // Viewable is a class provided by Jersey for MVC.

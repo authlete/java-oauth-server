@@ -71,7 +71,9 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     private int duration;
     private String credentialOfferEndpoint;
     private CredentialOfferInfo info;
+    private String credentialOfferLink;
     private String credentialOfferQrCode;
+    private String credentialOfferUriLink;
     private String credentialOfferUriQrCode;
 
 
@@ -106,7 +108,7 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
         }
         catch (NumberFormatException e)
         {
-            throw ExceptionUtil.badRequestException("User pin length should be a number");
+            throw ExceptionUtil.badRequestException("User pin length should be a number.");
         }
 
         try
@@ -115,14 +117,14 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
         }
         catch (NumberFormatException e)
         {
-            throw ExceptionUtil.badRequestException("Duration should be a number");
+            throw ExceptionUtil.badRequestException("Duration should be a number.");
         }
 
         return this;
     }
 
 
-    private String generateQrCode(final String text) throws IOException, WriterException
+    private String asQrCode(final String text) throws IOException, WriterException
     {
         final QRCodeWriter qrCodeWriter = new QRCodeWriter();
         final BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 300, 300);
@@ -257,21 +259,33 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
 
         try
         {
-            this.credentialOfferQrCode = generateQrCode(
-                    String.format(CREDENTIAL_OFFER_QR_PATTERN, credentialOfferEndpoint,
-                                  URLEncoder.encode(info.getCredentialOffer(), "UTF-8")));
+            this.credentialOfferLink = String.format(CREDENTIAL_OFFER_QR_PATTERN, credentialOfferEndpoint,
+                                                     URLEncoder.encode(info.getCredentialOffer(), "UTF-8"));
+            this.credentialOfferQrCode = asQrCode(this.credentialOfferLink);
 
             final String credentialOfferUri = String.format("%s/api/offer/%s",
                                                             info.getCredentialIssuer().toString(),
                                                             info.getIdentifier());
-            this.credentialOfferUriQrCode = generateQrCode(
-                    String.format(CREDENTIAL_OFFER_URI_QR_PATTERN, credentialOfferEndpoint,
-                                  URLEncoder.encode(credentialOfferUri, "UTF-8")));
+            this.credentialOfferUriLink = String.format(CREDENTIAL_OFFER_URI_QR_PATTERN, credentialOfferEndpoint,
+                                                        URLEncoder.encode(credentialOfferUri, "UTF-8"));
+            this.credentialOfferUriQrCode = asQrCode(this.credentialOfferUriLink);
         }
         catch (IOException | WriterException e)
         {
             throw ExceptionUtil.internalServerErrorException("Can't generate QR code.");
         }
+    }
+
+
+    public String getCredentialOfferLink()
+    {
+        return credentialOfferLink;
+    }
+
+
+    public void setCredentialOfferLink(String credentialOfferLink)
+    {
+        this.credentialOfferLink = credentialOfferLink;
     }
 
 
@@ -284,6 +298,18 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     public void setCredentialOfferQrCode(String credentialOfferQrCode)
     {
         this.credentialOfferQrCode = credentialOfferQrCode;
+    }
+
+
+    public String getCredentialOfferUriLink()
+    {
+        return credentialOfferUriLink;
+    }
+
+
+    public void setCredentialOfferUriLink(String credentialOfferUriLink)
+    {
+        this.credentialOfferUriLink = credentialOfferUriLink;
     }
 
 

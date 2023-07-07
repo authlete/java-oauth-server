@@ -61,37 +61,55 @@
           <div class="indent">
             <h4>Offer parameters</h4>
 
-            <label for="authorizationCodeGrantIncluded">Authorization code grant included</label>
-            <input type="checkbox" id="authorizationCodeGrantIncluded" name="authorizationCodeGrantIncluded"
-                   <c:if test="${model.authorizationCodeGrantIncluded}">checked</c:if> class="font-default">
-            <br/>
-            <label for="issuerStateIncluded">Issuer state included</label>
-            <input type="checkbox" id="issuerStateIncluded" name="issuerStateIncluded"
-                   <c:if test="${model.issuerStateIncluded}">checked</c:if> class="font-default">
-            <br/>
-            <label for="preAuthorizedCodeGrantIncluded">Pre-authorized code grant included</label>
-            <input type="checkbox" id="preAuthorizedCodeGrantIncluded" name="preAuthorizedCodeGrantIncluded"
-                   <c:if test="${model.preAuthorizedCodeGrantIncluded}">checked</c:if> class="font-default">
-            <br/>
-            <label for="userPinRequired">User pin required</label>
-            <input type="checkbox" id="userPinRequired" name="userPinRequired"
-                   <c:if test="${model.userPinRequired}">checked</c:if> class="font-default">
-            <br/>
-            <label for="userPinRequired">User pin length</label>
-            <input type="number" id="userPinLength" name="userPinLength" value="${model.userPinLength}" class="font-default">
-            <br/>
-            <label for="userPinRequired">Duration</label>
-            <input type="number" id="duration" name="duration" value="${model.duration}" class="font-default">
-            <br/>
-            <label for="credentials">Credentials</label>
-            <textarea id="credentials" name="credentials" class="font-default">
-                ${model.credentials}
-            </textarea>
-            <br/>
-            <label for="credentialOfferEndpoint">Credential offer endpoint</label>
-            <input type="text" id="credentialOfferEndpoint" name="credentialOfferEndpoint"
-                   value="${model.credentialOfferEndpoint}" class="font-default">
-            <br/>
+            <table class="indent">
+              <tr>
+                <td><label for="authorizationCodeGrantIncluded">Authorization code grant included</label></td>
+                <td>
+                  <input type="checkbox" id="authorizationCodeGrantIncluded" name="authorizationCodeGrantIncluded"
+                           <c:if test="${model.authorizationCodeGrantIncluded}">checked</c:if> class="font-default">
+                </td>
+              </tr>
+              <tr>
+                <td><label for="issuerStateIncluded">Issuer state included</label></td>
+                <td>
+                  <input type="checkbox" id="issuerStateIncluded" name="issuerStateIncluded"
+                         <c:if test="${model.issuerStateIncluded}">checked</c:if> class="font-default">
+                </td>
+              </tr>
+              <tr>
+                <td><label for="preAuthorizedCodeGrantIncluded">Pre-authorized code grant included</label></td>
+                <td>
+                  <input type="checkbox" id="preAuthorizedCodeGrantIncluded" name="preAuthorizedCodeGrantIncluded"
+                         <c:if test="${model.preAuthorizedCodeGrantIncluded}">checked</c:if> class="font-default">
+                </td>
+              </tr>
+              <tr>
+                <td><label for="userPinRequired">User pin required</label></td>
+                <td>
+                  <input type="checkbox" id="userPinRequired" name="userPinRequired"
+                         <c:if test="${model.userPinRequired}">checked</c:if> class="font-default">
+                </td>
+              </tr>
+              <tr>
+                <td><label for="userPinRequired">User pin length</label></td>
+                <td>
+                  <input type="number" id="userPinLength" name="userPinLength" value="${model.userPinLength}" class="font-default">
+                </td>
+              </tr>
+              <tr>
+                <td><label for="credentials">Credentials</label></td>
+                <td>
+                  <textarea id="credentials" name="credentials" rows="10" cols="40" class="font-default">${model.credentials}</textarea>
+                </td>
+              </tr>
+              <tr>
+                <td><label for="credentialOfferEndpoint">Credential offer endpoint</label></td>
+                <td>
+                  <input type="text" id="credentialOfferEndpoint" name="credentialOfferEndpoint"
+                         value="${model.credentialOfferEndpoint}" class="font-default">
+                </td>
+              </tr>
+            </table>
             <div id="authorization-form-buttons">
               <input type="submit" name="authorized" id="authorize-button" value="Submit" class="font-default"/>
             </div>
@@ -105,15 +123,21 @@
             <p>User pin: ${model.info.userPin}</p>
             </c:if>
 
-<%--            <c:if test="${model.credentialOfferQrCode != null}">--%>
+            <c:if test="${model.credentialOfferQrCode != null}">
             <h5>Credential offer</h5>
-            <img src="data:image/png;base64,${model.credentialOfferQrCode}"/>
-<%--            </c:if>--%>
+            <a href="${model.credentialOfferLink}">
+              <img src="data:image/png;base64,${model.credentialOfferQrCode}"/>
+            </a>
+            <br/>
+            </c:if>
 
-<%--            <c:if test="${model.credentialOfferUriQrCode != null}">--%>
+            <c:if test="${model.credentialOfferUriQrCode != null}">
             <h5>Credential offer URI</h5>
-            <img src="data:image/png;base64,${model.credentialOfferUriQrCode}"/>
-<%--            </c:if>--%>
+            <a href="${model.credentialOfferLink}">
+              <img src="data:image/png;base64,${model.credentialOfferUriQrCode}"/>
+            </a>
+            <br/>
+            </c:if>
           </div>
         </c:otherwise>
       </c:choose>
