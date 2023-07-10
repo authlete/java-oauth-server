@@ -20,44 +20,20 @@ package com.authlete.jaxrs.server.api;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.glassfish.jersey.server.mvc.Viewable;
-import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.dto.CredentialOfferInfoRequest;
-import com.authlete.common.dto.CredentialOfferInfoResponse;
-import com.authlete.jaxrs.BaseEndpoint;
-import com.authlete.jaxrs.server.util.ExceptionUtil;
+import com.authlete.jaxrs.BaseCredentialOfferUriEndpoint;
 
 
 @Path("/api/offer/{identifier}")
-public class CredentialOfferEndpoint extends BaseEndpoint
+public class CredentialOfferEndpoint extends BaseCredentialOfferUriEndpoint
 {
     @GET
     public Response get(
             @PathParam("identifier") String identifier)
     {
-        final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
-
-        final CredentialOfferInfoRequest infoRequest = new CredentialOfferInfoRequest()
-                .setIdentifier(identifier);
-        final CredentialOfferInfoResponse response = api.credentialOfferInfo(infoRequest);
-
-        switch(response.getAction())
-        {
-            default:
-                throw ExceptionUtil.badRequestException("An exception occured: " + response.getResultMessage());
-            case OK:
-                final CredentialOfferPageModel model = new CredentialOfferPageModel();
-                model.setInfo(response.getInfo());
-
-                // Create a Viewable instance that represents the credential offer page.
-                // Viewable is a class provided by Jersey for MVC.
-                final Viewable viewable = new Viewable("/credential-offer", model);
-
-                // Create a response that has the viewable as its content.
-                return Response.ok(viewable, MediaType.TEXT_HTML_TYPE.withCharset("UTF-8")).build();
-        }
+        return this.handle(AuthleteApiFactory.getDefaultApi(),
+                           new CredentialOfferInfoRequest().setIdentifier(identifier));
     }
 }
