@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Map;
+import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 import com.authlete.common.dto.CredentialOfferCreateRequest;
 import com.authlete.common.dto.CredentialOfferInfo;
@@ -47,6 +48,8 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     private static final String DEFAULT_ENDPOINT = "openid-credential-offer://";
     private static final String CREDENTIAL_OFFER_QR_PATTERN = "%s?credential_offer=%s";
     private static final String CREDENTIAL_OFFER_URI_QR_PATTERN = "%s?credential_offer_uri=%s";
+    private static final int QR_CODE_WIDTH = 300;
+    public static final int QR_CODE_HEIGHT = 300;
 
 
     private static final String DEFAULT_CREDENTIALS = "[\n" +
@@ -98,36 +101,42 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
         this.preAuthorizedCodeGrantIncluded = ProcessingUtil.fromFormCheckbox(values, "preAuthorizedCodeGrantIncluded");
         this.userPinRequired = ProcessingUtil.fromFormCheckbox(values, "userPinRequired");
         this.credentialOfferEndpoint = values.getOrDefault("credentialOfferEndpoint", this.credentialOfferEndpoint);
-
-        final String userPinLengthStr = values.getOrDefault("userPinLength", Integer.toString(this.userPinLength));
-        final String durationStr = values.getOrDefault("duration", Integer.toString(this.duration));
-
-        try
-        {
-            userPinLength = Integer.parseInt(userPinLengthStr);
-        }
-        catch (NumberFormatException e)
-        {
-            throw ExceptionUtil.badRequestException("User pin length should be a number.");
-        }
-
-        try
-        {
-            duration = Integer.parseInt(durationStr);
-        }
-        catch (NumberFormatException e)
-        {
-            throw ExceptionUtil.badRequestException("Duration should be a number.");
-        }
-
+        this.userPinLength = extractInt(values, "userPinLength", this.userPinLength);
+        this.duration = extractInt(values, "duration", this.duration);
         return this;
+    }
+
+
+    private Integer extractInt(final Map<String, String> values,
+                               final String key, final Integer def)
+    {
+        final String value = values.getOrDefault(key, Integer.toString(def));
+
+        try
+        {
+            final Integer intVal = Integer.parseInt(value);
+
+            if (intVal < 0)
+            {
+                throw ExceptionUtil.badRequestException(
+                        String.format("%s should be positive.", key));
+            }
+
+            return intVal;
+        }
+        catch (NumberFormatException e)
+        {
+            throw ExceptionUtil.badRequestException(
+                    String.format("%s should be a number.", key));
+        }
     }
 
 
     private String asQrCode(final String text) throws IOException, WriterException
     {
         final QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        final BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 300, 300);
+        final BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE,
+                                                        QR_CODE_WIDTH, QR_CODE_HEIGHT);
 
         final BufferedImage qrCode = MatrixToImageWriter.toBufferedImage(bitMatrix);
 

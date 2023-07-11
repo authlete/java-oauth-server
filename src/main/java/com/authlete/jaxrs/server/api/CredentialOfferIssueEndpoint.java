@@ -71,7 +71,7 @@ public class CredentialOfferIssueEndpoint extends BaseEndpoint
         final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
         final User user = ProcessingUtil.getUser(session, parameters);
 
-        if(user == null)
+        if (user == null)
         {
             throw ExceptionUtil.badRequestException("Bad authentication.");
         }
@@ -79,10 +79,8 @@ public class CredentialOfferIssueEndpoint extends BaseEndpoint
         final CredentialOfferCreateRequest createRequest = model.toRequest(user);
         final CredentialOfferCreateResponse response = api.credentialOfferCreate(createRequest);
 
-        switch(response.getAction())
+        switch (response.getAction())
         {
-            default:
-                throw ExceptionUtil.badRequestException("An exception occured: " + response.getResultMessage());
             case CREATED:
                 model.setInfo(response.getInfo());
                 model.setUser(user);
@@ -93,6 +91,9 @@ public class CredentialOfferIssueEndpoint extends BaseEndpoint
 
                 // Create a response that has the viewable as its content.
                 return Response.ok(viewable, MediaType.TEXT_HTML_TYPE.withCharset("UTF-8")).build();
+
+            default:
+                throw ExceptionUtil.badRequestException("An exception occured: " + response.getResultMessage());
         }
     }
 }
