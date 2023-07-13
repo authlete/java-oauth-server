@@ -32,6 +32,34 @@
   <!-- <% /* //-->
   <link rel="stylesheet" href="../../css/authorization.css">
   <!-- */ %> //-->
+
+  <script>
+    function cascadeDependency(src, dst) {
+      const srcElem = document.getElementById(src);
+      const dstElem = document.getElementById(dst);
+
+      dstElem.disabled = !srcElem.checked
+    }
+
+    function cascadeAuthorizationCodeGrantIncluded() {
+      cascadeDependency("authorizationCodeGrantIncluded", "issuerStateIncluded");
+    }
+
+    function cascadePreAuthorizedCodeGrantIncluded() {
+      cascadeDependency("preAuthorizedCodeGrantIncluded", "userPinRequired");
+      cascadeDependency("preAuthorizedCodeGrantIncluded", "userPinLength");
+    }
+
+    window.onload = function() {
+      cascadeAuthorizationCodeGrantIncluded();
+      cascadePreAuthorizedCodeGrantIncluded();
+
+      document.getElementById("authorizationCodeGrantIncluded")
+              .addEventListener('click', cascadeAuthorizationCodeGrantIncluded);
+      document.getElementById("preAuthorizedCodeGrantIncluded")
+              .addEventListener('click', cascadePreAuthorizedCodeGrantIncluded);
+    };
+  </script>
 </head>
 <body class="font-default">
   <div id="page_title">Credential Offer</div>
@@ -40,10 +68,8 @@
     <form id="credential-offer-form" action="/api/offer/issue" method="POST">
       <c:if test="${model.user == null}">
       <div class="indent">
-        <h4 id="authorization">Authorization</h4>
+        <h4 id="authorization">Login</h4>
         <div class="indent">
-          <p>Do you grant authorization to the application?</p>
-
           <div id="login-fields" class="indent">
           <div id="login-prompt">Input Login ID and Password.</div>
           <input type="text" id="loginId" name="loginId" placeholder="Login ID"
@@ -66,16 +92,17 @@
                 <td><label for="authorizationCodeGrantIncluded">Authorization code grant included</label></td>
                 <td>
                   <input type="checkbox" id="authorizationCodeGrantIncluded" name="authorizationCodeGrantIncluded"
-                           <c:if test="${model.authorizationCodeGrantIncluded}">checked</c:if> class="font-default">
+                         <c:if test="${model.authorizationCodeGrantIncluded}">checked</c:if> class="font-default">
                 </td>
               </tr>
               <tr>
-                <td><label for="issuerStateIncluded">Issuer state included</label></td>
+                <td><div class="indent"><label for="issuerStateIncluded">Issuer state included</label></div></td>
                 <td>
                   <input type="checkbox" id="issuerStateIncluded" name="issuerStateIncluded"
                          <c:if test="${model.issuerStateIncluded}">checked</c:if> class="font-default">
                 </td>
               </tr>
+              <tr></tr>
               <tr>
                 <td><label for="preAuthorizedCodeGrantIncluded">Pre-authorized code grant included</label></td>
                 <td>
@@ -84,18 +111,20 @@
                 </td>
               </tr>
               <tr>
-                <td><label for="userPinRequired">User pin required</label></td>
+                <td><div class="indent"><label for="userPinRequired">User pin required</label></div></td>
                 <td>
                   <input type="checkbox" id="userPinRequired" name="userPinRequired"
                          <c:if test="${model.userPinRequired}">checked</c:if> class="font-default">
                 </td>
               </tr>
               <tr>
-                <td><label for="userPinRequired">User pin length</label></td>
+                <td><div class="indent"><label for="userPinLength">User pin length</label></div></td>
                 <td>
-                  <input type="number" id="userPinLength" name="userPinLength" value="${model.userPinLength}" class="font-default">
+                  <input type="number" id="userPinLength" name="userPinLength" value="${model.userPinLength}"
+                         min="0" max="8" class="font-default">
                 </td>
               </tr>
+              <tr></tr>
               <tr>
                 <td><label for="credentials">Credentials</label></td>
                 <td>
@@ -106,7 +135,7 @@
                 <td><label for="credentialOfferEndpoint">Credential offer endpoint</label></td>
                 <td>
                   <input type="text" id="credentialOfferEndpoint" name="credentialOfferEndpoint"
-                         value="${model.credentialOfferEndpoint}" class="font-default">
+                         value="${model.credentialOfferEndpoint}" size="40" class="font-default">
                 </td>
               </tr>
             </table>

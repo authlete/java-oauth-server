@@ -55,11 +55,8 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     private static final String DEFAULT_CREDENTIALS = "[\n" +
             "  {\n" +
             "    \"format\": \"vc+sd-jwt\",\n" +
-            "    \"type\": \"IdentityCredential\",\n" +
             "    \"credential_definition\": {\n" +
-            "      \"given_name\": {},\n" +
-            "      \"family_name\": {},\n" +
-            "      \"birthdate\": {}\n" +
+            "      \"type\": \"IdentityCredential\"\n" +
             "    }\n" +
             "  }\n" +
             "]";
