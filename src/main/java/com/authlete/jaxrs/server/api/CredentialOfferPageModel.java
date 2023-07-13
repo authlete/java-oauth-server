@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Map;
-import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 import com.authlete.common.dto.CredentialOfferCreateRequest;
 import com.authlete.common.dto.CredentialOfferInfo;
@@ -30,11 +29,16 @@ import com.authlete.common.types.User;
 import com.authlete.jaxrs.AuthorizationPageModel;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ProcessingUtil;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.nimbusds.jose.shaded.gson.Gson;
+import com.nimbusds.jose.shaded.gson.GsonBuilder;
+import com.nimbusds.jose.shaded.gson.JsonParseException;
 
 
 /**
@@ -73,6 +77,7 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     private CredentialOfferInfo info;
     private String credentialOfferLink;
     private String credentialOfferQrCode;
+    private String credentialOfferContent;
     private String credentialOfferUriLink;
     private String credentialOfferUriQrCode;
 
@@ -140,6 +145,14 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
         final ByteArrayOutputStream output = new ByteArrayOutputStream();
         ImageIO.write(qrCode, "png", output);
         return Base64.getEncoder().encodeToString(output.toByteArray());
+    }
+
+
+    private String prettifyJson(final String json)
+    {
+        final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        final JsonElement je = JsonParser.parseString(json);
+        return gson.toJson(je);
     }
 
 
@@ -280,6 +293,15 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
         {
             throw ExceptionUtil.internalServerErrorException("Can't generate QR code.");
         }
+
+        this.credentialOfferContent = info.getCredentialOffer();
+
+        try
+        {
+            this.credentialOfferContent = prettifyJson(this.credentialOfferContent);
+        }
+        catch (JsonParseException ignored)
+        {}
     }
 
 
@@ -304,6 +326,18 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     public void setCredentialOfferQrCode(String credentialOfferQrCode)
     {
         this.credentialOfferQrCode = credentialOfferQrCode;
+    }
+
+
+    public String getCredentialOfferContent()
+    {
+        return credentialOfferContent;
+    }
+
+
+    public void setCredentialOfferContent(String credentialOfferContent)
+    {
+        this.credentialOfferContent = credentialOfferContent;
     }
 
 

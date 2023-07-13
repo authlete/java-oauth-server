@@ -155,14 +155,18 @@
             <c:if test="${model.credentialOfferQrCode != null}">
             <h5>Credential offer</h5>
             <a href="${model.credentialOfferLink}">
-              <img src="data:image/png;base64,${model.credentialOfferQrCode}"/>
+              <img src="data:image/png;base64,${model.credentialOfferQrCode}">
             </a>
+            <br/>
+            <div class="indent">
+              <pre><code>${model.credentialOfferContent}</code></pre>
+            </div>
             <br/>
             </c:if>
 
             <c:if test="${model.credentialOfferUriQrCode != null}">
             <h5>Credential offer URI</h5>
-            <a href="${model.credentialOfferLink}">
+            <a href="${model.credentialOfferUriLink}">
               <img src="data:image/png;base64,${model.credentialOfferUriQrCode}"/>
             </a>
             <br/>
