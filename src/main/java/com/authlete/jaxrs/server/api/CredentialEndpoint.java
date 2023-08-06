@@ -24,6 +24,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -41,6 +42,7 @@ import com.authlete.common.dto.IntrospectionRequest;
 import com.authlete.common.dto.IntrospectionResponse;
 import com.authlete.jaxrs.BaseEndpoint;
 import com.authlete.jaxrs.server.util.CredentialUtil;
+import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,15 +62,45 @@ public class CredentialEndpoint extends BaseEndpoint
             return ResponseUtil.badRequest("Missing request content.");
         }
 
-        String accessToken = request.getHeader("Authorization");
-        if (accessToken == null || !accessToken.startsWith("Bearer "))
+        final String accessToken = processAccessToken(request);
+        if (accessToken == null)
         {
             return ResponseUtil.badRequest("Missing access token.");
         }
-        accessToken = accessToken.replaceFirst("Bearer ", "");
 
-        // 2.
         final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+
+        // Validate access token
+        introspect(api, accessToken);
+
+        // Parse credential and make it an order
+        final CredentialRequestInfo credential = credentialSingleParse(api,
+                                                                       requestContent,
+                                                                       accessToken);
+        final CredentialIssuanceOrder order = CredentialUtil.toOrder(credential);
+
+        // Issue
+        final String issuance = credentialIssue(api, order, accessToken);
+        return ResponseUtil.ok(issuance);
+    }
+
+
+    private String processAccessToken(final HttpServletRequest request)
+    {
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken == null || !accessToken.startsWith("Bearer "))
+        {
+            return null;
+        }
+        accessToken = accessToken.replaceFirst("Bearer ", "");
+        return accessToken;
+    }
+
+
+    private String introspect(final AuthleteApi api,
+                                final String accessToken)
+            throws WebApplicationException
+    {
         final IntrospectionRequest introspectionRequest = new IntrospectionRequest()
                 .setToken(accessToken);
 
@@ -77,63 +109,87 @@ public class CredentialEndpoint extends BaseEndpoint
 
         switch (response.getAction())
         {
-            case INTERNAL_SERVER_ERROR:
-                return ResponseUtil.internalServerError(resultMessage);
             case BAD_REQUEST:
-                return ResponseUtil.badRequest(resultMessage);
-            case UNAUTHORIZED:
-                return ResponseUtil.unauthorized(accessToken, resultMessage);
-            case FORBIDDEN:
-                //TODO
-                return ResponseUtil.internalServerError(resultMessage);
-        }
+                throw ExceptionUtil.badRequestException(resultMessage);
 
-        // 3.
+            case UNAUTHORIZED:
+                throw ExceptionUtil.unauthorizedException(accessToken, resultMessage);
+
+            case FORBIDDEN:
+                throw ExceptionUtil.forbiddenException(resultMessage);
+
+            case OK:
+                return resultMessage;
+
+            case INTERNAL_SERVER_ERROR:
+            default:
+                throw ExceptionUtil.internalServerErrorException(resultMessage);
+        }
+    }
+
+
+    private CredentialRequestInfo credentialSingleParse(final AuthleteApi api,
+                                     final String requestContent,
+                                     final String accessToken)
+            throws WebApplicationException
+    {
         final CredentialSingleParseRequest parseRequest = new CredentialSingleParseRequest()
                 .setRequestContent(requestContent)
                 .setAccessToken(accessToken);
 
-        final CredentialSingleParseResponse credentialSingleParseResponse = api.credentialSingleParse(parseRequest);
-        resultMessage = credentialSingleParseResponse.getResultMessage();
+        final CredentialSingleParseResponse response = api.credentialSingleParse(parseRequest);
+        final String resultMessage = response.getResultMessage();
 
-        switch (credentialSingleParseResponse.getAction())
+        switch (response.getAction())
         {
-            case INTERNAL_SERVER_ERROR:
-                return ResponseUtil.internalServerError(resultMessage);
             case BAD_REQUEST:
-                return ResponseUtil.badRequest(resultMessage);
+                throw ExceptionUtil.badRequestException(resultMessage);
+
             case UNAUTHORIZED:
-                return ResponseUtil.unauthorized(accessToken, resultMessage);
+                throw ExceptionUtil.unauthorizedException(accessToken, resultMessage);
+
             case FORBIDDEN:
-                //TODO
-                return ResponseUtil.internalServerError(resultMessage);
+                throw ExceptionUtil.forbiddenException(resultMessage);
+
+            case OK:
+                return response.getInfo();
+
+            case INTERNAL_SERVER_ERROR:
+            default:
+                throw ExceptionUtil.internalServerErrorException(resultMessage);
         }
+    }
 
-        // 4.
-        final CredentialIssuanceOrder credentialIssuanceOrder = CredentialUtil.toOrder(
-                credentialSingleParseResponse.getInfo());
 
-        // 5.
+    private String credentialIssue(final AuthleteApi api,
+                            final CredentialIssuanceOrder order,
+                            final String accessToken)
+    {
         final CredentialSingleIssueRequest credentialSingleIssueRequest = new CredentialSingleIssueRequest()
                 .setAccessToken(accessToken)
-                .setOrder(credentialIssuanceOrder);
+                .setOrder(order);
 
-        final CredentialSingleIssueResponse credentialSingleIssueResponse = api.credentialSingleIssue(credentialSingleIssueRequest);
-        resultMessage = credentialSingleIssueResponse.getResultMessage();
+        final CredentialSingleIssueResponse response = api.credentialSingleIssue(credentialSingleIssueRequest);
+        final String resultMessage = response.getResultMessage();
 
-        switch (credentialSingleIssueResponse.getAction())
+        switch (response.getAction())
         {
-            case INTERNAL_SERVER_ERROR:
-                return ResponseUtil.internalServerError(resultMessage);
             case CALLER_ERROR:
-                return ResponseUtil.badRequest(resultMessage);
-            case UNAUTHORIZED:
-                return ResponseUtil.unauthorized(accessToken, resultMessage);
-            case FORBIDDEN:
-                //TODO
-                return ResponseUtil.internalServerError(resultMessage);
-        }
+                throw ExceptionUtil.badRequestException(resultMessage);
 
-        return ResponseUtil.ok(credentialSingleIssueResponse.getResponseContent());
+            case UNAUTHORIZED:
+                throw ExceptionUtil.unauthorizedException(accessToken, resultMessage);
+
+            case FORBIDDEN:
+                throw ExceptionUtil.forbiddenException(resultMessage);
+
+            case OK:
+            case ACCEPTED:
+                return resultMessage;
+
+            case INTERNAL_SERVER_ERROR:
+            default:
+                throw ExceptionUtil.internalServerErrorException(resultMessage);
+        }
     }
 }

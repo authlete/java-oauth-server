@@ -18,6 +18,7 @@ package com.authlete.jaxrs.server.util;
 
 
 import static com.authlete.jaxrs.server.util.ResponseUtil.badRequest;
+import static com.authlete.jaxrs.server.util.ResponseUtil.forbidden;
 import static com.authlete.jaxrs.server.util.ResponseUtil.unauthorized;
 import static com.authlete.jaxrs.server.util.ResponseUtil.notFound;
 import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerError;
@@ -97,6 +98,20 @@ public class ExceptionUtil
     public static WebApplicationException unauthorizedException(Viewable entity, String challenge)
     {
         return new WebApplicationException(unauthorized(entity, challenge));
+    }
+
+    /**
+     * Create an exception indicating "403 Forbidden".
+     *
+     * @param entity
+     *         An entity to contain in the response of the exception.
+     *
+     * @return
+     *         An exception indicating "403 Forbidden".
+     */
+    public static WebApplicationException forbiddenException(final String entity)
+    {
+        return new WebApplicationException(entity, forbidden(entity));
     }
 
 

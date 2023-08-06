@@ -159,6 +159,22 @@ public class ResponseUtil
 
 
     /**
+     * Build a "text/plain" response of "403 Forbidden".
+     *
+     * @param entity
+     *         A string entity to contain in the response.
+     *
+     * @return
+     *         A "text/plain" response of "403 Forbidde".
+     */
+    public static Response forbidden(final String entity)
+    {
+        return builderForTextPlain(Status.FORBIDDEN, entity)
+                .build();
+    }
+
+
+    /**
      * Build a "text/plain" response of "404 Not Found".
      *
      * @param entity
