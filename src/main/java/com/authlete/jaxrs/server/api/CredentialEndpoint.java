@@ -17,22 +17,17 @@
 package com.authlete.jaxrs.server.api;
 
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.dto.CredentialIssuanceOrder;
-import com.authlete.common.dto.CredentialOfferInfoRequest;
 import com.authlete.common.dto.CredentialRequestInfo;
 import com.authlete.common.dto.CredentialSingleIssueRequest;
 import com.authlete.common.dto.CredentialSingleIssueResponse;
@@ -44,9 +39,6 @@ import com.authlete.jaxrs.BaseEndpoint;
 import com.authlete.jaxrs.server.util.CredentialUtil;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import net.minidev.json.JSONObject;
 
 
 @Path("/api/credential")
