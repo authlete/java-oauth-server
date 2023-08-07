@@ -18,27 +18,12 @@ package com.authlete.jaxrs.server.api;
 
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
-import com.authlete.common.dto.CredentialBatchIssueRequest;
-import com.authlete.common.dto.CredentialBatchIssueResponse;
-import com.authlete.common.dto.CredentialBatchParseRequest;
-import com.authlete.common.dto.CredentialBatchParseResponse;
-import com.authlete.common.dto.CredentialIssuanceOrder;
-import com.authlete.common.dto.CredentialRequestInfo;
 import com.authlete.common.dto.IntrospectionRequest;
 import com.authlete.common.dto.IntrospectionResponse;
 import com.authlete.jaxrs.BaseEndpoint;
-import com.authlete.jaxrs.server.util.CredentialUtil;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
-import com.authlete.jaxrs.server.util.ResponseUtil;
 
 
 public abstract class AbstractCredentialEndpoint extends BaseEndpoint
