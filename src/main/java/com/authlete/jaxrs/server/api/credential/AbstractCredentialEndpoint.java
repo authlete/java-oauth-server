@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the
  * License.
  */
-package com.authlete.jaxrs.server.api;
+package com.authlete.jaxrs.server.api.credential;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +58,7 @@ public abstract class AbstractCredentialEndpoint extends BaseEndpoint
     }
 
 
-    protected String introspect(final AuthleteApi api,
+    protected IntrospectionResponse introspect(final AuthleteApi api,
                                 final String accessToken)
             throws WebApplicationException
     {
@@ -66,7 +66,7 @@ public abstract class AbstractCredentialEndpoint extends BaseEndpoint
                 .setToken(accessToken);
 
         final IntrospectionResponse response = api.introspection(introspectionRequest);
-        String resultMessage = response.getResultMessage();
+        final String resultMessage = response.getResultMessage();
 
         switch (response.getAction())
         {
@@ -80,7 +80,7 @@ public abstract class AbstractCredentialEndpoint extends BaseEndpoint
                 throw ExceptionUtil.forbiddenException(resultMessage);
 
             case OK:
-                return resultMessage;
+                return response;
 
             case INTERNAL_SERVER_ERROR:
             default:

@@ -2,43 +2,34 @@ package com.authlete.jaxrs.server.util;
 
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import com.authlete.common.dto.CredentialIssuanceOrder;
 import com.authlete.common.dto.CredentialRequestInfo;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import net.minidev.json.JSONObject;
+import com.authlete.common.dto.IntrospectionResponse;
+import com.authlete.jaxrs.server.api.credential.OrderFormat;
 
 
 public class CredentialUtil
 {
-
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-    public static CredentialIssuanceOrder toOrder(final CredentialRequestInfo info)
+    public static CredentialIssuanceOrder toOrder(final IntrospectionResponse introspection,
+                                                  final CredentialRequestInfo info)
     {
-        final String format = info.getFormat();
-        final String details = info.getDetails();
-        final JSONObject detailsObj = gson.fromJson(details, JSONObject.class);
-        final JSONObject payloadObj = new JSONObject()
-                .appendField("format", format)
-                .appendField("details", detailsObj);
-        final String payload = gson.toJson(payloadObj);
-        final String identifier = info.getIdentifier();
+        final String formatId = info.getFormat();
+        final OrderFormat format = OrderFormat.byId(formatId);
+        if (format == null)
+        {
+            throw ExceptionUtil.badRequestException(String.format("Unsupported credential format %s.", formatId));
+        }
 
-        return new CredentialIssuanceOrder()
-                .setCredentialPayload(payload)
-                .setRequestIdentifier(identifier);
+        return format.getProcessor()
+                .toOrder(introspection, info);
     }
 
 
-    public static CredentialIssuanceOrder[] toOrder(final CredentialRequestInfo[] info)
+    public static CredentialIssuanceOrder[] toOrder(final IntrospectionResponse introspection,
+                                                    final CredentialRequestInfo[] infos)
     {
-        return Arrays.stream(info)
-                .map(CredentialUtil::toOrder)
-                .collect(Collectors.toList())
-                .toArray(new CredentialIssuanceOrder[]{});
+        return Arrays.stream(infos)
+                .map(info -> toOrder(introspection, info))
+                .toArray(CredentialIssuanceOrder[]::new);
     }
-
 }

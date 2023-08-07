@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the
  * License.
  */
-package com.authlete.jaxrs.server.api;
+package com.authlete.jaxrs.server.api.credential;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,19 +27,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiFactory;
-import com.authlete.common.dto.CredentialBatchIssueRequest;
-import com.authlete.common.dto.CredentialBatchIssueResponse;
-import com.authlete.common.dto.CredentialBatchParseRequest;
-import com.authlete.common.dto.CredentialBatchParseResponse;
 import com.authlete.common.dto.CredentialIssuanceOrder;
 import com.authlete.common.dto.CredentialRequestInfo;
+import com.authlete.common.dto.CredentialSingleIssueRequest;
+import com.authlete.common.dto.CredentialSingleIssueResponse;
+import com.authlete.common.dto.CredentialSingleParseRequest;
+import com.authlete.common.dto.CredentialSingleParseResponse;
+import com.authlete.common.dto.IntrospectionResponse;
+import com.authlete.jaxrs.server.api.credential.AbstractCredentialEndpoint;
 import com.authlete.jaxrs.server.util.CredentialUtil;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
 
 
-@Path("/api/batch_credential")
-public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
+@Path("/api/credential")
+public class CredentialEndpoint extends AbstractCredentialEndpoint
 {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -52,30 +54,31 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
         final String accessToken = super.checkContentExtractToken(request, requestContent);
 
         // Validate access token
-        introspect(api, accessToken);
+        final IntrospectionResponse introspection = introspect(api, accessToken);
 
         // Parse credential and make it an order
-        final CredentialRequestInfo[] credential = credentialBatchParse(api,
+        final CredentialRequestInfo credential = credentialSingleParse(api,
                                                                        requestContent,
                                                                        accessToken);
-        final CredentialIssuanceOrder[] orders = CredentialUtil.toOrder(credential);
+        final CredentialIssuanceOrder order = CredentialUtil.toOrder(introspection,
+                                                                     credential);
 
         // Issue
-        final String issuance = credentialIssue(api, orders, accessToken);
+        final String issuance = credentialIssue(api, order, accessToken);
         return ResponseUtil.ok(issuance);
     }
 
 
-    private CredentialRequestInfo[] credentialBatchParse(final AuthleteApi api,
+    private CredentialRequestInfo credentialSingleParse(final AuthleteApi api,
                                      final String requestContent,
                                      final String accessToken)
             throws WebApplicationException
     {
-        final CredentialBatchParseRequest parseRequest = new CredentialBatchParseRequest()
+        final CredentialSingleParseRequest parseRequest = new CredentialSingleParseRequest()
                 .setRequestContent(requestContent)
                 .setAccessToken(accessToken);
 
-        final CredentialBatchParseResponse response = api.credentialBatchParse(parseRequest);
+        final CredentialSingleParseResponse response = api.credentialSingleParse(parseRequest);
         final String resultMessage = response.getResultMessage();
 
         switch (response.getAction())
@@ -100,14 +103,14 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
 
 
     private String credentialIssue(final AuthleteApi api,
-                            final CredentialIssuanceOrder[] orders,
+                            final CredentialIssuanceOrder order,
                             final String accessToken)
     {
-        final CredentialBatchIssueRequest credentialBatchIssueRequest = new CredentialBatchIssueRequest()
+        final CredentialSingleIssueRequest credentialSingleIssueRequest = new CredentialSingleIssueRequest()
                 .setAccessToken(accessToken)
-                .setOrders(orders);
+                .setOrder(order);
 
-        final CredentialBatchIssueResponse response = api.credentialBatchIssue(credentialBatchIssueRequest);
+        final CredentialSingleIssueResponse response = api.credentialSingleIssue(credentialSingleIssueRequest);
         final String resultMessage = response.getResultMessage();
 
         switch (response.getAction())
@@ -122,6 +125,7 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
                 throw ExceptionUtil.forbiddenException(resultMessage);
 
             case OK:
+            case ACCEPTED:
                 return resultMessage;
 
             case INTERNAL_SERVER_ERROR:
