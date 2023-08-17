@@ -34,7 +34,6 @@ import com.authlete.common.dto.CredentialSingleIssueResponse;
 import com.authlete.common.dto.CredentialSingleParseRequest;
 import com.authlete.common.dto.CredentialSingleParseResponse;
 import com.authlete.common.dto.IntrospectionResponse;
-import com.authlete.jaxrs.server.api.credential.AbstractCredentialEndpoint;
 import com.authlete.jaxrs.server.util.CredentialUtil;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
