@@ -125,7 +125,7 @@ public class CredentialEndpoint extends AbstractCredentialEndpoint
 
             case OK:
             case ACCEPTED:
-                return resultMessage;
+                return response.getResponseContent();
 
             case INTERNAL_SERVER_ERROR:
             default:
