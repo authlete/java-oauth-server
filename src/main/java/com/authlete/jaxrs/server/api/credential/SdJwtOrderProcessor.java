@@ -34,7 +34,8 @@ public class SdJwtOrderProcessor implements IOrderProcessor
     public CredentialIssuanceOrder toOrder(final IntrospectionResponse introspection,
                                            final CredentialRequestInfo info)
     {
-        final String credentialType = getCredentialType(info.getDetails());
+        final JsonObject definition = getCredentialDefinition(info.getDetails());
+        final String credentialType = getCredentialType(definition);
 
         // The subject (the identifier of the user) that is associated with the access token.
         final String subject = introspection.getSubject();
@@ -44,7 +45,7 @@ public class SdJwtOrderProcessor implements IOrderProcessor
 
         // Find credentialType
         final CredentialDefinitionType definitionType = CredentialDefinitionType.byId(credentialType);
-        if(definitionType == null)
+        if (definitionType == null)
         {
             throw ExceptionUtil.badRequestException(String.format("Unknown credential type %s.", credentialType));
         }
@@ -54,20 +55,29 @@ public class SdJwtOrderProcessor implements IOrderProcessor
         jsonObject.addProperty("type", credentialType);
         jsonObject.addProperty("sub", subject);
 
+        boolean deferred = false;
         for (final String claim : definitionType.getClaims())
         {
-            jsonObject.addProperty(claim, (String) user.getClaim(claim, null));
+            String claimValue = (String) user.getClaim(claim, null);
+            if(claimValue == null)
+            {
+                deferred = true;
+                continue;
+            }
+
+            jsonObject.addProperty(claim, claimValue);
         }
 
         final String credentialPayload = jsonObject.toString();
 
         return new CredentialIssuanceOrder()
                 .setRequestIdentifier(info.getIdentifier())
-                .setCredentialPayload(credentialPayload);
+                .setCredentialPayload(credentialPayload)
+                .setIssuanceDeferred(deferred);
     }
 
 
-    private String getCredentialType(final String details)
+    private JsonObject getCredentialDefinition(final String details)
     {
         final JsonElement request;
         try
@@ -79,19 +89,25 @@ public class SdJwtOrderProcessor implements IOrderProcessor
             throw ExceptionUtil.badRequestException("Unreadable credential request details.");
         }
 
-        if(!(request instanceof JsonObject))
+        if (!(request instanceof JsonObject))
         {
             throw ExceptionUtil.badRequestException("Credential request details should be a JSON object.");
         }
 
         final JsonElement definition = ((JsonObject)request).get("credential_definition");
-        if(!(definition instanceof JsonObject))
+        if (!(definition instanceof JsonObject))
         {
             throw ExceptionUtil.badRequestException("Credential definition should be defined.");
         }
 
-        final JsonElement type = ((JsonObject)definition).get("type");
-        if(type == null)
+        return (JsonObject)definition;
+    }
+
+
+    private String getCredentialType(final JsonObject definition)
+    {
+        final JsonElement type = definition.get("type");
+        if (type == null)
         {
             throw ExceptionUtil.badRequestException("Credential type should be defined.");
         }
