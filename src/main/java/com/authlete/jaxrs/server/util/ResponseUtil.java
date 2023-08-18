@@ -77,6 +77,36 @@ public class ResponseUtil
 
 
     /**
+     * Build a "text/plain" response of "202 ACCEPTED".
+     *
+     * @param entity
+     *         A string entity to contain in the response.
+     *
+     * @return
+     *         A "text/plain" response of "202 ACCEPTED".
+     */
+    public static Response accepted(String entity)
+    {
+        return builderForTextPlain(Status.ACCEPTED, entity).build();
+    }
+
+
+    /**
+     * Build a "text/html" response of "202 ACCEPTED".
+     *
+     * @param entity
+     *         A {@link Viewable} entity to contain in the response.
+     *
+     * @return
+     *         A "text/html" response of "202 ACCEPTED".
+     */
+    public static Response accepted(Viewable entity)
+    {
+        return builderForTextHtml(Status.ACCEPTED, entity).build();
+    }
+
+
+    /**
      * Build a response of "204 No Content".
      *
      * @return
