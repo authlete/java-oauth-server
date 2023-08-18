@@ -63,8 +63,7 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
                                                                         credential);
 
         // Issue
-        final String issuance = credentialIssue(api, orders, accessToken);
-        return ResponseUtil.ok(issuance);
+        return credentialIssue(api, orders, accessToken);
     }
 
 
@@ -101,7 +100,7 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
     }
 
 
-    private String credentialIssue(final AuthleteApi api,
+    private Response credentialIssue(final AuthleteApi api,
                             final CredentialIssuanceOrder[] orders,
                             final String accessToken)
     {
@@ -115,16 +114,16 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
         switch (response.getAction())
         {
             case CALLER_ERROR:
-                throw ExceptionUtil.badRequestException(resultMessage);
+                return ResponseUtil.badRequest(resultMessage);
 
             case UNAUTHORIZED:
-                throw ExceptionUtil.unauthorizedException(accessToken, resultMessage);
+                return ResponseUtil.unauthorized(accessToken, resultMessage);
 
             case FORBIDDEN:
-                throw ExceptionUtil.forbiddenException(resultMessage);
+                return ResponseUtil.forbidden(resultMessage);
 
             case OK:
-                return resultMessage;
+                return ResponseUtil.ok(response.getResponseContent());
 
             case INTERNAL_SERVER_ERROR:
             default:
