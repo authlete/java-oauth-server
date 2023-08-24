@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the
  * License.
  */
-package com.authlete.jaxrs.server.api.credential;
+package com.authlete.jaxrs.server.api.vci;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,10 +27,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiFactory;
-import com.authlete.common.dto.CredentialBatchIssueRequest;
-import com.authlete.common.dto.CredentialBatchIssueResponse;
-import com.authlete.common.dto.CredentialBatchParseRequest;
-import com.authlete.common.dto.CredentialBatchParseResponse;
+import com.authlete.common.dto.CredentialDeferredIssueRequest;
+import com.authlete.common.dto.CredentialDeferredIssueResponse;
+import com.authlete.common.dto.CredentialDeferredParseRequest;
+import com.authlete.common.dto.CredentialDeferredParseResponse;
 import com.authlete.common.dto.CredentialIssuanceOrder;
 import com.authlete.common.dto.CredentialRequestInfo;
 import com.authlete.common.dto.IntrospectionResponse;
@@ -39,8 +39,8 @@ import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
 
 
-@Path("/api/batch_credential")
-public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
+@Path("/api/credential_deferred")
+public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
 {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -56,27 +56,27 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
         final IntrospectionResponse introspection = introspect(api, accessToken);
 
         // Parse credential and make it an order
-        final CredentialRequestInfo[] credential = credentialBatchParse(api,
+        final CredentialRequestInfo credential = credentialDeferredParse(api,
                                                                        requestContent,
                                                                        accessToken);
-        final CredentialIssuanceOrder[] orders = CredentialUtil.toOrder(introspection,
-                                                                        credential);
+        final CredentialIssuanceOrder order = CredentialUtil.toOrder(introspection,
+                                                                     credential);
 
         // Issue
-        return credentialIssue(api, orders, accessToken);
+        return credentialIssue(api, order);
     }
 
 
-    private CredentialRequestInfo[] credentialBatchParse(final AuthleteApi api,
-                                     final String requestContent,
-                                     final String accessToken)
+    private CredentialRequestInfo credentialDeferredParse(final AuthleteApi api,
+                                                        final String requestContent,
+                                                        final String accessToken)
             throws WebApplicationException
     {
-        final CredentialBatchParseRequest parseRequest = new CredentialBatchParseRequest()
+        final CredentialDeferredParseRequest parseRequest = new CredentialDeferredParseRequest()
                 .setRequestContent(requestContent)
                 .setAccessToken(accessToken);
 
-        final CredentialBatchParseResponse response = api.credentialBatchParse(parseRequest);
+        final CredentialDeferredParseResponse response = api.credentialDeferredParse(parseRequest);
         final String resultMessage = response.getResultMessage();
 
         switch (response.getAction())
@@ -101,23 +101,18 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
 
 
     private Response credentialIssue(final AuthleteApi api,
-                            final CredentialIssuanceOrder[] orders,
-                            final String accessToken)
+                                     final CredentialIssuanceOrder order)
     {
-        final CredentialBatchIssueRequest credentialBatchIssueRequest = new CredentialBatchIssueRequest()
-                .setAccessToken(accessToken)
-                .setOrders(orders);
+        final CredentialDeferredIssueRequest credentialSingleIssueRequest = new CredentialDeferredIssueRequest()
+                .setOrder(order);
 
-        final CredentialBatchIssueResponse response = api.credentialBatchIssue(credentialBatchIssueRequest);
+        final CredentialDeferredIssueResponse response = api.credentialDeferredIssue(credentialSingleIssueRequest);
         final String resultMessage = response.getResultMessage();
 
         switch (response.getAction())
         {
             case CALLER_ERROR:
                 return ResponseUtil.badRequest(resultMessage);
-
-            case UNAUTHORIZED:
-                return ResponseUtil.unauthorized(accessToken, resultMessage);
 
             case FORBIDDEN:
                 return ResponseUtil.forbidden(resultMessage);

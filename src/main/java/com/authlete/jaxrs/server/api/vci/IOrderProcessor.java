@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the
  * License.
  */
-package com.authlete.jaxrs.server.api.credential;
+package com.authlete.jaxrs.server.api.vci;
 
 
 import com.authlete.common.dto.CredentialIssuanceOrder;

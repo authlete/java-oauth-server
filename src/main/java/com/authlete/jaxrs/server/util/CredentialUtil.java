@@ -5,7 +5,7 @@ import java.util.Arrays;
 import com.authlete.common.dto.CredentialIssuanceOrder;
 import com.authlete.common.dto.CredentialRequestInfo;
 import com.authlete.common.dto.IntrospectionResponse;
-import com.authlete.jaxrs.server.api.credential.OrderFormat;
+import com.authlete.jaxrs.server.api.vci.OrderFormat;
 
 
 public class CredentialUtil
