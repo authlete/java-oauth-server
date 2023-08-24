@@ -17,33 +17,20 @@
 package com.authlete.jaxrs.server.api.vci;
 
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiFactory;
-import com.authlete.common.dto.CredentialIssuanceOrder;
-import com.authlete.common.dto.CredentialIssuerMetadataRequest;
-import com.authlete.common.dto.CredentialIssuerMetadataResponse;
-import com.authlete.common.dto.CredentialRequestInfo;
-import com.authlete.common.dto.CredentialSingleIssueRequest;
-import com.authlete.common.dto.CredentialSingleIssueResponse;
-import com.authlete.common.dto.CredentialSingleParseRequest;
-import com.authlete.common.dto.CredentialSingleParseResponse;
-import com.authlete.common.dto.IntrospectionResponse;
-import com.authlete.jaxrs.server.util.CredentialUtil;
+import com.authlete.common.dto.CredentialIssuerJwksRequest;
+import com.authlete.common.dto.CredentialIssuerJwksResponse;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
 
 
-@Path("/.well-known/openid-credential-issuer")
-public class CredentialMetadataEndpoint extends AbstractCredentialEndpoint
+@Path("/.well-known/jwks.json")
+public class JWKSetMetadataEndpoint extends AbstractCredentialEndpoint
 {
     @GET
     public Response get()
@@ -57,10 +44,10 @@ public class CredentialMetadataEndpoint extends AbstractCredentialEndpoint
     private Response metadata(final AuthleteApi api)
             throws WebApplicationException
     {
-        final CredentialIssuerMetadataRequest request = new CredentialIssuerMetadataRequest()
+        final CredentialIssuerJwksRequest request = new CredentialIssuerJwksRequest()
                 .setPretty(false);
 
-        final CredentialIssuerMetadataResponse response = api.credentialIssuerMetadata(request);
+        final CredentialIssuerJwksResponse response = api.credentialIssuerJwks(request);
         final String resultMessage = response.getResultMessage();
 
         switch (response.getAction())
