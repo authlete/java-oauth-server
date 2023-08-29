@@ -61,6 +61,10 @@ public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
                                                                        accessToken);
         final CredentialIssuanceOrder order = CredentialUtil.toOrder(introspection,
                                                                      credential);
+        if (order.isIssuanceDeferred())
+        {
+            return ResponseUtil.badRequest("Issuance not ready yet.");
+        }
 
         // Issue
         return credentialIssue(api, order);
