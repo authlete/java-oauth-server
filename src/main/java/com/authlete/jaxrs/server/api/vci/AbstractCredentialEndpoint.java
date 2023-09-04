@@ -19,9 +19,12 @@ package com.authlete.jaxrs.server.api.vci;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.HttpHeaders;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.dto.IntrospectionRequest;
 import com.authlete.common.dto.IntrospectionResponse;
+import com.authlete.common.web.BearerToken;
+import com.authlete.common.web.DpopToken;
 import com.authlete.jaxrs.BaseResourceEndpoint;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 
@@ -48,13 +51,13 @@ public abstract class AbstractCredentialEndpoint extends BaseResourceEndpoint
 
     private String processAccessToken(final HttpServletRequest request)
     {
-        String accessToken = request.getHeader("Authorization");
-        if (accessToken == null || !accessToken.startsWith("Bearer "))
-        {
-            return null;
-        }
-        accessToken = accessToken.replaceFirst("Bearer ", "");
-        return accessToken;
+        // The value of the "Authorization" header.
+        final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        // If an access token have been set
+        final String accessToken = request.getParameter("access_token");
+
+        return super.extractAccessToken(authorization, accessToken);
     }
 
 
