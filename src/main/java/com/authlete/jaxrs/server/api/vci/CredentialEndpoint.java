@@ -56,11 +56,11 @@ public class CredentialEndpoint extends AbstractCredentialEndpoint
         final IntrospectionResponse introspection = introspect(api, accessToken);
 
         // Parse credential and make it an order
-        final CredentialRequestInfo credential = credentialSingleParse(api,
-                                                                       requestContent,
-                                                                       accessToken);
-        final CredentialIssuanceOrder order = CredentialUtil.toOrder(introspection,
-                                                                     credential);
+        final CredentialRequestInfo credential =
+                credentialSingleParse(api, requestContent, accessToken);
+
+        final CredentialIssuanceOrder order =
+                CredentialUtil.toOrder(introspection, credential);
 
         // Issue
         return credentialIssue(api, order, accessToken);
@@ -104,11 +104,13 @@ public class CredentialEndpoint extends AbstractCredentialEndpoint
                             final CredentialIssuanceOrder order,
                             final String accessToken)
     {
-        final CredentialSingleIssueRequest credentialSingleIssueRequest = new CredentialSingleIssueRequest()
-                .setAccessToken(accessToken)
-                .setOrder(order);
+        final CredentialSingleIssueRequest credentialSingleIssueRequest =
+                new CredentialSingleIssueRequest()
+                        .setAccessToken(accessToken)
+                        .setOrder(order);
 
-        final CredentialSingleIssueResponse response = api.credentialSingleIssue(credentialSingleIssueRequest);
+        final CredentialSingleIssueResponse response =
+                api.credentialSingleIssue(credentialSingleIssueRequest);
         final String resultMessage = response.getResultMessage();
 
         switch (response.getAction())

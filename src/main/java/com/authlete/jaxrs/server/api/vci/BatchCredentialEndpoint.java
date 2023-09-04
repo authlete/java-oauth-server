@@ -56,11 +56,11 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
         final IntrospectionResponse introspection = introspect(api, accessToken);
 
         // Parse credential and make it an order
-        final CredentialRequestInfo[] credential = credentialBatchParse(api,
-                                                                       requestContent,
-                                                                       accessToken);
-        final CredentialIssuanceOrder[] orders = CredentialUtil.toOrder(introspection,
-                                                                        credential);
+        final CredentialRequestInfo[] credential =
+                credentialBatchParse(api, requestContent, accessToken);
+
+        final CredentialIssuanceOrder[] orders =
+                CredentialUtil.toOrder(introspection, credential);
 
         // Issue
         return credentialIssue(api, orders, accessToken);
@@ -72,11 +72,13 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
                                      final String accessToken)
             throws WebApplicationException
     {
-        final CredentialBatchParseRequest parseRequest = new CredentialBatchParseRequest()
-                .setRequestContent(requestContent)
-                .setAccessToken(accessToken);
+        final CredentialBatchParseRequest parseRequest =
+                new CredentialBatchParseRequest()
+                        .setRequestContent(requestContent)
+                        .setAccessToken(accessToken);
 
-        final CredentialBatchParseResponse response = api.credentialBatchParse(parseRequest);
+        final CredentialBatchParseResponse response =
+                api.credentialBatchParse(parseRequest);
         final String resultMessage = response.getResultMessage();
 
         switch (response.getAction())

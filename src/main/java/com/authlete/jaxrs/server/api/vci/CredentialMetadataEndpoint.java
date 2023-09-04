@@ -57,10 +57,12 @@ public class CredentialMetadataEndpoint extends AbstractCredentialEndpoint
     private Response metadata(final AuthleteApi api)
             throws WebApplicationException
     {
-        final CredentialIssuerMetadataRequest request = new CredentialIssuerMetadataRequest()
-                .setPretty(false);
+        final CredentialIssuerMetadataRequest request =
+                new CredentialIssuerMetadataRequest()
+                        .setPretty(false);
 
-        final CredentialIssuerMetadataResponse response = api.credentialIssuerMetadata(request);
+        final CredentialIssuerMetadataResponse response =
+                api.credentialIssuerMetadata(request);
         final String resultMessage = response.getResultMessage();
 
         switch (response.getAction())

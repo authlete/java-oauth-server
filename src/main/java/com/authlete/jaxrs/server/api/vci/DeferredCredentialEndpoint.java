@@ -56,11 +56,12 @@ public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
         final IntrospectionResponse introspection = introspect(api, accessToken);
 
         // Parse credential and make it an order
-        final CredentialRequestInfo credential = credentialDeferredParse(api,
-                                                                       requestContent,
-                                                                       accessToken);
-        final CredentialIssuanceOrder order = CredentialUtil.toOrder(introspection,
-                                                                     credential);
+        final CredentialRequestInfo credential =
+                credentialDeferredParse(api, requestContent, accessToken);
+
+        final CredentialIssuanceOrder order =
+                CredentialUtil.toOrder(introspection, credential);
+
         if (order.isIssuanceDeferred())
         {
             return ResponseUtil.badRequest("Issuance not ready yet.");
@@ -76,11 +77,13 @@ public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
                                                         final String accessToken)
             throws WebApplicationException
     {
-        final CredentialDeferredParseRequest parseRequest = new CredentialDeferredParseRequest()
-                .setRequestContent(requestContent)
-                .setAccessToken(accessToken);
+        final CredentialDeferredParseRequest parseRequest =
+                new CredentialDeferredParseRequest()
+                        .setRequestContent(requestContent)
+                        .setAccessToken(accessToken);
 
-        final CredentialDeferredParseResponse response = api.credentialDeferredParse(parseRequest);
+        final CredentialDeferredParseResponse response =
+                api.credentialDeferredParse(parseRequest);
         final String resultMessage = response.getResultMessage();
 
         switch (response.getAction())

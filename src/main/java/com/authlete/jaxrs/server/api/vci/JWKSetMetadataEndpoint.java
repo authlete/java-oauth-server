@@ -44,10 +44,12 @@ public class JWKSetMetadataEndpoint extends AbstractCredentialEndpoint
     private Response metadata(final AuthleteApi api)
             throws WebApplicationException
     {
-        final CredentialIssuerJwksRequest request = new CredentialIssuerJwksRequest()
-                .setPretty(false);
+        final CredentialIssuerJwksRequest request =
+                new CredentialIssuerJwksRequest()
+                        .setPretty(false);
 
-        final CredentialIssuerJwksResponse response = api.credentialIssuerJwks(request);
+        final CredentialIssuerJwksResponse response =
+                api.credentialIssuerJwks(request);
         final String resultMessage = response.getResultMessage();
 
         switch (response.getAction())
