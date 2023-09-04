@@ -22,11 +22,11 @@ import javax.ws.rs.WebApplicationException;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.dto.IntrospectionRequest;
 import com.authlete.common.dto.IntrospectionResponse;
-import com.authlete.jaxrs.BaseEndpoint;
+import com.authlete.jaxrs.BaseResourceEndpoint;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 
 
-public abstract class AbstractCredentialEndpoint extends BaseEndpoint
+public abstract class AbstractCredentialEndpoint extends BaseResourceEndpoint
 {
     protected String checkContentExtractToken(final HttpServletRequest request,
                                  final String requestContent)
