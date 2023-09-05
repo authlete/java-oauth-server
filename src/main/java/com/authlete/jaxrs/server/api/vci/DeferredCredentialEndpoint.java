@@ -122,7 +122,7 @@ public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
                 return ResponseUtil.badRequest(content);
 
             case FORBIDDEN:
-                return ResponseUtil.forbidden(content);
+                return ResponseUtil.forbiddenJson(content);
 
             case OK:
                 return ResponseUtil.ok(content);

@@ -68,6 +68,21 @@ public class ResponseUtil
 
 
     /**
+     * Build an "application/json" response of "200 OK".
+     *
+     * @param entity
+     *         A string entity to contain in the response.
+     *
+     * @return
+     *         An "application/json" response of "200 OK".
+     */
+    public static Response okJson(String entity)
+    {
+        return builderForJson(Status.OK, entity).build();
+    }
+
+
+    /**
      * Build a "text/html" response of "200 OK".
      *
      * @param entity
@@ -83,15 +98,15 @@ public class ResponseUtil
 
 
     /**
-     * Build a "text/plain" response of "202 ACCEPTED".
+     * Build an "application/json" response of "202 ACCEPTED".
      *
      * @param entity
      *         A string entity to contain in the response.
      *
      * @return
-     *         A "text/plain" response of "202 ACCEPTED".
+     *         An "application/json" response of "202 ACCEPTED".
      */
-    public static Response accepted(String entity)
+    public static Response acceptedJson(String entity)
     {
         return builderForJson(Status.ACCEPTED, entity).build();
     }
@@ -180,15 +195,15 @@ public class ResponseUtil
 
 
     /**
-     * Build a "text/plain" response of "403 Forbidden".
+     * Build an "application/json" response of "403 Forbidden".
      *
      * @param entity
      *         A string entity to contain in the response.
      *
      * @return
-     *         A "text/plain" response of "403 Forbidde".
+     *         An "application/json" response of "403 Forbidde".
      */
-    public static Response forbidden(final String entity)
+    public static Response forbiddenJson(final String entity)
     {
         return builderForJson(Status.FORBIDDEN, entity).build();
     }
@@ -206,6 +221,21 @@ public class ResponseUtil
     public static Response notFound(String entity)
     {
         return builderForTextPlain(Status.NOT_FOUND, entity).build();
+    }
+
+
+    /**
+     * Build an "application/json" response of "404 Not Found".
+     *
+     * @param entity
+     *         A string entity to contain in the response.
+     *
+     * @return
+     *         An "application/json" response of "404 Not Found".
+     */
+    public static Response notFoundJson(String entity)
+    {
+        return builderForJson(Status.NOT_FOUND, entity).build();
     }
 
 
@@ -234,6 +264,21 @@ public class ResponseUtil
      *         A "text/plain" response of "500 Internal Server Error".
      */
     public static Response internalServerError(String entity)
+    {
+        return builderForTextPlain(Status.INTERNAL_SERVER_ERROR, entity).build();
+    }
+
+
+    /**
+     * Build a "text/plain" response of "500 Internal Server Error".
+     *
+     * @param entity
+     *         A string entity to contain in the response.
+     *
+     * @return
+     *         A "text/plain" response of "500 Internal Server Error".
+     */
+    public static Response internalServerErrorJson(String entity)
     {
         return builderForTextPlain(Status.INTERNAL_SERVER_ERROR, entity).build();
     }

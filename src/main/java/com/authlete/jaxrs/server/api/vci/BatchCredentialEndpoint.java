@@ -122,14 +122,14 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
                 return ResponseUtil.unauthorized(accessToken, content);
 
             case FORBIDDEN:
-                return ResponseUtil.forbidden(content);
+                return ResponseUtil.forbiddenJson(content);
 
             case OK:
-                return ResponseUtil.ok(content);
+                return ResponseUtil.okJson(content);
 
             case INTERNAL_SERVER_ERROR:
             default:
-                throw ExceptionUtil.internalServerErrorException(content);
+                throw ExceptionUtil.internalServerErrorExceptionJson(content);
         }
     }
 }

@@ -122,17 +122,17 @@ public class CredentialEndpoint extends AbstractCredentialEndpoint
                 return ResponseUtil.unauthorized(accessToken, content);
 
             case FORBIDDEN:
-                return ResponseUtil.forbidden(content);
+                return ResponseUtil.forbiddenJson(content);
 
             case OK:
-                return ResponseUtil.ok(content);
+                return ResponseUtil.okJson(content);
 
             case ACCEPTED:
-                return ResponseUtil.accepted(content);
+                return ResponseUtil.acceptedJson(content);
 
             case INTERNAL_SERVER_ERROR:
             default:
-                throw ExceptionUtil.internalServerErrorException(content);
+                throw ExceptionUtil.internalServerErrorExceptionJson(content);
         }
     }
 }

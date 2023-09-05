@@ -55,14 +55,14 @@ public class JWKSetMetadataEndpoint extends AbstractCredentialEndpoint
         switch (response.getAction())
         {
             case NOT_FOUND:
-                return ResponseUtil.notFound(content);
+                return ResponseUtil.notFoundJson(content);
 
             case OK:
-                return ResponseUtil.ok(response.getResponseContent());
+                return ResponseUtil.okJson(response.getResponseContent());
 
             case INTERNAL_SERVER_ERROR:
             default:
-                throw ExceptionUtil.internalServerErrorException(content);
+                throw ExceptionUtil.internalServerErrorExceptionJson(content);
         }
     }
 }

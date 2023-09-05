@@ -18,7 +18,8 @@ package com.authlete.jaxrs.server.util;
 
 
 import static com.authlete.jaxrs.server.util.ResponseUtil.badRequest;
-import static com.authlete.jaxrs.server.util.ResponseUtil.forbidden;
+import static com.authlete.jaxrs.server.util.ResponseUtil.forbiddenJson;
+import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerErrorJson;
 import static com.authlete.jaxrs.server.util.ResponseUtil.unauthorized;
 import static com.authlete.jaxrs.server.util.ResponseUtil.notFound;
 import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerError;
@@ -111,7 +112,7 @@ public class ExceptionUtil
      */
     public static WebApplicationException forbiddenException(final String entity)
     {
-        return new WebApplicationException(entity, forbidden(entity));
+        return new WebApplicationException(entity, forbiddenJson(entity));
     }
 
 
@@ -157,6 +158,21 @@ public class ExceptionUtil
     public static WebApplicationException internalServerErrorException(String entity)
     {
         return new WebApplicationException(entity, internalServerError(entity));
+    }
+
+
+    /**
+     * Create an exception indicating "500 Internal Server Error" in application/json format.
+     *
+     * @param entity
+     *         An entity to contain in the response of the exception.
+     *
+     * @return
+     *         An exception indicating "500 Internal Server Error".
+     */
+    public static WebApplicationException internalServerErrorExceptionJson(String entity)
+    {
+        return new WebApplicationException(entity, internalServerErrorJson(entity));
     }
 
 
