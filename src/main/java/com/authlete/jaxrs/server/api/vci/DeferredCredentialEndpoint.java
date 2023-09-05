@@ -84,25 +84,25 @@ public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
 
         final CredentialDeferredParseResponse response =
                 api.credentialDeferredParse(parseRequest);
-        final String resultMessage = response.getResultMessage();
+        final String content = response.getResponseContent();
 
         switch (response.getAction())
         {
             case BAD_REQUEST:
-                throw ExceptionUtil.badRequestException(resultMessage);
+                throw ExceptionUtil.badRequestException(content);
 
             case UNAUTHORIZED:
-                throw ExceptionUtil.unauthorizedException(accessToken, resultMessage);
+                throw ExceptionUtil.unauthorizedException(accessToken, content);
 
             case FORBIDDEN:
-                throw ExceptionUtil.forbiddenException(resultMessage);
+                throw ExceptionUtil.forbiddenException(content);
 
             case OK:
                 return response.getInfo();
 
             case INTERNAL_SERVER_ERROR:
             default:
-                throw ExceptionUtil.internalServerErrorException(resultMessage);
+                throw ExceptionUtil.internalServerErrorException(content);
         }
     }
 

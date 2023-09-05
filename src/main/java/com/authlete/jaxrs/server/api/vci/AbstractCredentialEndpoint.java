@@ -23,8 +23,6 @@ import javax.ws.rs.core.HttpHeaders;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.dto.IntrospectionRequest;
 import com.authlete.common.dto.IntrospectionResponse;
-import com.authlete.common.web.BearerToken;
-import com.authlete.common.web.DpopToken;
 import com.authlete.jaxrs.BaseResourceEndpoint;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 

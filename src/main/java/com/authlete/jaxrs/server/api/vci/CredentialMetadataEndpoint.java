@@ -63,19 +63,19 @@ public class CredentialMetadataEndpoint extends AbstractCredentialEndpoint
 
         final CredentialIssuerMetadataResponse response =
                 api.credentialIssuerMetadata(request);
-        final String resultMessage = response.getResultMessage();
+        final String content = response.getResponseContent();
 
         switch (response.getAction())
         {
             case NOT_FOUND:
-                return ResponseUtil.notFound(resultMessage);
+                return ResponseUtil.notFound(content);
 
             case OK:
                 return ResponseUtil.ok(response.getResponseContent());
 
             case INTERNAL_SERVER_ERROR:
             default:
-                throw ExceptionUtil.internalServerErrorException(resultMessage);
+                throw ExceptionUtil.internalServerErrorException(content);
         }
     }
 }

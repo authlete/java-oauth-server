@@ -50,19 +50,19 @@ public class JWKSetMetadataEndpoint extends AbstractCredentialEndpoint
 
         final CredentialIssuerJwksResponse response =
                 api.credentialIssuerJwks(request);
-        final String resultMessage = response.getResultMessage();
+        final String content = response.getResponseContent();
 
         switch (response.getAction())
         {
             case NOT_FOUND:
-                return ResponseUtil.notFound(resultMessage);
+                return ResponseUtil.notFound(content);
 
             case OK:
                 return ResponseUtil.ok(response.getResponseContent());
 
             case INTERNAL_SERVER_ERROR:
             default:
-                throw ExceptionUtil.internalServerErrorException(resultMessage);
+                throw ExceptionUtil.internalServerErrorException(content);
         }
     }
 }
