@@ -17,7 +17,6 @@
 package com.authlete.jaxrs.server.util;
 
 
-import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -51,9 +50,6 @@ public class ResponseUtil
      */
     private static final MediaType MEDIA_TYPE_JSON =
             MediaType.APPLICATION_JSON_TYPE.withCharset("UTF-8");
-
-
-    private static final CacheControl NO_STORE_CACHE_CONTROL = new CacheControl();
 
 
     /**
