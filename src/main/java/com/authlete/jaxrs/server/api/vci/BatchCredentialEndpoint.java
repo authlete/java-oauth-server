@@ -111,25 +111,25 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
                 .setOrders(orders);
 
         final CredentialBatchIssueResponse response = api.credentialBatchIssue(credentialBatchIssueRequest);
-        final String resultMessage = response.getResultMessage();
+        final String content = response.getResponseContent();
 
         switch (response.getAction())
         {
             case CALLER_ERROR:
-                return ResponseUtil.badRequest(resultMessage);
+                return ResponseUtil.badRequest(content);
 
             case UNAUTHORIZED:
-                return ResponseUtil.unauthorized(accessToken, resultMessage);
+                return ResponseUtil.unauthorized(accessToken, content);
 
             case FORBIDDEN:
-                return ResponseUtil.forbidden(resultMessage);
+                return ResponseUtil.forbidden(content);
 
             case OK:
-                return ResponseUtil.ok(response.getResponseContent());
+                return ResponseUtil.ok(content);
 
             case INTERNAL_SERVER_ERROR:
             default:
-                throw ExceptionUtil.internalServerErrorException(resultMessage);
+                throw ExceptionUtil.internalServerErrorException(content);
         }
     }
 }

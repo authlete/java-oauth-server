@@ -17,6 +17,7 @@
 package com.authlete.jaxrs.server.util;
 
 
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -44,6 +45,15 @@ public class ResponseUtil
      */
     private static final MediaType MEDIA_TYPE_PLAIN =
             MediaType.TEXT_PLAIN_TYPE.withCharset("UTF-8");
+
+    /**
+     * {@code "application/json;charset=UTF-8"}
+     */
+    private static final MediaType MEDIA_TYPE_JSON =
+            MediaType.APPLICATION_JSON_TYPE.withCharset("UTF-8");
+
+
+    private static final CacheControl NO_STORE_CACHE_CONTROL = new CacheControl();
 
 
     /**
@@ -87,22 +97,7 @@ public class ResponseUtil
      */
     public static Response accepted(String entity)
     {
-        return builderForTextPlain(Status.ACCEPTED, entity).build();
-    }
-
-
-    /**
-     * Build a "text/html" response of "202 ACCEPTED".
-     *
-     * @param entity
-     *         A {@link Viewable} entity to contain in the response.
-     *
-     * @return
-     *         A "text/html" response of "202 ACCEPTED".
-     */
-    public static Response accepted(Viewable entity)
-    {
-        return builderForTextHtml(Status.ACCEPTED, entity).build();
+        return builderForJson(Status.ACCEPTED, entity).build();
     }
 
 
@@ -199,8 +194,7 @@ public class ResponseUtil
      */
     public static Response forbidden(final String entity)
     {
-        return builderForTextPlain(Status.FORBIDDEN, entity)
-                .build();
+        return builderForJson(Status.FORBIDDEN, entity).build();
     }
 
 
@@ -273,6 +267,12 @@ public class ResponseUtil
     private static ResponseBuilder builderForTextHtml(Status status, Viewable entity)
     {
         return builder(status, entity, MEDIA_TYPE_HTML);
+    }
+
+
+    private static ResponseBuilder builderForJson(Status status, String entity)
+    {
+        return builder(status, entity, MEDIA_TYPE_JSON);
     }
 
 
