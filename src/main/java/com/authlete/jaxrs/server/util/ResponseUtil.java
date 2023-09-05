@@ -140,6 +140,21 @@ public class ResponseUtil
 
 
     /**
+     * Build an "application/json" response of "400 Bad Request".
+     *
+     * @param entity
+     *         A string entity to contain in the response.
+     *
+     * @return
+     *         An "application/json" response of "400 Bad Request".
+     */
+    public static Response badRequestJson(String entity)
+    {
+        return builderForJson(Status.BAD_REQUEST, entity).build();
+    }
+
+
+    /**
      * Build a "text/html" response of "400 Bad Request".
      *
      * @param entity
@@ -191,6 +206,21 @@ public class ResponseUtil
         return builderForTextHtml(Status.UNAUTHORIZED, entity)
                 .header(HttpHeaders.WWW_AUTHENTICATE, challenge)
                 .build();
+    }
+
+
+    /**
+     * Build a "text/plain" response of "403 Forbidden".
+     *
+     * @param entity
+     *         A string entity to contain in the response.
+     *
+     * @return
+     *         An "text/plain" response of "403 Forbidde".
+     */
+    public static Response forbidden(final String entity)
+    {
+        return builderForTextPlain(Status.FORBIDDEN, entity).build();
     }
 
 

@@ -84,13 +84,13 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
         switch (response.getAction())
         {
             case BAD_REQUEST:
-                throw ExceptionUtil.badRequestException(content);
+                throw ExceptionUtil.badRequestExceptionJson(content);
 
             case UNAUTHORIZED:
                 throw ExceptionUtil.unauthorizedException(accessToken, content);
 
             case FORBIDDEN:
-                throw ExceptionUtil.forbiddenException(content);
+                throw ExceptionUtil.forbiddenExceptionJson(content);
 
             case OK:
                 return response.getInfo();

@@ -82,20 +82,20 @@ public class CredentialEndpoint extends AbstractCredentialEndpoint
         switch (response.getAction())
         {
             case BAD_REQUEST:
-                throw ExceptionUtil.badRequestException(content);
+                throw ExceptionUtil.badRequestExceptionJson(content);
 
             case UNAUTHORIZED:
                 throw ExceptionUtil.unauthorizedException(accessToken, content);
 
             case FORBIDDEN:
-                throw ExceptionUtil.forbiddenException(content);
+                throw ExceptionUtil.forbiddenExceptionJson(content);
 
             case OK:
                 return response.getInfo();
 
             case INTERNAL_SERVER_ERROR:
             default:
-                throw ExceptionUtil.internalServerErrorException(content);
+                throw ExceptionUtil.internalServerErrorExceptionJson(content);
         }
     }
 

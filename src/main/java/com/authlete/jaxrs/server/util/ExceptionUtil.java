@@ -18,6 +18,8 @@ package com.authlete.jaxrs.server.util;
 
 
 import static com.authlete.jaxrs.server.util.ResponseUtil.badRequest;
+import static com.authlete.jaxrs.server.util.ResponseUtil.badRequestJson;
+import static com.authlete.jaxrs.server.util.ResponseUtil.forbidden;
 import static com.authlete.jaxrs.server.util.ResponseUtil.forbiddenJson;
 import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerErrorJson;
 import static com.authlete.jaxrs.server.util.ResponseUtil.unauthorized;
@@ -47,6 +49,22 @@ public class ExceptionUtil
     {
         return new WebApplicationException(entity, badRequest(entity));
     }
+
+
+    /**
+     * Create an exception indicating "400 Bad Request" in application/json format.
+     *
+     * @param entity
+     *         An entity to contain in the response of the exception.
+     *
+     * @return
+     *         An exception indicating "400 Bad Request".
+     */
+    public static WebApplicationException badRequestExceptionJson(String entity)
+    {
+        return new WebApplicationException(entity, badRequestJson(entity));
+    }
+
 
 
     /**
@@ -111,6 +129,21 @@ public class ExceptionUtil
      *         An exception indicating "403 Forbidden".
      */
     public static WebApplicationException forbiddenException(final String entity)
+    {
+        return new WebApplicationException(entity, forbidden(entity));
+    }
+
+
+    /**
+     * Create an exception indicating "403 Forbidden" in application/json format.
+     *
+     * @param entity
+     *         An entity to contain in the response of the exception.
+     *
+     * @return
+     *         An exception indicating "403 Forbidden".
+     */
+    public static WebApplicationException forbiddenExceptionJson(final String entity)
     {
         return new WebApplicationException(entity, forbiddenJson(entity));
     }
