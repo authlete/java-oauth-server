@@ -29,19 +29,19 @@ import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
 
 
-@Path("/.well-known/jwks.json")
-public class JWKSetMetadataEndpoint extends AbstractCredentialEndpoint
+@Path("/api/vci/jwks")
+public class CredentialJWKSetEndpoint extends AbstractCredentialEndpoint
 {
     @GET
     public Response get()
     {
         final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
 
-        return metadata(api);
+        return process(api);
     }
 
 
-    private Response metadata(final AuthleteApi api)
+    private Response process(final AuthleteApi api)
             throws WebApplicationException
     {
         final CredentialIssuerJwksRequest request =

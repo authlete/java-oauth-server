@@ -61,6 +61,10 @@ public class CredentialEndpoint extends AbstractCredentialEndpoint
 
         final CredentialIssuanceOrder order =
                 CredentialUtil.toOrder(introspection, credential);
+        if(order == null)
+        {
+            return ExceptionUtil.badRequest(String.format("Unsupported credential format %s.", formatId));
+        }
 
         // Issue
         return credentialIssue(api, order, accessToken);

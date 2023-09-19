@@ -52,10 +52,7 @@ public abstract class AbstractCredentialEndpoint extends BaseResourceEndpoint
         // The value of the "Authorization" header.
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        // If an access token have been set
-        final String accessToken = request.getParameter("access_token");
-
-        return super.extractAccessToken(authorization, accessToken);
+        return super.extractAccessToken(authorization, null);
     }
 
 

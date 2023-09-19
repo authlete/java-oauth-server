@@ -39,7 +39,7 @@ import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
 
 
-@Path("/api/credential_deferred")
+@Path("/api/deferred_credential")
 public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
 {
     @POST
@@ -64,7 +64,7 @@ public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
 
         if (order.isIssuanceDeferred())
         {
-            return ResponseUtil.badRequest("Issuance not ready yet.");
+            return ResponseUtil.badRequestJson("{\"error\": \"issuance_pending\"");
         }
 
         // Issue
@@ -110,10 +110,10 @@ public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
     private Response credentialIssue(final AuthleteApi api,
                                      final CredentialIssuanceOrder order)
     {
-        final CredentialDeferredIssueRequest credentialSingleIssueRequest = new CredentialDeferredIssueRequest()
+        final CredentialDeferredIssueRequest request = new CredentialDeferredIssueRequest()
                 .setOrder(order);
 
-        final CredentialDeferredIssueResponse response = api.credentialDeferredIssue(credentialSingleIssueRequest);
+        final CredentialDeferredIssueResponse response = api.credentialDeferredIssue(request);
         final String content = response.getResponseContent();
 
         switch (response.getAction())
@@ -125,7 +125,7 @@ public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
                 return ResponseUtil.forbiddenJson(content);
 
             case OK:
-                return ResponseUtil.ok(content);
+                return ResponseUtil.okJson(content);
 
             case INTERNAL_SERVER_ERROR:
             default:
