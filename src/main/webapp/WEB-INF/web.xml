@@ -39,7 +39,7 @@
         com.authlete.jaxrs.server.api.vci.DeferredCredentialEndpoint,
         com.authlete.jaxrs.server.api.vci.CredentialOfferEndpoint,
         com.authlete.jaxrs.server.api.vci.CredentialOfferIssueEndpoint,
-        com.authlete.jaxrs.server.api.vci.JWKSetMetadataEndpoint,
+        com.authlete.jaxrs.server.api.vci.CredentialJWKSetEndpoint,
         com.authlete.jaxrs.server.api.ClientRegistrationEndpoint,
         com.authlete.jaxrs.server.api.ConfigurationEndpoint,
         com.authlete.jaxrs.server.api.FederationConfigurationEndpoint,
@@ -86,7 +86,6 @@
   <filter-mapping>
     <filter-name>API</filter-name>
     <url-pattern>/api/*</url-pattern>
-    <url-pattern>/.well-known/jwks.json</url-pattern>
     <url-pattern>/.well-known/openid-configuration</url-pattern>
     <url-pattern>/.well-known/openid-credential-issuer</url-pattern>
     <url-pattern>/.well-known/openid-federation</url-pattern>

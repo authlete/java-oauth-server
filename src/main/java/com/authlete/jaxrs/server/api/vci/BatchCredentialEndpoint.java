@@ -37,6 +37,7 @@ import com.authlete.common.dto.IntrospectionResponse;
 import com.authlete.jaxrs.server.util.CredentialUtil;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
+import com.authlete.jaxrs.server.util.StringUtil;
 
 
 @Path("/api/batch_credential")
@@ -59,8 +60,12 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
         final CredentialRequestInfo[] credential =
                 credentialBatchParse(api, requestContent, accessToken);
 
-        final CredentialIssuanceOrder[] orders =
-                CredentialUtil.toOrder(introspection, credential);
+        final CredentialIssuanceOrder[] orders;
+        try {
+            orders = CredentialUtil.toOrder(introspection, credential);
+        } catch (final CredentialUtil.UnknownCredentialFormatException e) {
+            return ResponseUtil.badRequestJson(e.getJsonError());
+        }
 
         // Issue
         return credentialIssue(api, orders, accessToken);

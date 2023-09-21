@@ -37,6 +37,7 @@ import com.authlete.common.dto.IntrospectionResponse;
 import com.authlete.jaxrs.server.util.CredentialUtil;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
+import com.authlete.jaxrs.server.util.StringUtil;
 
 
 @Path("/api/deferred_credential")
@@ -59,12 +60,16 @@ public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
         final CredentialRequestInfo credential =
                 credentialDeferredParse(api, requestContent, accessToken);
 
-        final CredentialIssuanceOrder order =
-                CredentialUtil.toOrder(introspection, credential);
+        final CredentialIssuanceOrder order;
+        try {
+            order = CredentialUtil.toOrder(introspection, credential);
+        } catch (final CredentialUtil.UnknownCredentialFormatException e) {
+            return ResponseUtil.badRequest(e.getJsonError());
+        }
 
         if (order.isIssuanceDeferred())
         {
-            return ResponseUtil.badRequestJson("{\"error\": \"issuance_pending\"");
+            return ResponseUtil.badRequestJson(StringUtil.toJsonError("issuance_pending"));
         }
 
         // Issue

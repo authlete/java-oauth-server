@@ -37,6 +37,7 @@ import com.authlete.common.dto.IntrospectionResponse;
 import com.authlete.jaxrs.server.util.CredentialUtil;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
+import com.authlete.jaxrs.server.util.StringUtil;
 
 
 @Path("/api/credential")
@@ -59,11 +60,11 @@ public class CredentialEndpoint extends AbstractCredentialEndpoint
         final CredentialRequestInfo credential =
                 credentialSingleParse(api, requestContent, accessToken);
 
-        final CredentialIssuanceOrder order =
-                CredentialUtil.toOrder(introspection, credential);
-        if(order == null)
-        {
-            return ExceptionUtil.badRequest(String.format("Unsupported credential format %s.", formatId));
+        final CredentialIssuanceOrder order;
+        try {
+            order = CredentialUtil.toOrder(introspection, credential);
+        } catch (final CredentialUtil.UnknownCredentialFormatException e) {
+            return ResponseUtil.badRequestJson(e.getJsonError());
         }
 
         // Issue
