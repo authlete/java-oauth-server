@@ -70,7 +70,7 @@ public class OBBTokenTask
 
         // If the token request is a refresh token request.
         String grantType = requestParams.getFirst("grant_type");
-        if (grantType != null && grantType.equals("refresht_token"))
+        if (grantType != null && grantType.equals("refresh_token"))
         {
             // Because Open Baning Brasil prohibits refresh token rotation,
             // no new refresh token is issued by the refresh token request.

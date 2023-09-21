@@ -33,8 +33,13 @@
         com.authlete.jaxrs.server.api.AppleAppSiteAssociation,
         com.authlete.jaxrs.server.api.AuthorizationDecisionEndpoint,
         com.authlete.jaxrs.server.api.AuthorizationEndpoint,
-        com.authlete.jaxrs.server.api.CredentialOfferEndpoint,
-        com.authlete.jaxrs.server.api.CredentialOfferIssueEndpoint,
+        com.authlete.jaxrs.server.api.vci.BatchCredentialEndpoint,
+        com.authlete.jaxrs.server.api.vci.CredentialEndpoint,
+        com.authlete.jaxrs.server.api.vci.CredentialMetadataEndpoint,
+        com.authlete.jaxrs.server.api.vci.DeferredCredentialEndpoint,
+        com.authlete.jaxrs.server.api.vci.CredentialOfferEndpoint,
+        com.authlete.jaxrs.server.api.vci.CredentialOfferIssueEndpoint,
+        com.authlete.jaxrs.server.api.vci.CredentialJWKSetEndpoint,
         com.authlete.jaxrs.server.api.ClientRegistrationEndpoint,
         com.authlete.jaxrs.server.api.ConfigurationEndpoint,
         com.authlete.jaxrs.server.api.FederationConfigurationEndpoint,
@@ -82,6 +87,7 @@
     <filter-name>API</filter-name>
     <url-pattern>/api/*</url-pattern>
     <url-pattern>/.well-known/openid-configuration</url-pattern>
+    <url-pattern>/.well-known/openid-credential-issuer</url-pattern>
     <url-pattern>/.well-known/openid-federation</url-pattern>
     <url-pattern>/.well-known/apple-app-site-association</url-pattern>
   </filter-mapping>
