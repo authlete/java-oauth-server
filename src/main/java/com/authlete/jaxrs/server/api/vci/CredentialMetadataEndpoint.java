@@ -17,27 +17,14 @@
 package com.authlete.jaxrs.server.api.vci;
 
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiFactory;
-import com.authlete.common.dto.CredentialIssuanceOrder;
 import com.authlete.common.dto.CredentialIssuerMetadataRequest;
 import com.authlete.common.dto.CredentialIssuerMetadataResponse;
-import com.authlete.common.dto.CredentialRequestInfo;
-import com.authlete.common.dto.CredentialSingleIssueRequest;
-import com.authlete.common.dto.CredentialSingleIssueResponse;
-import com.authlete.common.dto.CredentialSingleParseRequest;
-import com.authlete.common.dto.CredentialSingleParseResponse;
-import com.authlete.common.dto.IntrospectionResponse;
-import com.authlete.jaxrs.server.util.CredentialUtil;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
 
@@ -59,7 +46,7 @@ public class CredentialMetadataEndpoint extends AbstractCredentialEndpoint
     {
         final CredentialIssuerMetadataRequest request =
                 new CredentialIssuerMetadataRequest()
-                        .setPretty(false);
+                        .setPretty(true);
 
         final CredentialIssuerMetadataResponse response =
                 api.credentialIssuerMetadata(request);
