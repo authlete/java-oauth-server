@@ -36,6 +36,7 @@
         com.authlete.jaxrs.server.api.vci.BatchCredentialEndpoint,
         com.authlete.jaxrs.server.api.vci.CredentialEndpoint,
         com.authlete.jaxrs.server.api.vci.CredentialMetadataEndpoint,
+        com.authlete.jaxrs.server.api.vci.CredentialJwtIssuerEndpoint,
         com.authlete.jaxrs.server.api.vci.DeferredCredentialEndpoint,
         com.authlete.jaxrs.server.api.vci.CredentialOfferEndpoint,
         com.authlete.jaxrs.server.api.vci.CredentialOfferIssueEndpoint,
@@ -89,6 +90,7 @@
     <url-pattern>/.well-known/openid-configuration</url-pattern>
     <url-pattern>/.well-known/openid-credential-issuer</url-pattern>
     <url-pattern>/.well-known/openid-federation</url-pattern>
+    <url-pattern>/.well-known/jwt-issuer</url-pattern>
     <url-pattern>/.well-known/apple-app-site-association</url-pattern>
   </filter-mapping>
 

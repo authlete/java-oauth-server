@@ -95,19 +95,22 @@ Endpoints
 
 This implementation exposes endpoints as listed in the table below.
 
-| Endpoint                             | Path                                |
-|:-------------------------------------|:------------------------------------|
-| Authorization Endpoint               | `/api/authorization`                |
-| Token Endpoint                       | `/api/token`                        |
-| JWK Set Endpoint                     | `/api/jwks`                         |
-| Configuration Endpoint               | `/.well-known/openid-configuration` |
-| Revocation Endpoint                  | `/api/revocation`                   |
-| Introspection Endpoint               | `/api/introspection`                |
-| UserInfo Endpoint                    | `/api/userinfo`                     |
-| Dynamic Client Registration Endpoint | `/api/register`                     |
-| Pushed Authorization Request Endpoint| `/api/par`                          |
-| Grant Management Endpoint            | `/api/gm/{grantId}`                 |
-| Federation Configuration Endpoint    | `/.well-known/openid-federation`    |
+| Endpoint                             | Path                                    |
+|:-------------------------------------|:----------------------------------------|
+| Authorization Endpoint               | `/api/authorization`                    |
+| Token Endpoint                       | `/api/token`                            |
+| JWK Set Endpoint                     | `/api/jwks`                             |
+| Discovery Endpoint                   | `/.well-known/openid-configuration`     |
+| Revocation Endpoint                  | `/api/revocation`                       |
+| Introspection Endpoint               | `/api/introspection`                    |
+| UserInfo Endpoint                    | `/api/userinfo`                         |
+| Dynamic Client Registration Endpoint | `/api/register`                         |
+| Pushed Authorization Request Endpoint| `/api/par`                              |
+| Grant Management Endpoint            | `/api/gm/{grantId}`                     |
+| Federation Configuration Endpoint    | `/.well-known/openid-federation`        |
+| Federation Registration Endpoint     | `/api/federation/register`              |
+| Credential Issuer Metadata Endpoint  | `/.well-known/openid-credential-issuer` |
+| JWT Issuer Metadata Endpoint         | `/.well-known/jwt-issuer`               |
 
 The authorization endpoint and the token endpoint accept parameters described
 in [RFC 6749][1], [OpenID Connect Core 1.0][13],
@@ -143,7 +146,7 @@ and revoke a grant ID. Its behavior is defined in [Grant Management for OAuth 2.
 
 The federation configuration endpoint is a Web API that publishes the entity
 configuration of the authorization server in the JWT format. Its behavior is
-defined in [OpenID Connect Federation 1.0][OIDC_FED].
+defined in [OpenID Federation 1.0][OIDFED].
 
 
 Authorization Request Example
@@ -298,4 +301,4 @@ Contact
 [45]: https://www.rfc-editor.org/rfc/rfc9126.html
 [46]: https://openid.net/specs/fapi-grant-management.html
 [IDA]: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html
-[OIDC_FED]: https://openid.net/specs/openid-connect-federation-1_0.html
+[OIDFED]: https://openid.net/specs/openid-federation-1_0.html
