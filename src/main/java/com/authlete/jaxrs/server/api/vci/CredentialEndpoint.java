@@ -37,7 +37,6 @@ import com.authlete.common.dto.IntrospectionResponse;
 import com.authlete.jaxrs.server.util.CredentialUtil;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
-import com.authlete.jaxrs.server.util.StringUtil;
 
 
 @Path("/api/credential")
