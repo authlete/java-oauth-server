@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Authlete, Inc.
+ * Copyright (C) 2022-2023 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.common.dto.FederationConfigurationRequest;
+import com.authlete.common.types.EntityType;
 import com.authlete.jaxrs.BaseFederationConfigurationEndpoint;
 
 
@@ -29,7 +31,7 @@ import com.authlete.jaxrs.BaseFederationConfigurationEndpoint;
  *
  * <p>
  * An OpenID Provider that supports <a href=
- * "https://openid.net/specs/openid-connect-federation-1_0.html">OpenID Connect
+ * "https://openid.net/specs/openid-federation-1_0.html">OpenID
  * Federation 1.0</a> must provide an endpoint that returns its <b>entity
  * configuration</b> in the JWT format. The URI of the endpoint is defined
  * as follows:
@@ -45,19 +47,30 @@ import com.authlete.jaxrs.BaseFederationConfigurationEndpoint;
  * <p>
  * <b>Entity ID</b> is a URL that identifies an OpenID Provider (and other
  * entities including Relying Parties, Trust Anchors and Intermediate
- * Authorities) in the context of OpenID Connect Federation 1.0.
+ * Authorities) in the context of OpenID Federation 1.0.
  * </p>
  *
  * <p>
- * Note that OpenID Connect Federation 1.0 is supported since Authlete 2.3.
+ * Note that OpenID Federation 1.0 is supported since Authlete 2.3.
  * </p>
  *
- * @see <a href="https://openid.net/specs/openid-connect-federation-1_0.html"
- *      >OpenID Connect Federation 1.0</a>
+ * @see <a href="https://openid.net/specs/openid-federation-1_0.html"
+ *      >OpenID Federation 1.0</a>
  */
 @Path("/.well-known/openid-federation")
 public class FederationConfigurationEndpoint extends BaseFederationConfigurationEndpoint
 {
+    /**
+     * The request to Authlete's /federation/configuration API.
+     */
+    private static final FederationConfigurationRequest REQUEST =
+            new FederationConfigurationRequest()
+                .setEntityTypes(new EntityType[] {
+                        EntityType.OPENID_PROVIDER,
+                        EntityType.OPENID_CREDENTIAL_ISSUER
+                });
+
+
     /**
      * Entity configuration endpoint.
      */
@@ -65,6 +78,6 @@ public class FederationConfigurationEndpoint extends BaseFederationConfiguration
     public Response get()
     {
         // Handle the request to the endpoint.
-        return handle(AuthleteApiFactory.getDefaultApi());
+        return handle(AuthleteApiFactory.getDefaultApi(), REQUEST);
     }
 }
