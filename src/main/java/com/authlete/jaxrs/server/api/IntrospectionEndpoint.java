@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Authlete, Inc.
+ * Copyright (C) 2017-2023 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,9 @@ import javax.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.web.BasicCredentials;
 import com.authlete.jaxrs.BaseIntrospectionEndpoint;
+import com.authlete.jaxrs.IntrospectionRequestHandler.Params;
+import com.authlete.jaxrs.server.db.ResourceServerDao;
+import com.authlete.jaxrs.server.db.ResourceServerEntity;
 
 
 /**
@@ -39,6 +42,7 @@ import com.authlete.jaxrs.BaseIntrospectionEndpoint;
  *      >RFC 7662, OAuth 2.0 Token Introspection</a>
  *
  * @author Takahiko Kawasaki
+ * @author Hideki Ikeda
  */
 @Path("/api/introspection")
 public class IntrospectionEndpoint extends BaseIntrospectionEndpoint
@@ -53,6 +57,7 @@ public class IntrospectionEndpoint extends BaseIntrospectionEndpoint
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response post(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
+            @HeaderParam(HttpHeaders.ACCEPT) String accept,
             MultivaluedMap<String, String> parameters)
     {
         // "2.1. Introspection Request" in RFC 7662 says as follows:
@@ -68,46 +73,47 @@ public class IntrospectionEndpoint extends BaseIntrospectionEndpoint
         // Therefore, this API must be protected in some way or other.
         // Basic Authentication and Bearer Token are typical means, and
         // both use the value of the 'Authorization' header.
-        //
-        // Authenticate the API caller.
-        boolean authenticated = authenticateApiCaller(authorization);
 
-        // If the API caller does not have necessary privileges to call this API.
-        if (authenticated == false)
+        BasicCredentials credentials = BasicCredentials.parse(authorization);
+
+        // Fetch the information about the resource server from DB.
+        ResourceServerEntity rsEntity = ResourceServerDao.get(credentials.getUserId());
+
+        // If failed to authenticate the resource server.
+        if (authenticateResourceServer(rsEntity, credentials) == false)
         {
             // Return "401 Unauthorized".
             return Response.status(Status.UNAUTHORIZED).build();
         }
 
+        // Build a Param object to call the request handler.
+        Params params = buildParams(parameters, accept, rsEntity);
+
         // Handle the introspection request.
-        return handle(AuthleteApiFactory.getDefaultApi(), parameters);
+        return handle(AuthleteApiFactory.getDefaultApi(), params);
     }
 
 
-    /**
-     * Authenticate the API caller.
-     *
-     * @param authorization
-     *         The value of the {@code Authorization} header of the API call.
-     *
-     * @return
-     *         True if the API caller has necessary privileges to access
-     *         the introspection endpoint.
-     */
-    private boolean authenticateApiCaller(String authorization)
+    private Params buildParams(
+            MultivaluedMap<String, String> parameters, String accept, ResourceServerEntity rsEntity)
     {
-        // TODO: This implementation is for demonstration purpose only.
+        return new Params()
+                .setParameters(parameters)
+                .setHttpAcceptHeader(accept)
+                .setRsUri(rsEntity.getUri())
+                .setIntrospectionSignAlg(rsEntity.getIntrospectionSignAlg())
+                .setIntrospectionEncryptionAlg(rsEntity.getIntrospectionEncryptionAlg())
+                .setIntrospectionEncryptionEnc(rsEntity.getIntrospectionEncryptionEnc())
+                .setPublicKeyForEncryption(rsEntity.getPublicKeyForIntrospectionResponseEncryption())
+                .setSharedKeyForSign(rsEntity.getSharedKeyForIntrospectionResponseSign())
+                .setSharedKeyForEncryption(rsEntity.getSharedKeyForIntrospectionResponseEncryption());
+    }
 
-        // If the Authorization header contains "Basic Authentication" and
-        // if the user part is "nobody".
-        BasicCredentials credentials = BasicCredentials.parse(authorization);
-        if (credentials != null && "nobody".equals(credentials.getUserId()))
-        {
-            // Reject the introspection request by "nobody".
-            return false;
-        }
 
-        // Accept anybody except "nobody".
-        return true;
+    private boolean authenticateResourceServer(
+            ResourceServerEntity rsEntity, BasicCredentials credentials)
+    {
+        return rsEntity != null &&
+               rsEntity.getSecret().equals(credentials.getPassword());
     }
 }
