@@ -18,9 +18,7 @@ package com.authlete.jaxrs.server.db;
 
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,7 +31,7 @@ import com.google.gson.Gson;
 /**
  * Sources of datasets (contents of "verified_claims").
  */
-public class DatasetDao
+public class DatasetDao extends BaseDao
 {
     // Sources of datasets. The JSON files have been copied from
     // https://bitbucket.org/openid/ekyc-ida/src/master/examples/response/
@@ -100,7 +98,7 @@ public class DatasetDao
     private static Map<String, Object> loadDataset(String resource)
     {
         // Create a Reader to read the resource.
-        try (Reader reader = createReader(resource))
+        try ( Reader reader = createReader(DatasetDao.class, resource) )
         {
             // Convert the JSON in the resource into a Map instance.
             Map<String, Object> map = new Gson().fromJson(reader, Map.class);
@@ -115,17 +113,6 @@ public class DatasetDao
 
             return Collections.emptyMap();
         }
-    }
-
-
-    /**
-     * Create a Reader instance that reads the specified resource.
-     */
-    private static Reader createReader(String resource)
-    {
-        return new InputStreamReader(
-                DatasetDao.class.getResourceAsStream(resource),
-                StandardCharsets.UTF_8);
     }
 
 

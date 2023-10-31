@@ -1,0 +1,11 @@
+[
+    {
+        "id": "rs0",
+        "secret": "rs0-secret",
+        "uri": "https//rs0.example.com",
+        "introspectionSignAlg": "ES256",
+        "introspectionEncryptionAlg": "RSA_OAEP_256",
+        "introspectionEncryptionEnc": "A128CBC_HS256",
+        "publicKeyForIntrospectionResponseEncryption": "{\"kty\":\"RSA\", \"e\": \"AQAB\",\"use\": \"enc\",\"kid\": \"22BGA3qKjBG7a5Y5lmftcOYkeUCql_G12qPbjBn08rA\",\"alg\": \"RSA-OAEP-256\",\"n\": \"0bBna89O_reo8ttH1ITZ9sBc601OAOTHIdMQ3vwUYrrb-x2Zgp8BvueYKAeMy5kvv05zAGHqnF76v_z-XjT3Dr85xdY9ruNHA-Sg9hupa5NTUFbTOareh7MldjQNer9sejVeNmy7Wtk3CP7Y7p581VLSqj8r5DGsVh6Ha2mw5EiqtHLCPAMXMdb6pUMZ7TdKioHd-NMLwcL-p-OKGfF0znf-Fho-5KdoX855Digt2ud8LARe-qMA1DbSoHI1zowQeezRmcj_cbdv9RUaRmxg3Wqr_87WOninWA71qZFeLNEFitjQldf6FZhJ143lWnnMdzTBVvBBav0KHnsVcr982Q\"}"
+    }
+]
