@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Authlete, Inc.
+ * Copyright (C) 2019-2023 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package com.authlete.jaxrs.server.util;
 
 
+import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -63,7 +64,13 @@ public class ResponseUtil
      */
     public static Response ok(String entity)
     {
-        return builderForTextPlain(Status.OK, entity).build();
+        return ok(entity, /* headers */ null);
+    }
+
+
+    public static Response ok(String entity, Map<String, Object> headers)
+    {
+        return builderForTextPlain(Status.OK, entity, headers).build();
     }
 
 
@@ -78,7 +85,13 @@ public class ResponseUtil
      */
     public static Response okJson(String entity)
     {
-        return builderForJson(Status.OK, entity).build();
+        return okJson(entity, /* headers */ null);
+    }
+
+
+    public static Response okJson(String entity, Map<String, Object> headers)
+    {
+        return builderForJson(Status.OK, entity, headers).build();
     }
 
 
@@ -93,7 +106,13 @@ public class ResponseUtil
      */
     public static Response ok(Viewable entity)
     {
-        return builderForTextHtml(Status.OK, entity).build();
+        return ok(entity, /* headers */ null);
+    }
+
+
+    public static Response ok(Viewable entity, Map<String, Object> headers)
+    {
+        return builderForTextHtml(Status.OK, entity, headers).build();
     }
 
 
@@ -108,7 +127,13 @@ public class ResponseUtil
      */
     public static Response acceptedJson(String entity)
     {
-        return builderForJson(Status.ACCEPTED, entity).build();
+        return acceptedJson(entity, /* headers */ null);
+    }
+
+
+    public static Response acceptedJson(String entity, Map<String, Object> headers)
+    {
+        return builderForJson(Status.ACCEPTED, entity, headers).build();
     }
 
 
@@ -135,7 +160,13 @@ public class ResponseUtil
      */
     public static Response badRequest(String entity)
     {
-        return builderForTextPlain(Status.BAD_REQUEST, entity).build();
+        return badRequest(entity, /* headers */ null);
+    }
+
+
+    public static Response badRequest(String entity, Map<String, Object> headers)
+    {
+        return builderForTextPlain(Status.BAD_REQUEST, entity, headers).build();
     }
 
 
@@ -150,7 +181,13 @@ public class ResponseUtil
      */
     public static Response badRequestJson(String entity)
     {
-        return builderForJson(Status.BAD_REQUEST, entity).build();
+        return badRequestJson(entity, /* headers */ null);
+    }
+
+
+    public static Response badRequestJson(String entity, Map<String, Object> headers)
+    {
+        return builderForJson(Status.BAD_REQUEST, entity, headers).build();
     }
 
 
@@ -165,7 +202,13 @@ public class ResponseUtil
      */
     public static Response badRequest(Viewable entity)
     {
-        return builderForTextHtml(Status.BAD_REQUEST, entity).build();
+        return badRequest(entity, /* headers */ null);
+    }
+
+
+    public static Response badRequest(Viewable entity, Map<String, Object> headers)
+    {
+        return builderForTextHtml(Status.BAD_REQUEST, entity, headers).build();
     }
 
 
@@ -183,7 +226,14 @@ public class ResponseUtil
      */
     public static Response unauthorized(String entity, String challenge)
     {
-        return builderForTextPlain(Status.UNAUTHORIZED, entity)
+        return unauthorized(entity, challenge, /* headers */ null);
+    }
+
+
+    public static Response unauthorized(
+            String entity, String challenge, Map<String, Object> headers)
+    {
+        return builderForTextPlain(Status.UNAUTHORIZED, entity, headers)
                 .header(HttpHeaders.WWW_AUTHENTICATE, challenge)
                 .build();
     }
@@ -203,7 +253,14 @@ public class ResponseUtil
      */
     public static Response unauthorized(Viewable entity, String challenge)
     {
-        return builderForTextHtml(Status.UNAUTHORIZED, entity)
+        return unauthorized(entity, challenge, /* headers */ null);
+    }
+
+
+    public static Response unauthorized(
+            Viewable entity, String challenge, Map<String, Object> headers)
+    {
+        return builderForTextHtml(Status.UNAUTHORIZED, entity, headers)
                 .header(HttpHeaders.WWW_AUTHENTICATE, challenge)
                 .build();
     }
@@ -216,11 +273,17 @@ public class ResponseUtil
      *         A string entity to contain in the response.
      *
      * @return
-     *         An "text/plain" response of "403 Forbidde".
+     *         An "text/plain" response of "403 Forbidden".
      */
-    public static Response forbidden(final String entity)
+    public static Response forbidden(String entity)
     {
-        return builderForTextPlain(Status.FORBIDDEN, entity).build();
+        return forbidden(entity, /* headers */ null);
+    }
+
+
+    public static Response forbidden(String entity, Map<String, Object> headers)
+    {
+        return builderForTextPlain(Status.FORBIDDEN, entity, headers).build();
     }
 
 
@@ -231,11 +294,17 @@ public class ResponseUtil
      *         A string entity to contain in the response.
      *
      * @return
-     *         An "application/json" response of "403 Forbidde".
+     *         An "application/json" response of "403 Forbidden".
      */
-    public static Response forbiddenJson(final String entity)
+    public static Response forbiddenJson(String entity)
     {
-        return builderForJson(Status.FORBIDDEN, entity).build();
+        return forbiddenJson(entity, /* headers */ null);
+    }
+
+
+    public static Response forbiddenJson(String entity, Map<String, Object> headers)
+    {
+        return builderForJson(Status.FORBIDDEN, entity, headers).build();
     }
 
 
@@ -250,7 +319,13 @@ public class ResponseUtil
      */
     public static Response notFound(String entity)
     {
-        return builderForTextPlain(Status.NOT_FOUND, entity).build();
+        return notFound(entity, /* headers */ null);
+    }
+
+
+    public static Response notFound(String entity, Map<String, Object> headers)
+    {
+        return builderForTextPlain(Status.NOT_FOUND, entity, headers).build();
     }
 
 
@@ -265,7 +340,13 @@ public class ResponseUtil
      */
     public static Response notFoundJson(String entity)
     {
-        return builderForJson(Status.NOT_FOUND, entity).build();
+        return notFoundJson(entity, /* headers */ null);
+    }
+
+
+    public static Response notFoundJson(String entity, Map<String, Object> headers)
+    {
+        return builderForJson(Status.NOT_FOUND, entity, headers).build();
     }
 
 
@@ -280,7 +361,13 @@ public class ResponseUtil
      */
     public static Response notFound(Viewable entity)
     {
-        return builderForTextHtml(Status.NOT_FOUND, entity).build();
+        return notFound(entity, /* headers */ null);
+    }
+
+
+    public static Response notFound(Viewable entity, Map<String, Object> headers)
+    {
+        return builderForTextHtml(Status.NOT_FOUND, entity, headers).build();
     }
 
 
@@ -295,7 +382,13 @@ public class ResponseUtil
      */
     public static Response internalServerError(String entity)
     {
-        return builderForTextPlain(Status.INTERNAL_SERVER_ERROR, entity).build();
+        return internalServerError(entity, /* headers */ null);
+    }
+
+
+    public static Response internalServerError(String entity, Map<String, Object> headers)
+    {
+        return builderForTextPlain(Status.INTERNAL_SERVER_ERROR, entity, headers).build();
     }
 
 
@@ -310,7 +403,13 @@ public class ResponseUtil
      */
     public static Response internalServerErrorJson(String entity)
     {
-        return builderForTextPlain(Status.INTERNAL_SERVER_ERROR, entity).build();
+        return internalServerErrorJson(entity, /* headers */ null);
+    }
+
+
+    public static Response internalServerErrorJson(String entity, Map<String, Object> headers)
+    {
+        return builderForJson(Status.INTERNAL_SERVER_ERROR, entity, headers).build();
     }
 
 
@@ -325,33 +424,56 @@ public class ResponseUtil
      */
     public static Response internalServerError(Viewable entity)
     {
-        return builderForTextHtml(Status.INTERNAL_SERVER_ERROR, entity).build();
+        return internalServerError(entity, /* headers */ null);
     }
 
 
-    private static ResponseBuilder builderForTextPlain(Status status, String entity)
+    public static Response internalServerError(Viewable entity, Map<String, Object> headers)
     {
-        return builder(status, entity, MEDIA_TYPE_PLAIN);
+        return builderForTextHtml(Status.INTERNAL_SERVER_ERROR, entity, headers).build();
     }
 
 
-    private static ResponseBuilder builderForTextHtml(Status status, Viewable entity)
+    private static ResponseBuilder builderForTextPlain(
+            Status status, String entity, Map<String, Object> headers)
     {
-        return builder(status, entity, MEDIA_TYPE_HTML);
+        return builder(status, entity, MEDIA_TYPE_PLAIN, headers);
     }
 
 
-    private static ResponseBuilder builderForJson(Status status, String entity)
+    private static ResponseBuilder builderForTextHtml(
+            Status status, Viewable entity, Map<String, Object> headers)
     {
-        return builder(status, entity, MEDIA_TYPE_JSON);
+        return builder(status, entity, MEDIA_TYPE_HTML, headers);
     }
 
 
-    private static ResponseBuilder builder(Status status, Object entity, MediaType type)
+    private static ResponseBuilder builderForJson(
+            Status status, String entity, Map<String, Object> headers)
     {
-        return Response
+        return builder(status, entity, MEDIA_TYPE_JSON, headers);
+    }
+
+
+    private static ResponseBuilder builder(
+            Status status, Object entity, MediaType type, Map<String, Object> headers)
+    {
+        ResponseBuilder builder = Response
                 .status(status)
                 .entity(entity)
                 .type(type);
+
+        // If additional headers are given.
+        if (headers != null)
+        {
+            // For each additional header.
+            for (Map.Entry<String, Object> header : headers.entrySet())
+            {
+                // Add the header.
+                builder.header(header.getKey(), header.getValue());
+            }
+        }
+
+        return builder;
     }
 }

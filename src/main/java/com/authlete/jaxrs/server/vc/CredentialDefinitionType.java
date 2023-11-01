@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the
  * License.
  */
-package com.authlete.jaxrs.server.api.vci;
+package com.authlete.jaxrs.server.vc;
 
 
 import java.util.Arrays;

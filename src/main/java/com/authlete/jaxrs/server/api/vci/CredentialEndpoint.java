@@ -17,12 +17,15 @@
 package com.authlete.jaxrs.server.api.vci;
 
 
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
@@ -34,9 +37,9 @@ import com.authlete.common.dto.CredentialSingleIssueResponse;
 import com.authlete.common.dto.CredentialSingleParseRequest;
 import com.authlete.common.dto.CredentialSingleParseResponse;
 import com.authlete.common.dto.IntrospectionResponse;
-import com.authlete.jaxrs.server.util.CredentialUtil;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
+import com.authlete.jaxrs.server.vc.OrderContext;
 
 
 @Path("/api/credential")
@@ -44,99 +47,113 @@ public class CredentialEndpoint extends AbstractCredentialEndpoint
 {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response post(@Context HttpServletRequest request,
-                         final String requestContent)
+    public Response post(
+            @Context HttpServletRequest request,
+            @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
+            @HeaderParam("DPoP") String dpop,
+            String requestContent)
     {
         final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
 
-        // Check request content
-        final String accessToken = super.checkContentExtractToken(request, requestContent);
+        // Extract the access token from the request.
+        String accessToken = extractAccessToken(authorization, null);
 
-        // Validate access token
-        final IntrospectionResponse introspection = introspect(api, accessToken);
+        // The expected value of the 'htu' claim in the DPoP proof JWT.
+        String htu = computeHtu(api, dpop, "credential_endpoint");
 
-        // Parse credential and make it an order
-        final CredentialRequestInfo credential =
-                credentialSingleParse(api, requestContent, accessToken);
+        // Validate the access token.
+        IntrospectionResponse introspection =
+                introspect(request, api, accessToken, dpop, htu);
 
-        final CredentialIssuanceOrder order;
-        try {
-            order = CredentialUtil.toOrder(introspection, credential);
-        } catch (final CredentialUtil.UnknownCredentialFormatException e) {
-            return ResponseUtil.badRequestJson(e.getJsonError());
-        }
+        // The headers that the response from this endpoint should include.
+        Map<String, Object> headers = prepareHeaders(introspection);
 
-        // Issue
-        return credentialIssue(api, order, accessToken);
+        // Parse the credential request.
+        CredentialRequestInfo info = parseRequest(
+                api, requestContent, accessToken, headers);
+
+        // Prepare a credential issuance order.
+        CredentialIssuanceOrder order =
+                prepareOrder(OrderContext.SINGLE, introspection, info, headers);
+
+        // Issue a credential and return a credential response.
+        return issue(api, order, accessToken, headers);
     }
 
 
-    private CredentialRequestInfo credentialSingleParse(final AuthleteApi api,
-                                     final String requestContent,
-                                     final String accessToken)
-            throws WebApplicationException
+    private CredentialRequestInfo parseRequest(
+            AuthleteApi api, String requestContent, String accessToken,
+            Map<String, Object> headers) throws WebApplicationException
     {
-        final CredentialSingleParseRequest parseRequest = new CredentialSingleParseRequest()
-                .setRequestContent(requestContent)
-                .setAccessToken(accessToken);
+        // Prepare a request to the /vci/single/parse API.
+        CredentialSingleParseRequest request =
+                new CredentialSingleParseRequest()
+                    .setRequestContent(requestContent)
+                    .setAccessToken(accessToken);
 
-        final CredentialSingleParseResponse response = api.credentialSingleParse(parseRequest);
-        final String content = response.getResponseContent();
+        // Call the /vci/single/parse API and get the response.
+        CredentialSingleParseResponse response = api.credentialSingleParse(request);
+
+        // The response content.
+        String content = response.getResponseContent();
 
         switch (response.getAction())
         {
             case BAD_REQUEST:
-                throw ExceptionUtil.badRequestExceptionJson(content);
+                throw ExceptionUtil.badRequestExceptionJson(content, headers);
 
             case UNAUTHORIZED:
-                throw ExceptionUtil.unauthorizedException(accessToken, content);
+                throw ExceptionUtil.unauthorizedException(accessToken, content, headers);
 
             case FORBIDDEN:
-                throw ExceptionUtil.forbiddenExceptionJson(content);
+                throw ExceptionUtil.forbiddenExceptionJson(content, headers);
 
             case OK:
                 return response.getInfo();
 
             case INTERNAL_SERVER_ERROR:
             default:
-                throw ExceptionUtil.internalServerErrorExceptionJson(content);
+                throw ExceptionUtil.internalServerErrorExceptionJson(content, headers);
         }
     }
 
 
-    private Response credentialIssue(final AuthleteApi api,
-                            final CredentialIssuanceOrder order,
-                            final String accessToken)
+    private Response issue(
+            AuthleteApi api, CredentialIssuanceOrder order, String accessToken,
+            Map<String, Object> headers) throws WebApplicationException
     {
-        final CredentialSingleIssueRequest credentialSingleIssueRequest =
+        // Prepare a request to the /vci/single/issue API.
+        CredentialSingleIssueRequest request =
                 new CredentialSingleIssueRequest()
                         .setAccessToken(accessToken)
                         .setOrder(order);
 
-        final CredentialSingleIssueResponse response =
-                api.credentialSingleIssue(credentialSingleIssueRequest);
-        final String content = response.getResponseContent();
+        // Call the /vci/single/issue API and get the response.
+        CredentialSingleIssueResponse response = api.credentialSingleIssue(request);
+
+        // The response content.
+        String content = response.getResponseContent();
 
         switch (response.getAction())
         {
             case CALLER_ERROR:
-                return ResponseUtil.badRequest(content);
+                return ResponseUtil.internalServerErrorJson(content, headers);
 
             case UNAUTHORIZED:
-                return ResponseUtil.unauthorized(accessToken, content);
+                return ResponseUtil.unauthorized(accessToken, content, headers);
 
             case FORBIDDEN:
-                return ResponseUtil.forbiddenJson(content);
+                return ResponseUtil.forbiddenJson(content, headers);
 
             case OK:
-                return ResponseUtil.okJson(content);
+                return ResponseUtil.okJson(content, headers);
 
             case ACCEPTED:
-                return ResponseUtil.acceptedJson(content);
+                return ResponseUtil.acceptedJson(content, headers);
 
             case INTERNAL_SERVER_ERROR:
             default:
-                throw ExceptionUtil.internalServerErrorExceptionJson(content);
+                return ResponseUtil.internalServerErrorJson(content, headers);
         }
     }
 }

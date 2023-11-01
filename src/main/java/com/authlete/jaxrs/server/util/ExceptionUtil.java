@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Authlete, Inc.
+ * Copyright (C) 2019-2023 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,11 @@ import static com.authlete.jaxrs.server.util.ResponseUtil.badRequest;
 import static com.authlete.jaxrs.server.util.ResponseUtil.badRequestJson;
 import static com.authlete.jaxrs.server.util.ResponseUtil.forbidden;
 import static com.authlete.jaxrs.server.util.ResponseUtil.forbiddenJson;
-import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerErrorJson;
-import static com.authlete.jaxrs.server.util.ResponseUtil.unauthorized;
-import static com.authlete.jaxrs.server.util.ResponseUtil.notFound;
 import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerError;
+import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerErrorJson;
+import static com.authlete.jaxrs.server.util.ResponseUtil.notFound;
+import static com.authlete.jaxrs.server.util.ResponseUtil.unauthorized;
+import java.util.Map;
 import javax.ws.rs.WebApplicationException;
 import org.glassfish.jersey.server.mvc.Viewable;
 
@@ -62,9 +63,14 @@ public class ExceptionUtil
      */
     public static WebApplicationException badRequestExceptionJson(String entity)
     {
-        return new WebApplicationException(entity, badRequestJson(entity));
+        return badRequestExceptionJson(entity, /* headers */ null);
     }
 
+
+    public static WebApplicationException badRequestExceptionJson(String entity, Map<String, Object> headers)
+    {
+        return new WebApplicationException(entity, badRequestJson(entity, headers));
+    }
 
 
     /**
@@ -97,7 +103,13 @@ public class ExceptionUtil
      */
     public static WebApplicationException unauthorizedException(String entity, String challenge)
     {
-        return new WebApplicationException(entity, unauthorized(entity, challenge));
+        return unauthorizedException(entity, challenge, /* headers */ null);
+    }
+
+
+    public static WebApplicationException unauthorizedException(String entity, String challenge, Map<String, Object> headers)
+    {
+        return new WebApplicationException(entity, unauthorized(entity, challenge, headers));
     }
 
 
@@ -145,7 +157,13 @@ public class ExceptionUtil
      */
     public static WebApplicationException forbiddenExceptionJson(final String entity)
     {
-        return new WebApplicationException(entity, forbiddenJson(entity));
+        return forbiddenExceptionJson(entity, /* headers */ null);
+    }
+
+
+    public static WebApplicationException forbiddenExceptionJson(final String entity, Map<String, Object> headers)
+    {
+        return new WebApplicationException(entity, forbiddenJson(entity, headers));
     }
 
 
@@ -205,7 +223,13 @@ public class ExceptionUtil
      */
     public static WebApplicationException internalServerErrorExceptionJson(String entity)
     {
-        return new WebApplicationException(entity, internalServerErrorJson(entity));
+        return internalServerErrorExceptionJson(entity, /* headers */ null);
+    }
+
+
+    public static WebApplicationException internalServerErrorExceptionJson(String entity, Map<String, Object> headers)
+    {
+        return new WebApplicationException(entity, internalServerErrorJson(entity, headers));
     }
 
 
