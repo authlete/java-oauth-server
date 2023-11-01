@@ -14,16 +14,13 @@
  * language governing permissions and limitations under the
  * License.
  */
-package com.authlete.jaxrs.server.api.vci;
+package com.authlete.jaxrs.server.vc;
 
 
-import com.authlete.common.dto.CredentialIssuanceOrder;
-import com.authlete.common.dto.CredentialRequestInfo;
-import com.authlete.common.dto.IntrospectionResponse;
-
-
-public interface IOrderProcessor
+public enum OrderContext
 {
-    CredentialIssuanceOrder toOrder(final IntrospectionResponse introspection,
-                                    final CredentialRequestInfo info);
+    SINGLE,
+    BATCH,
+    DEFERRED,
+    ;
 }

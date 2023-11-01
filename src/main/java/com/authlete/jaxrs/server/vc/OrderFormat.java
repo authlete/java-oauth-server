@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the
  * License.
  */
-package com.authlete.jaxrs.server.api.vci;
+package com.authlete.jaxrs.server.vc;
 
 
 import java.util.Arrays;
@@ -22,17 +22,17 @@ import java.util.Arrays;
 
 public enum OrderFormat
 {
-    SD_JWT("vc+sd-jwt", new SdJwtOrderProcessor());
+    SD_JWT("vc+sd-jwt", new SdJwtOrderProcessor()),
+    ;
 
 
-    private String id;
-    private IOrderProcessor processor;
+    private final String id;
+    private final OrderProcessor processor;
 
 
-    OrderFormat(final String id,
-                final IOrderProcessor processor)
+    private OrderFormat(String id, OrderProcessor processor)
     {
-        this.id = id;
+        this.id        = id;
         this.processor = processor;
     }
 
@@ -43,7 +43,7 @@ public enum OrderFormat
     }
 
 
-    public IOrderProcessor getProcessor()
+    public OrderProcessor getProcessor()
     {
         return processor;
     }

@@ -17,12 +17,15 @@
 package com.authlete.jaxrs.server.api.vci;
 
 
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
@@ -34,7 +37,6 @@ import com.authlete.common.dto.CredentialBatchParseResponse;
 import com.authlete.common.dto.CredentialIssuanceOrder;
 import com.authlete.common.dto.CredentialRequestInfo;
 import com.authlete.common.dto.IntrospectionResponse;
-import com.authlete.jaxrs.server.util.CredentialUtil;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ResponseUtil;
 
@@ -44,96 +46,109 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
 {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response post(@Context HttpServletRequest request,
-                         final String requestContent)
+    public Response post(
+            @Context HttpServletRequest request,
+            @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
+            @HeaderParam("DPoP") String dpop,
+            String requestContent)
     {
         final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
 
-        // Check request content
-        final String accessToken = super.checkContentExtractToken(request, requestContent);
+        // Extract the access token from the request.
+        String accessToken = extractAccessToken(authorization, null);
 
-        // Validate access token
-        final IntrospectionResponse introspection = introspect(api, accessToken);
+        // The expected value of the 'htu' claim in the DPoP proof JWT.
+        String htu = computeHtu(api, dpop, "batch_credential_endpoint");
 
-        // Parse credential and make it an order
-        final CredentialRequestInfo[] credential =
-                credentialBatchParse(api, requestContent, accessToken);
+        // Validate the access token.
+        IntrospectionResponse introspection =
+                introspect(request, api, accessToken, dpop, htu);
 
-        final CredentialIssuanceOrder[] orders;
-        try {
-            orders = CredentialUtil.toOrder(introspection, credential);
-        } catch (final CredentialUtil.UnknownCredentialFormatException e) {
-            return ResponseUtil.badRequestJson(e.getJsonError());
-        }
+        // The headers that the response from this endpoint should include.
+        Map<String, Object> headers = prepareHeaders(introspection);
 
-        // Issue
-        return credentialIssue(api, orders, accessToken);
+        // Parse the batch credential request.
+        CredentialRequestInfo[] infos = parseRequest(
+                api, requestContent, accessToken, headers);
+
+        // Prepare credential issuance orders.
+        CredentialIssuanceOrder[] orders = prepareOrders(introspection, infos, headers);
+
+        // Issue credentials and return a batch credential response.
+        return issue(api, orders, accessToken, headers);
     }
 
 
-    private CredentialRequestInfo[] credentialBatchParse(final AuthleteApi api,
-                                     final String requestContent,
-                                     final String accessToken)
-            throws WebApplicationException
+    private CredentialRequestInfo[] parseRequest(
+            AuthleteApi api, String requestContent, String accessToken,
+            Map<String, Object> headers) throws WebApplicationException
     {
-        final CredentialBatchParseRequest parseRequest =
+        // Prepare a request to the /vci/batch/parse API.
+        CredentialBatchParseRequest request =
                 new CredentialBatchParseRequest()
                         .setRequestContent(requestContent)
                         .setAccessToken(accessToken);
 
-        final CredentialBatchParseResponse response =
-                api.credentialBatchParse(parseRequest);
-        final String content = response.getResponseContent();
+        // Call the /vci/batch/parse API and get the response.
+        CredentialBatchParseResponse response = api.credentialBatchParse(request);
+
+        // The response content.
+        String content = response.getResponseContent();
 
         switch (response.getAction())
         {
             case BAD_REQUEST:
-                throw ExceptionUtil.badRequestExceptionJson(content);
+                throw ExceptionUtil.badRequestExceptionJson(content, headers);
 
             case UNAUTHORIZED:
-                throw ExceptionUtil.unauthorizedException(accessToken, content);
+                throw ExceptionUtil.unauthorizedException(accessToken, content, headers);
 
             case FORBIDDEN:
-                throw ExceptionUtil.forbiddenExceptionJson(content);
+                throw ExceptionUtil.forbiddenExceptionJson(content, headers);
 
             case OK:
                 return response.getInfo();
 
             case INTERNAL_SERVER_ERROR:
             default:
-                throw ExceptionUtil.internalServerErrorException(content);
+                throw ExceptionUtil.internalServerErrorExceptionJson(content, headers);
         }
     }
 
 
-    private Response credentialIssue(final AuthleteApi api,
-                            final CredentialIssuanceOrder[] orders,
-                            final String accessToken)
+    private Response issue(
+            AuthleteApi api, CredentialIssuanceOrder[] orders, String accessToken,
+            Map<String, Object> headers) throws WebApplicationException
     {
-        final CredentialBatchIssueRequest credentialBatchIssueRequest = new CredentialBatchIssueRequest()
-                .setAccessToken(accessToken)
-                .setOrders(orders);
+        // Prepare a request to the /vci/batch/issue API.
+        CredentialBatchIssueRequest request =
+                new CredentialBatchIssueRequest()
+                    .setAccessToken(accessToken)
+                    .setOrders(orders);
 
-        final CredentialBatchIssueResponse response = api.credentialBatchIssue(credentialBatchIssueRequest);
-        final String content = response.getResponseContent();
+        // Call the /vci/batch/issue API and get the response.
+        CredentialBatchIssueResponse response = api.credentialBatchIssue(request);
+
+        // The response content.
+        String content = response.getResponseContent();
 
         switch (response.getAction())
         {
             case CALLER_ERROR:
-                return ResponseUtil.badRequest(content);
+                return ResponseUtil.internalServerErrorJson(content, headers);
 
             case UNAUTHORIZED:
-                return ResponseUtil.unauthorized(accessToken, content);
+                return ResponseUtil.unauthorized(accessToken, content, headers);
 
             case FORBIDDEN:
-                return ResponseUtil.forbiddenJson(content);
+                return ResponseUtil.forbiddenJson(content, headers);
 
             case OK:
-                return ResponseUtil.okJson(content);
+                return ResponseUtil.okJson(content, headers);
 
             case INTERNAL_SERVER_ERROR:
             default:
-                throw ExceptionUtil.internalServerErrorExceptionJson(content);
+                return ResponseUtil.internalServerErrorJson(content, headers);
         }
     }
 }
