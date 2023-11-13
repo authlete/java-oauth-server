@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import com.authlete.common.dto.CredentialOfferCreateRequest;
@@ -57,12 +58,7 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
 
 
     private static final String DEFAULT_CREDENTIALS = "[\n" +
-            "  {\n" +
-            "    \"format\": \"vc+sd-jwt\",\n" +
-            "    \"credential_definition\": {\n" +
-            "      \"type\": \"IdentityCredential\"\n" +
-            "    }\n" +
-            "  }\n" +
+            "  \"IdentityCredential\"\n" +
             "]";
 
 
@@ -165,8 +161,50 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
                 .setUserPinRequired(this.userPinRequired)
                 .setUserPinLength(this.userPinLength)
                 .setDuration(this.duration)
-                .setCredentials(this.credentials)
+                .setCredentials(parseAsStringArray("credentials", this.credentials))
                 .setSubject(user.getSubject());
+    }
+
+
+    private String[] parseAsStringArray(String name, String json)
+    {
+        List<?> list = parseAsList(name, json);
+
+        if (list == null)
+        {
+            return null;
+        }
+
+        int size = list.size();
+
+        for (int i = 0; i < size; i++)
+        {
+            Object element = list.get(i);
+
+            if (!(element instanceof String))
+            {
+                throw ExceptionUtil.badRequestException(String.format(
+                        "All the elements in the '%s' array must be a string, but the element at the index %d is not.",
+                        name, i));
+            }
+        }
+
+        return list.stream().map(element -> (String)element).toArray(String[]::new);
+    }
+
+
+    private List<?> parseAsList(String name, String json)
+    {
+        try
+        {
+            // Parse as a JSON array.
+            return new Gson().fromJson(json, List.class);
+        }
+        catch (Exception cause)
+        {
+            throw ExceptionUtil.badRequestException(String.format(
+                    "The value of '%s' should be a JSON array.", name));
+        }
     }
 
 

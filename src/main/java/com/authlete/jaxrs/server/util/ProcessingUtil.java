@@ -15,6 +15,7 @@ import com.authlete.jaxrs.server.db.UserDao;
 public class ProcessingUtil
 {
 
+    @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> flattenMultivaluedMap(final MultivaluedMap<K, V> multimap)
     {
         return multimap.entrySet().stream()

@@ -137,6 +137,9 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
             case CALLER_ERROR:
                 return ResponseUtil.internalServerErrorJson(content, headers);
 
+            case BAD_REQUEST:
+                return ResponseUtil.badRequestJson(content, headers);
+
             case UNAUTHORIZED:
                 return ResponseUtil.unauthorized(accessToken, content, headers);
 
@@ -145,6 +148,9 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
 
             case OK:
                 return ResponseUtil.okJson(content, headers);
+
+            case OK_JWT:
+                return ResponseUtil.okJwt(content, headers);
 
             case INTERNAL_SERVER_ERROR:
             default:

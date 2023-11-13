@@ -147,11 +147,17 @@ public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
             case CALLER_ERROR:
                 return ResponseUtil.internalServerErrorJson(content, headers);
 
+            case BAD_REQUEST:
+                return ResponseUtil.badRequestJson(content, headers);
+
             case FORBIDDEN:
                 return ResponseUtil.forbiddenJson(content, headers);
 
             case OK:
                 return ResponseUtil.okJson(content, headers);
+
+            case OK_JWT:
+                return ResponseUtil.okJwt(content, headers);
 
             case INTERNAL_SERVER_ERROR:
             default:

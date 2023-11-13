@@ -52,6 +52,13 @@ public class ResponseUtil
     private static final MediaType MEDIA_TYPE_JSON =
             MediaType.APPLICATION_JSON_TYPE.withCharset("UTF-8");
 
+    /**
+     * {@code "application/jwt"}
+     */
+    private static final MediaType MEDIA_TYPE_JWT =
+            new MediaType("application", "jwt");
+
+
 
     /**
      * Build a "text/plain" response of "200 OK".
@@ -95,6 +102,12 @@ public class ResponseUtil
     }
 
 
+    public static Response okJwt(String entity, Map<String, Object> headers)
+    {
+        return builderForJwt(Status.OK, entity, headers).build();
+    }
+
+
     /**
      * Build a "text/html" response of "200 OK".
      *
@@ -134,6 +147,12 @@ public class ResponseUtil
     public static Response acceptedJson(String entity, Map<String, Object> headers)
     {
         return builderForJson(Status.ACCEPTED, entity, headers).build();
+    }
+
+
+    public static Response acceptedJwt(String entity, Map<String, Object> headers)
+    {
+        return builderForJwt(Status.ACCEPTED, entity, headers).build();
     }
 
 
@@ -452,6 +471,13 @@ public class ResponseUtil
             Status status, String entity, Map<String, Object> headers)
     {
         return builder(status, entity, MEDIA_TYPE_JSON, headers);
+    }
+
+
+    private static ResponseBuilder builderForJwt(
+            Status status, String entity, Map<String, Object> headers)
+    {
+        return builder(status, entity, MEDIA_TYPE_JWT, headers);
     }
 
 
