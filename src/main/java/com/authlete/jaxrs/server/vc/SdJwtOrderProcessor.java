@@ -39,6 +39,13 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
             String format, Map<String, Object> requestedCredential)
                     throws InvalidCredentialRequestException
     {
+        // If no issuable credential is associated with the access token.
+        if (issuableCredentials == null)
+        {
+            throw new InvalidCredentialRequestException(
+                    "No credential can be issued with the access token.");
+        }
+
         // As explained in https://www.authlete.com/developers/oid4vci/,
         // it is challenging to implement this step in a manner consistent
         // across all implementations due to the flaws of the OID4VCI spec.
