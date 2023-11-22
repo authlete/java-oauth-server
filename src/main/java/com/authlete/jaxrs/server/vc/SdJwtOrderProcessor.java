@@ -28,7 +28,7 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
     private static final String KEY_CREDENTIAL_DEFINITION = "credential_definition";
     private static final String KEY_FORMAT                = "format";
     private static final String KEY_SUB                   = "sub";
-    private static final String KEY_TYPE                  = "type";
+    private static final String KEY_VCT                   = "vct";
 
 
     @SuppressWarnings("unchecked")
@@ -59,8 +59,8 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
         Map<String, Object> credentialDefinition =
                 extractCredentialDefinition(requestedCredential);
 
-        // The "credential_definition" object must contain "type".
-        String type = extractType(credentialDefinition);
+        // The "credential_definition" object must contain "vct".
+        String vct = extractVct(credentialDefinition);
 
         // For each issuable credential.
         for (Map<String, Object> issuableCredential : issuableCredentials)
@@ -84,8 +84,8 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
                 continue;
             }
 
-            // The "type" in the "credential_definition" object of the issuable credential.
-            value = ((Map<String, Object>)value).get(KEY_TYPE);
+            // The "vct" in the "credential_definition" object of the issuable credential.
+            value = ((Map<String, Object>)value).get(KEY_VCT);
 
             // If the "type" property is not available as a string.
             if (!(value instanceof String))
@@ -94,11 +94,11 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
             }
 
             // This implementation of the checkPermissions method is simple.
-            // If "credential_definition.type" of the requested credential
-            // matches "credential_definition.type" of any of the issuable
+            // If "credential_definition.vct" of the requested credential
+            // matches "credential_definition.vct" of any of the issuable
             // credentials, it is regarded that the credential request is
             // permitted.
-            if (type.equals(value))
+            if (vct.equals(value))
             {
                 // The credential request is permitted.
                 return;
@@ -135,24 +135,24 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
     }
 
 
-    private String extractType(
+    private String extractVct(
             Map<String, Object> credentialDefinition) throws InvalidCredentialRequestException
     {
-        // If the "credential_definition" does not contain "type".
-        if (!credentialDefinition.containsKey(KEY_TYPE))
+        // If the "credential_definition" does not contain "vct".
+        if (!credentialDefinition.containsKey(KEY_VCT))
         {
             throw new InvalidCredentialRequestException(
-                    "The 'credential_definition' object does not contain 'type'.");
+                    "The 'credential_definition' object does not contain 'vct'.");
         }
 
-        // The value of the "type" property.
-        Object value = credentialDefinition.get(KEY_TYPE);
+        // The value of the "vct" property.
+        Object value = credentialDefinition.get(KEY_VCT);
 
-        // If the value of the "type" property is not a string.
+        // If the value of the "vct" property is not a string.
         if (!(value instanceof String))
         {
             throw new InvalidCredentialRequestException(
-                    "The value of the 'type' property in the 'credential_definition' object is not a string.");
+                    "The value of the 'vct' property in the 'credential_definition' object is not a string.");
         }
 
         return (String)value;
@@ -164,18 +164,18 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
             OrderContext context, User user, String format,
             Map<String, Object> requestedCredential) throws VerifiableCredentialException
     {
-        // The "credential_definition.type" in the requested credential.
+        // The "credential_definition.vct" in the requested credential.
         @SuppressWarnings("unchecked")
-        String type = (String)((Map<String, Object>)requestedCredential.get(KEY_CREDENTIAL_DEFINITION)).get(KEY_TYPE);
+        String vct = (String)((Map<String, Object>)requestedCredential.get(KEY_CREDENTIAL_DEFINITION)).get(KEY_VCT);
 
-        // Find a CredentialDefinitionType having the type.
-        CredentialDefinitionType cdType = CredentialDefinitionType.byId(type);
+        // Find a CredentialDefinitionType having the vct.
+        CredentialDefinitionType cdType = CredentialDefinitionType.byId(vct);
 
         if (cdType == null)
         {
             // The credential type is not supported.
             throw new UnsupportedCredentialTypeException(String.format(
-                    "The credential type '%s' is not supported.", type));
+                    "The credential type '%s' is not supported.", vct));
         }
 
         // For testing purposes, the credential issuance for a certain user
@@ -190,8 +190,8 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
         // Claims.
         Map<String, Object> claims = new LinkedHashMap<>();
 
-        // "type"
-        claims.put(KEY_TYPE, type);
+        // "vct"
+        claims.put(KEY_VCT, vct);
 
         // "sub"
         claims.put(KEY_SUB, user.getSubject());
