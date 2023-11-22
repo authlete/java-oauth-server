@@ -23,11 +23,14 @@ import com.authlete.common.types.StandardClaims;
 
 public enum CredentialDefinitionType
 {
-    IDENTITY_CREDENTIAL("IdentityCredential", new String[]{
-            StandardClaims.GIVEN_NAME,
-            StandardClaims.FAMILY_NAME,
-            StandardClaims.BIRTHDATE
-    });
+    IDENTITY_CREDENTIAL(
+            "https://credentials.example.com/identity_credential",
+            new String[]{
+                    StandardClaims.GIVEN_NAME,
+                    StandardClaims.FAMILY_NAME,
+                    StandardClaims.BIRTHDATE
+            }
+    );
 
 
     final String id;
