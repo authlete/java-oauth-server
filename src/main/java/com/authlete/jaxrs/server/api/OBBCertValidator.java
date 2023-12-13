@@ -43,7 +43,7 @@ public class OBBCertValidator extends CertValidator
     // are used as fallback when valid paths are not specified via the
     // environment variables.
     private static final Path[] ROOT_CERTIFICATES = {
-            Paths.get(pwd(), "certs", "Open_Banking_Brasil_Sandbox_Root_G1.pem")
+            Paths.get(pwd(), "certs", "Open_Banking_Brasil_Sandbox_Root_G2.pem")
     };
 
 
