@@ -13,6 +13,6 @@ FROM jetty:9.4.46-jre8-slim-openjdk
 
 USER root
 COPY certs/ certs/
-RUN certs/import-certificate.sh certs/Open_Banking_Brasil_Sandbox_Root_G1.pem
+RUN certs/import-certificate.sh certs/Open_Banking_Brasil_Sandbox_Root_G2.pem
 USER jetty
 COPY --from=builder /build/target/*.war /var/lib/jetty/webapps/ROOT.war
