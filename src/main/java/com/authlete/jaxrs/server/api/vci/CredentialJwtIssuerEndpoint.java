@@ -28,7 +28,7 @@ import com.authlete.common.dto.CredentialJwtIssuerMetadataResponse;
 import com.authlete.jaxrs.server.util.ResponseUtil;
 
 
-@Path("/.well-known/jwt-issuer")
+@Path("/.well-known/{path : jwt-issuer|jwt-vc-issuer}")
 public class CredentialJwtIssuerEndpoint extends AbstractCredentialEndpoint
 {
     @GET

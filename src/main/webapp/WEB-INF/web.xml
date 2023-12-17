@@ -91,6 +91,7 @@
     <url-pattern>/.well-known/openid-credential-issuer</url-pattern>
     <url-pattern>/.well-known/openid-federation</url-pattern>
     <url-pattern>/.well-known/jwt-issuer</url-pattern>
+    <url-pattern>/.well-known/jwt-vc-issuer</url-pattern>
     <url-pattern>/.well-known/apple-app-site-association</url-pattern>
   </filter-mapping>
 
