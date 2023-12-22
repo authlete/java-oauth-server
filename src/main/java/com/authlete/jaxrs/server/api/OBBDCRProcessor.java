@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1014,6 +1015,12 @@ public class OBBDCRProcessor
         // Open Banking Brasil Financial-grade API is based on
         // "FAPI 1.0 Advanced" which requires certificate-bound access tokens.
         merged.putIfAbsent("tls_client_certificate_bound_access_tokens", Boolean.TRUE);
+
+        // the latest security profile ("v2") requires that id tokens are always encrypted
+        merged.putIfAbsent("id_token_encrypted_response_alg", "RSA-OAEP");
+        merged.putIfAbsent("id_token_encrypted_response_enc", "A256GCM");
+        // and that an acr value is always returned
+        merged.putIfAbsent("default_acr_values", Arrays.asList("urn:brasil:openbanking:loa3"));
 
         // Use some claims in the software statement as default values
         // for some standard claims. See also:
