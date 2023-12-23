@@ -114,6 +114,7 @@ public abstract class AbstractOrderProcessor implements OrderProcessor
                 .setRequestIdentifier(info.getIdentifier())
                 .setCredentialPayload(payload)
                 .setIssuanceDeferred(deferred)
+                .setCredentialDuration(computeCredentialDuration())
                 ;
     }
 
@@ -167,4 +168,22 @@ public abstract class AbstractOrderProcessor implements OrderProcessor
     protected abstract Map<String, Object> collectClaims(
             OrderContext context, User user, String format,
             Map<String, Object> requestedCredential) throws VerifiableCredentialException;
+
+
+    /**
+     * Compute the credential duration in seconds.
+     *
+     * <p>
+     * The default implementation of this method returns 0, which tells
+     * Authlete to try to generate a VC that does not expire. Subclasses
+     * may override this method to set duration.
+     * </p>
+     *
+     * @return
+     *         The credential duration in seconds.
+     */
+    protected long computeCredentialDuration()
+    {
+        return 0;
+    }
 }

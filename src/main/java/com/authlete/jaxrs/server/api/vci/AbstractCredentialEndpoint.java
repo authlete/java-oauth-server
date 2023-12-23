@@ -39,7 +39,6 @@ import com.authlete.jaxrs.server.vc.OrderFormat;
 import com.authlete.jaxrs.server.vc.UnsupportedCredentialFormatException;
 import com.authlete.jaxrs.server.vc.UnsupportedCredentialTypeException;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 
 public abstract class AbstractCredentialEndpoint extends BaseResourceEndpoint
@@ -298,18 +297,14 @@ public abstract class AbstractCredentialEndpoint extends BaseResourceEndpoint
 
     protected String errorJson(ErrorCode errorCode, Throwable cause)
     {
-        Map<String, Object> map = new LinkedHashMap<>();
-
-        // "error"
-        map.put("error", errorCode.name());
-
-        if (cause != null)
+        if (cause == null)
         {
-            // "error_description"
-            map.put("error_description", cause.getMessage());
+            return String.format(
+                    "{%n  \"error\": \"%s\"%n}%n", errorCode.name());
         }
 
-        // The content of the error response.
-        return new GsonBuilder().setPrettyPrinting().create().toJson(map);
+        return String.format(
+                "{%n  \"error\": \"%s\",%n  \"error_description\": \"%s\"%n}%n",
+                errorCode.name(), cause.getMessage());
     }
 }

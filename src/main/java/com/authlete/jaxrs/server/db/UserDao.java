@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2022 Authlete, Inc.
+ * Copyright (C) 2016-2023 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,17 @@ package com.authlete.jaxrs.server.db;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import com.authlete.common.dto.Address;
 import com.authlete.common.types.User;
+import com.authlete.mdoc.constants.MDLClaimNames;
+import com.authlete.mdoc.constants.MDLConstants;
 
 
 /**
@@ -68,10 +73,63 @@ public class UserDao
                     null, null, "Inga", "Silverstone", null, null,
                     "https://example.com/inga/profile", "https://example.com/inga/me.jpg",
                     "https://example.com/inga/", "female", "America/Toronto", "en-US",
-                    "inga", "1991-11-06", toDate("2022-04-30")
-            )
+                    "inga", "1991-11-06", toDate("2022-04-30"))
+                    .setAttribute(MDLConstants.DOC_TYPE_MDL, createMDLData1004())
         );
     };
+
+
+    private static Map<String, Object> createMDLData1004()
+    {
+        // Some string claim values in the data below have the prefix "cbor:".
+        // They are interpreted by Authlete server. See the JavaDoc of the
+        // CredentialIssuanceOrder class in the authlete-java-common library
+        // for details.
+        //
+        //   CredentialIssuerOrder JavaDoc
+        //     https://authlete.github.io/authlete-java-common/com/authlete/common/dto/CredentialIssuanceOrder.html
+        //
+
+        // {
+        //   "vehicle_category_code" : "A",
+        //   "issue_date"            : "2023-01-01",
+        //   "expiry_date"           : "2043-01-01"
+        // }
+        Map<String, Object> vehicleA = new LinkedHashMap<>();
+        vehicleA.put("vehicle_category_code", "A");
+        vehicleA.put("issue_date",            "cbor:1004(\"2023-01-01\")");
+        vehicleA.put("expiry_date",           "cbor:1004(\"2043-01-01\")");
+
+        // [
+        //    vehicleA
+        // ]
+        List<Map<String, Object>> drivingPrivileges = new ArrayList<>();
+        drivingPrivileges.add(vehicleA);
+
+        // {
+        //   "family_name"        : "Silverstone",
+        //   "given_name"         : "Inga",
+        //   "birth_date"         : "1991-11-06",
+        //   "issuing_country"    : "US",
+        //   "document_number"    : "12345678",
+        //   "driving_privileges" : drivingPrivileges
+        // }
+        Map<String, Object> nameSpace = new LinkedHashMap<>();
+        nameSpace.put(MDLClaimNames.FAMILY_NAME,        "Silverstone");
+        nameSpace.put(MDLClaimNames.GIVEN_NAME,         "Inga");
+        nameSpace.put(MDLClaimNames.BIRTH_DATE,         "cbor:1004(\"1991-11-06\")");
+        nameSpace.put(MDLClaimNames.ISSUING_COUNTRY,    "US");
+        nameSpace.put(MDLClaimNames.DOCUMENT_NUMBER,    "12345678");
+        nameSpace.put(MDLClaimNames.DRIVING_PRIVILEGES, drivingPrivileges);
+
+        // {
+        //   "org.iso.18013.5.1" : nameSpace
+        // }
+        Map<String, Object> root = new LinkedHashMap<>();
+        root.put(MDLConstants.NAME_SPACE_MDL, nameSpace);
+
+        return root;
+    }
 
 
     private static Date toDate(String input)

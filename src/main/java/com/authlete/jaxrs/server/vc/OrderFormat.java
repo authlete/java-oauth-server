@@ -23,6 +23,7 @@ import java.util.Arrays;
 public enum OrderFormat
 {
     SD_JWT("vc+sd-jwt", new SdJwtOrderProcessor()),
+    MDOC("mso_mdoc", new MdocOrderProcessor()),
     ;
 
 

@@ -20,6 +20,7 @@ package com.authlete.jaxrs.server.db;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.authlete.common.dto.Address;
@@ -105,6 +106,10 @@ public class UserEntity implements User, Serializable
 
     // Custom claims
     private List<String> nationalities;
+
+
+    // Attributes
+    private Map<String, Object> attributes = new HashMap<>();
 
 
     /**
@@ -372,9 +377,16 @@ public class UserEntity implements User, Serializable
                 return code;
 
             default:
-                // Unsupported attribute.
-                return null;
+                return attributes.get(attributeName);
         }
+    }
+
+
+    public UserEntity setAttribute(String attributeName, Object attributeValue)
+    {
+        attributes.put(attributeName, attributeValue);
+
+        return this;
     }
 
 
@@ -403,6 +415,6 @@ public class UserEntity implements User, Serializable
         // This Gson instance does not serialize properties with null values.
         Gson gson = new Gson();
 
-        return (Map<String, Object>)gson.fromJson(gson.toJson(address), Map.class);
+        return gson.fromJson(gson.toJson(address), Map.class);
     }
 }
