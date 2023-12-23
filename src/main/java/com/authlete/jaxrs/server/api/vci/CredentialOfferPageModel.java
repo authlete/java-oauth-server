@@ -58,7 +58,8 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
 
 
     private static final String DEFAULT_CREDENTIALS = "[\n" +
-            "  \"IdentityCredential\"\n" +
+            "  \"IdentityCredential\",\n" +
+            "  \"mDL\"\n" +
             "]";
 
 
