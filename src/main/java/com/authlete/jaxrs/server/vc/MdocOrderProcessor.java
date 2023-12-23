@@ -343,10 +343,8 @@ class MdocOrderProcessor extends AbstractOrderProcessor
         // If the "issue_date" claim is requested.
         if (requestedSubclaims.containsKey(MDLClaimNames.ISSUE_DATE))
         {
-            // "issue_date": "YYYY-MM-DD"
-            subclaims.put(
-                    MDLClaimNames.ISSUE_DATE,
-                    now.format(DateTimeFormatter.ISO_LOCAL_DATE));
+            // "issue_date": 1004("YYYY-MM-DD")
+            subclaims.put(MDLClaimNames.ISSUE_DATE, toFullDate(now));
         }
 
         // If the "expiry_date" claim is requested.
@@ -357,10 +355,15 @@ class MdocOrderProcessor extends AbstractOrderProcessor
             ZonedDateTime exp = now.plusYears(1);
 
             // "expiry_date": "YYYY-MM-DD"
-            subclaims.put(
-                    MDLClaimNames.EXPIRY_DATE,
-                    exp.format(DateTimeFormatter.ISO_LOCAL_DATE));
+            subclaims.put(MDLClaimNames.EXPIRY_DATE, toFullDate(exp));
         }
+    }
+
+
+    private static String toFullDate(ZonedDateTime dt)
+    {
+        return String.format("cbor:1004(\"%s\")",
+                dt.format(DateTimeFormatter.ISO_LOCAL_DATE));
     }
 
 
