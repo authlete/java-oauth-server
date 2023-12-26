@@ -107,9 +107,8 @@
           <div>Input Login ID and Password.</div>
           <input type="text" id="loginId" name="loginId" placeholder="Login ID"
             autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-            class="font-default" value="${model.loginId}" ${model.loginIdReadOnly}>
-          <input type="password" id="password" name="password" placeholder="Password"
-            class="font-default">
+            value="${model.loginId}" ${model.loginIdReadOnly}>
+          <input type="password" id="password" name="password" placeholder="Password">
           </div>
         </div>
       </div>
@@ -175,7 +174,7 @@
               <tr>
                 <td width="20"></td>
                 <td class="border-top"><nobr>Value</nobr></td>
-                <td>
+                <td class="border-top">
                   <input type="text" id="txCode" name="txCode"
                          value="${model.txCode}" size="40"
                          placeholder="e.g. 493536">
