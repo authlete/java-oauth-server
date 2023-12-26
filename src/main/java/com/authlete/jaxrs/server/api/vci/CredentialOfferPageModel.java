@@ -47,7 +47,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
  */
 public class CredentialOfferPageModel extends AuthorizationPageModel
 {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
 
     private static final String DEFAULT_ENDPOINT = "openid-credential-offer://";
@@ -57,24 +57,27 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     public static final int QR_CODE_HEIGHT = 300;
 
 
-    private static final String DEFAULT_CREDENTIALS = "[\n" +
+    private static final String DEFAULT_CREDENTIAL_CONFIGURATIONS =
+            "[\n" +
             "  \"IdentityCredential\",\n" +
-            "  \"mDL\"\n" +
+            "  \"org.iso.18013.5.1.mDL\"\n" +
             "]";
 
 
-    private String credentials;
+    private String credentialConfigurations;
     private boolean authorizationCodeGrantIncluded;
     private boolean issuerStateIncluded;
     private boolean preAuthorizedCodeGrantIncluded;
-    private boolean userPinRequired;
-    private int userPinLength;
+    private String txCode;
+    private String txCodeInputMode;
+    private String txCodeDescription;
     private int duration;
     private String credentialOfferEndpoint;
     private CredentialOfferInfo info;
     private String credentialOfferLink;
     private String credentialOfferQrCode;
     private String credentialOfferContent;
+    private String credentialOfferUri;
     private String credentialOfferUriLink;
     private String credentialOfferUriQrCode;
 
@@ -82,27 +85,33 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     public CredentialOfferPageModel()
     {
         this.authorizationCodeGrantIncluded = false;
-        this.issuerStateIncluded = true;
+        this.issuerStateIncluded            = true;
         this.preAuthorizedCodeGrantIncluded = true;
-        this.userPinRequired = false;
-        this.userPinLength = 0;
         this.duration = 0;
-        this.credentials = DEFAULT_CREDENTIALS;
-        this.credentialOfferEndpoint = DEFAULT_ENDPOINT;
+        this.credentialConfigurations = DEFAULT_CREDENTIAL_CONFIGURATIONS;
+        this.credentialOfferEndpoint  = DEFAULT_ENDPOINT;
     }
 
 
     public CredentialOfferPageModel setValues(final Map<String, String> values)
     {
-        this.credentials = values.getOrDefault("credentials", this.credentials);
-        this.authorizationCodeGrantIncluded = ProcessingUtil.fromFormCheckbox(values, "authorizationCodeGrantIncluded");
-        this.issuerStateIncluded = ProcessingUtil.fromFormCheckbox(values, "issuerStateIncluded");
-        this.preAuthorizedCodeGrantIncluded = ProcessingUtil.fromFormCheckbox(values, "preAuthorizedCodeGrantIncluded");
-        this.userPinRequired = ProcessingUtil.fromFormCheckbox(values, "userPinRequired");
-        this.credentialOfferEndpoint = values.getOrDefault("credentialOfferEndpoint", this.credentialOfferEndpoint);
-        this.userPinLength = extractInt(values, "userPinLength", this.userPinLength);
-        this.duration = extractInt(values, "duration", this.duration);
+        this.credentialConfigurations       = values.getOrDefault("credentialConfigurations", this.credentialConfigurations);
+        this.authorizationCodeGrantIncluded = fromCheckBox(values, "authorizationCodeGrantIncluded");
+        this.issuerStateIncluded            = fromCheckBox(values, "issuerStateIncluded");
+        this.preAuthorizedCodeGrantIncluded = fromCheckBox(values, "preAuthorizedCodeGrantIncluded");
+        this.txCode                         = values.getOrDefault("txCode",            this.txCode);
+        this.txCodeInputMode                = values.getOrDefault("txCodeInputMode",   this.txCodeInputMode);
+        this.txCodeDescription              = values.getOrDefault("txCodeDescription", this.txCodeDescription);
+        this.duration                       = extractInt(values, "duration", this.duration);
+        this.credentialOfferEndpoint        = values.getOrDefault("credentialOfferEndpoint", this.credentialOfferEndpoint);
+
         return this;
+    }
+
+
+    private static boolean fromCheckBox(Map<String, String> values, String key)
+    {
+        return ProcessingUtil.fromFormCheckbox(values, key);
     }
 
 
@@ -159,10 +168,12 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
                 .setAuthorizationCodeGrantIncluded(this.authorizationCodeGrantIncluded)
                 .setIssuerStateIncluded(this.issuerStateIncluded)
                 .setPreAuthorizedCodeGrantIncluded(this.preAuthorizedCodeGrantIncluded)
-                .setUserPinRequired(this.userPinRequired)
-                .setUserPinLength(this.userPinLength)
+                .setTxCode(this.txCode)
+                .setTxCodeInputMode(this.txCodeInputMode)
+                .setTxCodeDescription(this.txCodeDescription)
                 .setDuration(this.duration)
-                .setCredentials(parseAsStringArray("credentials", this.credentials))
+                .setCredentialConfigurations(
+                        parseAsStringArray("credentialConfigurations", this.credentialConfigurations))
                 .setSubject(user.getSubject());
     }
 
@@ -209,15 +220,15 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     }
 
 
-    public String getCredentials()
+    public String getCredentialConfigurations()
     {
-        return credentials;
+        return credentialConfigurations;
     }
 
 
-    public void setCredentials(String credentials)
+    public void setCredentialConfigurations(String configurations)
     {
-        this.credentials = credentials;
+        this.credentialConfigurations = configurations;
     }
 
 
@@ -257,27 +268,39 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     }
 
 
-    public boolean isUserPinRequired()
+    public String getTxCode()
     {
-        return userPinRequired;
+        return txCode;
     }
 
 
-    public void setUserPinRequired(boolean userPinRequired)
+    public void setTxCode(String txCode)
     {
-        this.userPinRequired = userPinRequired;
+        this.txCode = txCode;
     }
 
 
-    public int getUserPinLength()
+    public String getTxCodeInputMode()
     {
-        return userPinLength;
+        return txCodeInputMode;
     }
 
 
-    public void setUserPinLength(int userPinLength)
+    public void setTxCodeInputMode(String inputMode)
     {
-        this.userPinLength = userPinLength;
+        this.txCodeInputMode = inputMode;
+    }
+
+
+    public String getTxCodeDescription()
+    {
+        return txCodeDescription;
+    }
+
+
+    public void setTxCodeDescription(String description)
+    {
+        this.txCodeDescription = description;
     }
 
 
@@ -321,7 +344,7 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
                                                      URLEncoder.encode(info.getCredentialOffer(), "UTF-8"));
             this.credentialOfferQrCode = asQrCode(this.credentialOfferLink);
 
-            final String credentialOfferUri = String.format("%s/api/offer/%s",
+            this.credentialOfferUri = String.format("%s/api/offer/%s",
                                                             info.getCredentialIssuer().toString(),
                                                             info.getIdentifier());
             this.credentialOfferUriLink = String.format(CREDENTIAL_OFFER_URI_QR_PATTERN, credentialOfferEndpoint,
@@ -377,6 +400,18 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     public void setCredentialOfferContent(String credentialOfferContent)
     {
         this.credentialOfferContent = credentialOfferContent;
+    }
+
+
+    public String getCredentialOfferUri()
+    {
+        return credentialOfferUri;
+    }
+
+
+    public void setCredentialOfferUri(String credentialOfferUri)
+    {
+        this.credentialOfferUri = credentialOfferUri;
     }
 
 

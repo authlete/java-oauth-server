@@ -21,7 +21,11 @@ import java.util.Arrays;
 import com.authlete.common.types.StandardClaims;
 
 
-public enum CredentialDefinitionType
+/**
+ * Verifiable Credential Type identified by the "{@code vct}" claim
+ * in an SD-JWT VC.
+ */
+public enum VerifiableCredentialType
 {
     IDENTITY_CREDENTIAL(
             "https://credentials.example.com/identity_credential",
@@ -33,14 +37,13 @@ public enum CredentialDefinitionType
     );
 
 
-    final String id;
-    final String[] claims;
+    private final String id;
+    private final String[] claims;
 
 
-    CredentialDefinitionType(final String typeId,
-                             final String[] claims)
+    private VerifiableCredentialType(String id, String[] claims)
     {
-        this.id = typeId;
+        this.id     = id;
         this.claims = claims;
     }
 
@@ -57,9 +60,9 @@ public enum CredentialDefinitionType
     }
 
 
-    public static CredentialDefinitionType byId(final String id)
+    public static VerifiableCredentialType byId(final String id)
     {
-        return Arrays.stream(CredentialDefinitionType.values())
+        return Arrays.stream(VerifiableCredentialType.values())
                 .filter(format -> format.getId().equals(id))
                 .findFirst()
                 .orElse(null);
