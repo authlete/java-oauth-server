@@ -127,10 +127,10 @@
               </tr>
 
               <tr>
-                <td colspan="2"><nobr>Credential Configurations</nobr></td>
+                <td colspan="2"><nobr>Credential Configuration IDs</nobr></td>
                 <td>
-                  <textarea id="credentialConfigurations" name="credentialConfigurations"
-                            rows="4" cols="40">${model.credentialConfigurations}</textarea>
+                  <textarea id="credentialConfigurationIds" name="credentialConfigurationIds"
+                            rows="4" cols="40">${model.credentialConfigurationIds}</textarea>
                 </td>
               </tr>
 

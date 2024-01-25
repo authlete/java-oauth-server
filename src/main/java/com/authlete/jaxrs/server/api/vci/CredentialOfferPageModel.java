@@ -57,14 +57,14 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     public static final int QR_CODE_HEIGHT = 300;
 
 
-    private static final String DEFAULT_CREDENTIAL_CONFIGURATIONS =
+    private static final String DEFAULT_CREDENTIAL_CONFIGURATION_IDS =
             "[\n" +
             "  \"IdentityCredential\",\n" +
             "  \"org.iso.18013.5.1.mDL\"\n" +
             "]";
 
 
-    private String credentialConfigurations;
+    private String credentialConfigurationIds;
     private boolean authorizationCodeGrantIncluded;
     private boolean issuerStateIncluded;
     private boolean preAuthorizedCodeGrantIncluded;
@@ -87,15 +87,15 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
         this.authorizationCodeGrantIncluded = false;
         this.issuerStateIncluded            = true;
         this.preAuthorizedCodeGrantIncluded = true;
-        this.duration = 0;
-        this.credentialConfigurations = DEFAULT_CREDENTIAL_CONFIGURATIONS;
-        this.credentialOfferEndpoint  = DEFAULT_ENDPOINT;
+        this.duration                       = 0;
+        this.credentialConfigurationIds     = DEFAULT_CREDENTIAL_CONFIGURATION_IDS;
+        this.credentialOfferEndpoint        = DEFAULT_ENDPOINT;
     }
 
 
     public CredentialOfferPageModel setValues(final Map<String, String> values)
     {
-        this.credentialConfigurations       = values.getOrDefault("credentialConfigurations", this.credentialConfigurations);
+        this.credentialConfigurationIds     = values.getOrDefault("credentialConfigurationIds", this.credentialConfigurationIds);
         this.authorizationCodeGrantIncluded = fromCheckBox(values, "authorizationCodeGrantIncluded");
         this.issuerStateIncluded            = fromCheckBox(values, "issuerStateIncluded");
         this.preAuthorizedCodeGrantIncluded = fromCheckBox(values, "preAuthorizedCodeGrantIncluded");
@@ -172,8 +172,8 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
                 .setTxCodeInputMode(this.txCodeInputMode)
                 .setTxCodeDescription(this.txCodeDescription)
                 .setDuration(this.duration)
-                .setCredentialConfigurations(
-                        parseAsStringArray("credentialConfigurations", this.credentialConfigurations))
+                .setCredentialConfigurationIds(
+                        parseAsStringArray("credentialConfigurationIds", this.credentialConfigurationIds))
                 .setSubject(user.getSubject());
     }
 
@@ -220,15 +220,15 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
     }
 
 
-    public String getCredentialConfigurations()
+    public String getCredentialConfigurationIds()
     {
-        return credentialConfigurations;
+        return credentialConfigurationIds;
     }
 
 
-    public void setCredentialConfigurations(String configurations)
+    public void setCredentialConfigurationIds(String ids)
     {
-        this.credentialConfigurations = configurations;
+        this.credentialConfigurationIds = ids;
     }
 
 
