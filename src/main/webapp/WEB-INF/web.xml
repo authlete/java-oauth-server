@@ -87,6 +87,7 @@
   <filter-mapping>
     <filter-name>API</filter-name>
     <url-pattern>/api/*</url-pattern>
+    <url-pattern>/.well-known/oauth-authorization-server</url-pattern>
     <url-pattern>/.well-known/openid-configuration</url-pattern>
     <url-pattern>/.well-known/openid-credential-issuer</url-pattern>
     <url-pattern>/.well-known/openid-federation</url-pattern>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2022 Authlete, Inc.
+ * Copyright (C) 2016-2024 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,16 +32,16 @@ import com.authlete.jaxrs.BaseConfigurationEndpoint;
  *
  * <p>
  * An OpenID Provider that supports <a href=
- * "http://openid.net/specs/openid-connect-discovery-1_0.html">OpenID Connect
+ * "https://openid.net/specs/openid-connect-discovery-1_0.html">OpenID Connect
  * Discovery 1.0</a> must provide an endpoint that returns its configuration
  * information in a JSON format. Details about the format are described in
- * "<a href="http://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata"
+ * "<a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata"
  * >3. OpenID Provider Metadata</a>" in OpenID Connect Discovery 1.0.
  * </p>
  *
  * <p>
  * Note that the URI of an OpenID Provider configuration endpoint is defined in
- * "<a href="http://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfigurationRequest"
+ * "<a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfigurationRequest"
  * >4.1. OpenID Provider Configuration Request</a>" in OpenID Connect Discovery
  * 1.0. In short, the URI must be:
  * </p>
@@ -53,9 +53,9 @@ import com.authlete.jaxrs.BaseConfigurationEndpoint;
  * <p>
  * <i>Issuer Identifier</i> is a URL to identify an OpenID Provider. For example,
  * {@code https://example.com}. For details about Issuer Identifier, See <b>{@code issuer}</b>
- * in "<a href="http://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata"
+ * in "<a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata"
  * >3. OpenID Provider Metadata</a>" (OpenID Connect Discovery 1.0) and <b>{@code iss}</b> in
- * "<a href="http://openid.net/specs/openid-connect-core-1_0.html#IDToken">2. ID Token</a>"
+ * "<a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">2. ID Token</a>"
  * (OpenID Connect Core 1.0).
  * </p>
  *
@@ -66,12 +66,15 @@ import com.authlete.jaxrs.BaseConfigurationEndpoint;
  * use, so you should change it.
  * </p>
  *
- * @see <a href="http://openid.net/specs/openid-connect-discovery-1_0.html"
+ * @see <a href="https://openid.net/specs/openid-connect-discovery-1_0.html"
  *      >OpenID Connect Discovery 1.0</a>
+ *
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc8414.html"
+ *      >RFC 8414 OAuth 2.0 Authorization Server Metadata</a>
  *
  * @author Takahiko Kawasaki
  */
-@Path("/.well-known/openid-configuration")
+@Path("/.well-known/{path : openid-configuration|oauth-authorization-server}")
 public class ConfigurationEndpoint extends BaseConfigurationEndpoint
 {
     /**
