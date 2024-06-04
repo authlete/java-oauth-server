@@ -116,7 +116,7 @@ class MdocOrderProcessor extends AbstractOrderProcessor
     @SuppressWarnings("unchecked")
     private static boolean includeClaims(
             Map<String, Object> issuableCredential,
-            Map<String, Object> requestedCredential)
+            Map<String, Object> requestedCredential) throws InvalidCredentialRequestException
     {
         // The claims in the issuable credential.
         Object issuableCredentialClaims = issuableCredential.get(KEY_CLAIMS);
@@ -124,10 +124,37 @@ class MdocOrderProcessor extends AbstractOrderProcessor
         // The claims in the requested credential.
         Object requestedCredentialClaims = requestedCredential.get(KEY_CLAIMS);
 
-        // If either or both are not maps.
-        if (!(issuableCredentialClaims instanceof Map) ||
-            !(requestedCredentialClaims instanceof Map))
+        // If the credential request does not include the "claims" property.
+        if (requestedCredentialClaims == null)
         {
+            // Conceptually, any issuable credential includes an empty claim set.
+            // But note that the issued verifiable credential will include no claim.
+            return true;
+        }
+
+        // If the credential request includes the "claims" property but its
+        // value is not a JSON object.
+        if (!(requestedCredentialClaims instanceof Map))
+        {
+            throw new InvalidCredentialRequestException(
+                    "The value of the 'claims' property in the credential request is not a JSON object.");
+        }
+
+        // If the content of the "claims" property in the credential request is empty.
+        if (((Map<String, Object>)requestedCredentialClaims).isEmpty())
+        {
+            // Conceptually, any issuable credential includes an empty claim set.
+            // But note that the issued verifiable credential will include no claim.
+            return true;
+        }
+
+        // If the code flow reaches here, requestedCredentialClaims contains
+        // at least one claim.
+
+        // If the issuable credential does include any claims.
+        if (!(issuableCredentialClaims instanceof Map))
+        {
+            // No claim can be requested.
             return false;
         }
 
@@ -270,6 +297,13 @@ class MdocOrderProcessor extends AbstractOrderProcessor
         //
 
         Map<String, Object> claims = new LinkedHashMap<>();
+
+        // If the credential request does not include the "claims" property.
+        if (requestedClaims == null)
+        {
+            // The verifiable credential will include no claim.
+            return claims;
+        }
 
         for (Map.Entry<String, Object> requestedNameSpace : requestedClaims.entrySet())
         {
