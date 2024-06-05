@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Authlete, Inc.
+ * Copyright (C) 2023-2024 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -154,7 +154,7 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
         // "sub"
         claims.put(KEY_SUB, user.getSubject());
 
-        // The CredentialDefinitionType has a set of claims.
+        // The VerifiableCredentialType has a set of claims.
         // For each claim in the set.
         for (String claimName : vct.getClaims())
         {
