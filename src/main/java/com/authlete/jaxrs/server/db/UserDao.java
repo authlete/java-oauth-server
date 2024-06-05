@@ -66,17 +66,41 @@ public class UserDao
 
             new UserEntity("1004", "inga", "inga", "Inga Silverstone", "inga@example.com",
                     new Address()
+                        .setFormatted("114 Old State Hwy 127, Shoshone, CA 92384, USA")
                         .setCountry("USA")
                         .setLocality("Shoshone")
-                        .setStreetAddress("114 0ld State Hwy 127")
+                        .setStreetAddress("114 Old State Hwy 127")
                         .setPostaCode("CA 92384"),
                     null, null, "Inga", "Silverstone", null, null,
                     "https://example.com/inga/profile", "https://example.com/inga/me.jpg",
                     "https://example.com/inga/", "female", "America/Toronto", "en-US",
                     "inga", "1991-11-06", toDate("2022-04-30"))
                     .setAttribute(MDLConstants.DOC_TYPE_MDL, createMDLData1004())
+
+                    // POTENTIAL Interop Event Track 2
+                    // https://gitlab.opencode.de/potential/interop-event
+                    .addExtraClaim("age_equal_or_over", mapOf("18", Boolean.TRUE))
+                    .addExtraClaim("place_of_birth", mapOf("locality", "Shoshone"))
+                    .addExtraClaim("issuing_authority", "US")
+                    .addExtraClaim("issuing_country", "US")
         );
     };
+
+
+    /**
+     * A substitute for {@code Map.of}, which is unavailable in Java 8.
+     */
+    private static Map<String, Object> mapOf(Object... keyValuePairs)
+    {
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        for (int i = 0; i < keyValuePairs.length; i += 2)
+        {
+            map.put((String)keyValuePairs[i], keyValuePairs[i+1]);
+        }
+
+        return map;
+    }
 
 
     private static Map<String, Object> createMDLData1004()

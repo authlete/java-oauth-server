@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2022 Authlete, Inc.
+ * Copyright (C) 2016-2024 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import com.nimbusds.openid.connect.sdk.claims.UserInfo;
  */
 public class UserEntity implements User, Serializable
 {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
 
     /**
@@ -110,6 +110,10 @@ public class UserEntity implements User, Serializable
 
     // Attributes
     private Map<String, Object> attributes = new HashMap<>();
+
+
+    // Extra claims
+    private Map<String, Object> extraClaims = new HashMap<>();
 
 
     /**
@@ -356,9 +360,16 @@ public class UserEntity implements User, Serializable
                 return nationalities;
 
             default:
-                // Unsupported claim.
-                return null;
+                break;
         }
+
+        if (extraClaims.containsKey(claimName))
+        {
+            return extraClaims.get(claimName);
+        }
+
+        // Unsupported claim.
+        return null;
     }
 
 
@@ -385,6 +396,14 @@ public class UserEntity implements User, Serializable
     public UserEntity setAttribute(String attributeName, Object attributeValue)
     {
         attributes.put(attributeName, attributeValue);
+
+        return this;
+    }
+
+
+    public UserEntity addExtraClaim(String claimName, Object claimValue)
+    {
+        extraClaims.put(claimName, claimValue);
 
         return this;
     }

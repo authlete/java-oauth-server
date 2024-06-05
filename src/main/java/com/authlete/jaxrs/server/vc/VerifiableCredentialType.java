@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Authlete, Inc.
+ * Copyright (C) 2023-2024 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,12 +29,60 @@ public enum VerifiableCredentialType
 {
     IDENTITY_CREDENTIAL(
             "https://credentials.example.com/identity_credential",
-            new String[]{
+            new String[] {
                     StandardClaims.GIVEN_NAME,
                     StandardClaims.FAMILY_NAME,
                     StandardClaims.BIRTHDATE
             }
-    );
+    ),
+
+    /**
+     * The vct used in the <a href="https://www.digital-identity-wallet.eu/"
+     * >POTENTIAL</a> Interop Event Track 2.
+     *
+     * <blockquote>
+     * <table border="1" cellpadding="5" style="border-collapse: collapse;">
+     *   <tr bgcolor="orange">
+     *     <th>vct</th>
+     *     <th>claims</th>
+     *   </tr>
+     *   <tr>
+     *     <td style="vertical-align: top;">
+     *       <code>urn:eu.europa.ec.eudi:pid:1</code>
+     *     </td>
+     *     <td style="vertical-align: top;">
+     *       <ul>
+     *         <li><code>family_name</code>
+     *         <li><code>given_name</code>
+     *         <li><code>birthdate</code>
+     *         <li><code>age_equal_or_over/18</code>
+     *         <li><code>place_of_birth/locality</code>
+     *         <li><code>address/formatted</code>
+     *         <li><code>issuing_authority</code>
+     *         <li><code>issuing_country</code>
+     *       </ul>
+     *     </td>
+     *   </tr>
+     * </table>
+     * </blockquote>
+     *
+     * @see <a href="https://gitlab.opencode.de/potential/interop-event/-/tree/master/track2/description"
+     *      >POTENTIAL Interop Event Track 2 / description</a>
+     */
+    EUDI_PID_1(
+            "urn:eu.europa.ec.eudi:pid:1",
+            new String[] {
+                    StandardClaims.FAMILY_NAME,
+                    StandardClaims.GIVEN_NAME,
+                    StandardClaims.BIRTHDATE,
+                    "age_equal_or_over",
+                    "place_of_birth",
+                    StandardClaims.ADDRESS,
+                    "issuing_authority",
+                    "issuing_country",
+            }
+    ),
+    ;
 
 
     private final String id;
