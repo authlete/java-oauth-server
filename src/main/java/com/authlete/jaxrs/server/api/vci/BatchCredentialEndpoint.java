@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Authlete, Inc.
+ * Copyright (C) 2023-2024 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -50,6 +51,7 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
             @Context HttpServletRequest request,
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
             @HeaderParam("DPoP") String dpop,
+            @QueryParam("deferred") String deferred,
             String requestContent)
     {
         final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
@@ -73,6 +75,17 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
 
         // Prepare credential issuance orders.
         CredentialIssuanceOrder[] orders = prepareOrders(introspection, infos, headers);
+
+        // Defer the issuance if it is explicitly requested.
+        // Note that the 'deferred' query parameter is not a standardized one.
+        boolean issuanceDeferred = Boolean.parseBoolean(deferred);
+        if (issuanceDeferred)
+        {
+            for (CredentialIssuanceOrder order : orders)
+            {
+                order.setIssuanceDeferred(issuanceDeferred);
+            }
+        }
 
         // Issue credentials and return a batch credential response.
         return issue(api, orders, accessToken, headers);
