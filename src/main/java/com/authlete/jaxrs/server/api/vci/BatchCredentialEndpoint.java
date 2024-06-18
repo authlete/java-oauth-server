@@ -165,6 +165,12 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
             case OK_JWT:
                 return ResponseUtil.okJwt(content, headers);
 
+            case ACCEPTED:
+                return ResponseUtil.acceptedJson(content, headers);
+
+            case ACCEPTED_JWT:
+                return ResponseUtil.acceptedJwt(content, headers);
+
             case INTERNAL_SERVER_ERROR:
             default:
                 return ResponseUtil.internalServerErrorJson(content, headers);
