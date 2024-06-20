@@ -17,7 +17,6 @@
 package com.authlete.jaxrs.server.api;
 
 
-import static com.authlete.jaxrs.server.util.ExceptionUtil.badRequestException;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -33,7 +32,6 @@ import com.authlete.common.dto.Client;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.AuthorizationDecisionHandler.Params;
 import com.authlete.jaxrs.BaseAuthorizationDecisionEndpoint;
-import com.authlete.jaxrs.server.db.UserDao;
 import com.authlete.jaxrs.server.util.ProcessingUtil;
 import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpi;
 
@@ -85,10 +83,13 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         User user     = ProcessingUtil.getUser(session, parameters);
         Date authTime = (Date)    session.getAttribute("authTime");
 
+        // Claims requested to be embedded in the ID token.
+        String idTokenClaims = (params != null) ? params.getIdTokenClaims() : null;
+
         // Implementation of AuthorizationDecisionHandlerSpi.
         AuthorizationDecisionHandlerSpi spi =
             new AuthorizationDecisionHandlerSpiImpl(
-                parameters, user, authTime, params.getIdTokenClaims(), acrs, client);
+                parameters, user, authTime, idTokenClaims, acrs, client);
 
         // Handle the end-user's decision.
         return handle(AuthleteApiFactory.getDefaultApi(), spi, params);
