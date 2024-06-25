@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020 Authlete, Inc.
+ * Copyright (C) 2016-2024 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,6 +138,11 @@ public class TokenEndpoint extends BaseTokenEndpoint
 
         // Even the call of the setHtm(String) method can be omitted, too.
         // When "htm" is not set, "POST" is used as the default value.
+
+        // OAuth 2.0 Attestation-Based Client Authentication
+        params.setClientAttestation(   request.getHeader("OAuth-Client-Attestation"))
+              .setClientAttestationPop(request.getHeader("OAuth-Client-Attestation-PoP"))
+              ;
 
         return params;
     }
