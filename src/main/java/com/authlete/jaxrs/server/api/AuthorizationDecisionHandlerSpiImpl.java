@@ -20,6 +20,7 @@ package com.authlete.jaxrs.server.api;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ws.rs.WebApplicationException;
@@ -274,6 +275,12 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
             // the authorization server embeds the value of the claim
             // in an ID token.
             return getOpenBankingIntentIdFromIdTokenClaims(claimName);
+        }
+
+        if ("txn".equals(claimName)) {
+            // txn claim as used in ConnectID Australia:
+            // https://cdn.connectid.com.au/specifications/digitalid-identity-assurance-profile-06.html
+            return UUID.randomUUID();
         }
 
         // If the name indicates that the claim is a transformed claim.
