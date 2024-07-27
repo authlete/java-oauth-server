@@ -77,7 +77,7 @@ public class IntrospectionEndpoint extends BaseIntrospectionEndpoint
         BasicCredentials credentials = BasicCredentials.parse(authorization);
 
         // Fetch the information about the resource server from DB.
-        ResourceServerEntity rsEntity = ResourceServerDao.get(credentials.getUserId());
+        ResourceServerEntity rsEntity = getResourceServer(credentials);
 
         // If failed to authenticate the resource server.
         if (authenticateResourceServer(rsEntity, credentials) == false)
@@ -107,6 +107,17 @@ public class IntrospectionEndpoint extends BaseIntrospectionEndpoint
                 .setPublicKeyForEncryption(rsEntity.getPublicKeyForIntrospectionResponseEncryption())
                 .setSharedKeyForSign(rsEntity.getSharedKeyForIntrospectionResponseSign())
                 .setSharedKeyForEncryption(rsEntity.getSharedKeyForIntrospectionResponseEncryption());
+    }
+
+
+    private ResourceServerEntity getResourceServer(BasicCredentials credentials)
+    {
+        if (credentials == null)
+        {
+            return null;
+        }
+
+        return ResourceServerDao.get(credentials.getUserId());
     }
 
 
