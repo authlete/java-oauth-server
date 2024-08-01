@@ -17,7 +17,10 @@
 package com.authlete.jaxrs.server.api;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
@@ -44,6 +47,22 @@ import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpi;
 @Path("/api/authorization/decision")
 public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndpoint
 {
+    private static void addTxnToClaimNames(Params params) {
+        // txn claim is always required by ConnectID Australia
+        // https://cdn.connectid.com.au/specifications/digitalid-identity-assurance-profile-06.html
+        String[] claimNames = params.getClaimNames();
+        if (claimNames == null) {
+            // if no claims were requested it can't be a connectid au request
+            return;
+        }
+        // txn will now be returned for any requests that request oidc claims - as our AS is multipurpose there's no
+        // real good way to identify the ecosystem variant being tested and returning an random uuid is harmless
+        ArrayList<String> claimNamesArray = new ArrayList<>(Arrays.asList(claimNames));
+        claimNamesArray.add("txn");
+
+        params.setClaimNames(claimNamesArray.toArray(new String[0]));
+    }
+
     /**
      * Process a request from the form in the authorization page.
      *
@@ -82,6 +101,8 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         Client client = (Client)  takeAttribute(session, "client");
         User user     = ProcessingUtil.getUser(session, parameters);
         Date authTime = (Date)    session.getAttribute("authTime");
+
+        addTxnToClaimNames(params);
 
         // Claims requested to be embedded in the ID token.
         String idTokenClaims = (params != null) ? params.getIdTokenClaims() : null;
