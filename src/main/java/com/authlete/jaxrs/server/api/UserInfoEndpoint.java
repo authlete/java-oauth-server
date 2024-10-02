@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2022 Authlete, Inc.
+ * Copyright (C) 2016-2024 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -61,7 +60,7 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
         String accessToken = extractAccessToken(authorization, null);
 
         // Handle the userinfo request.
-        return handle(request, accessToken, dpop);
+        return handle(request, /*body*/null, accessToken, dpop);
     }
 
 
@@ -98,7 +97,7 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
         accessToken = extractAccessToken(authorization, accessToken);
 
         // Handle the userinfo request.
-        return handle(request, accessToken, dpop);
+        return handle(request, body, accessToken, dpop);
     }
 
 
@@ -119,9 +118,11 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
     /**
      * Handle the userinfo request.
      */
-    private Response handle(HttpServletRequest request, String accessToken, String dpop)
+    private Response handle(
+            HttpServletRequest request, String body,
+            String accessToken, String dpop)
     {
-        Params params = buildParams(request, accessToken, dpop);
+        Params params = buildParams(request, body, accessToken, dpop);
 
         return handle(AuthleteApiFactory.getDefaultApi(),
                 new UserInfoRequestHandlerSpiImpl(), params);
@@ -129,7 +130,8 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
 
 
     private Params buildParams(
-            HttpServletRequest request, String accessToken, String dpop)
+            HttpServletRequest request, String body,
+            String accessToken, String dpop)
     {
         Params params = new Params();
 
@@ -155,6 +157,29 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
         // is referred to as the default value. Therefore, we don't call the
         // setHtu(String) method here intentionally. Note that this means you
         // have to set "userInfoEndpoint" properly to support DPoP.
+
+        // HTTP Message Signatures
+        params.setHeaders(extractHeadersAsPairs(request))
+              .setRequestBodyContained(body != null)
+              //.setTargetUri(targetUri)
+              ;
+
+        // We can reconstruct the target URI using request.getRequestURL() and
+        // request.getQueryString() and set it to params by the setTargetUri(URI)
+        // method. However, behind proxies, the constructed URI may be different
+        // from the original one.
+        //
+        // If the "targetUri" parameter is omitted, the value of the "htu"
+        // parameter is used. The "htu" parameter represents the URL of the
+        // userinfo endpoint, which usually serves as the target URI of the
+        // userinfo request. The only exception is when the access token is
+        // specified as a query parameter, as defined in RFC 6750 Section 2.3.
+        // However, RFC 6750 states that this method "SHOULD NOT be used"
+        // unless other methods are not viable.
+        //
+        // If neither the "targetUri" parameter nor the "htu" parameter is
+        // specified, the "userInfoEndpoint" property of the service is used
+        // as a fallback.
 
         return params;
     }
