@@ -1,6 +1,6 @@
 # Production-friendly Dockerfile with multi-stage build and decent layer caching
 
-FROM --platform=$BUILDPLATFORM maven:3.8.5-openjdk-8-slim AS builder
+FROM --platform=$BUILDPLATFORM maven:3.9.9-eclipse-temurin-21 AS builder
 
 WORKDIR /build
 COPY pom.xml .
@@ -9,7 +9,7 @@ COPY src/ /build/src/
 RUN mvn -Dmaven.test.skip=true -Dmaven.javadoc.skip=true package
 
 
-FROM jetty:9.4.46-jre8-slim-openjdk
+FROM jetty:9.4.56-jre21-eclipse-temurin
 
 USER root
 COPY certs/ certs/
