@@ -203,7 +203,7 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
         catch (GeneralSecurityException e)
         {
             throw OBBDCRProcessor.errorResponse(Status.UNAUTHORIZED,
-                    "Client certificate validation failed: %s", e.getMessage());
+                    "Client certificate validation failed", e.getMessage());
         }
     }
 }
