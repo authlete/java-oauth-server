@@ -59,6 +59,7 @@ public class CredentialOfferPageModel extends AuthorizationPageModel
 
     private static final String DEFAULT_CREDENTIAL_CONFIGURATION_IDS =
             "[\n" +
+            "  \"DigitalCredential\",\n" +
             "  \"IdentityCredential\",\n" +
             "  \"org.iso.18013.5.1.mDL\"\n" +
             "]";
