@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Authlete, Inc.
+ * Copyright (C) 2023-2025 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,25 @@ package com.authlete.jaxrs.server.vc;
 import java.util.Arrays;
 
 
+/**
+ * Order formats.
+ *
+ * <p>
+ * NOTE: The media type of SD-JWT VC has been changed from {@code vc+sd-jwt} to
+ * {@code dc+sd-jwt} by <a href="https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/268"
+ * >OAuth-SD-JWT-VC PR 268: change media type from vc+sd-jwt to dc+sd-jwt</a>.
+ * </p>
+ *
+ * @see <a href="https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/268"
+ *      >OAuth-SD-JWT VC PR 268: change media type from vc+sd-jwt to dc+sd-jwt</a>
+ *
+ * @see <a href="https://datatracker.ietf.org/meeting/121/materials/slides-121-oauth-sessb-sd-jwt-and-sd-jwt-vc-02#page=51"
+ *      >IETF 121 Dublin, SD-JWT/SD-JWT VC, Page 51</a>
+ */
 public enum OrderFormat
 {
-    SD_JWT("vc+sd-jwt", new SdJwtOrderProcessor()),
+    DC_SD_JWT("dc+sd-jwt", new SdJwtOrderProcessor()),
+    VC_SD_JWT("vc+sd-jwt", new SdJwtOrderProcessor()),
     MDOC("mso_mdoc", new MdocOrderProcessor()),
     ;
 

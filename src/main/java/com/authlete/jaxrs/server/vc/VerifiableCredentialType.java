@@ -36,6 +36,15 @@ public enum VerifiableCredentialType
             }
     ),
 
+    DIGITAL_CREDENTIAL(
+            "https://credentials.example.com/digital_credential",
+            new String[] {
+                    StandardClaims.GIVEN_NAME,
+                    StandardClaims.FAMILY_NAME,
+                    StandardClaims.BIRTHDATE
+            }
+    ),
+
     /**
      * The vct used in the <a href="https://www.digital-identity-wallet.eu/"
      * >POTENTIAL</a> Interop Event Track 2.
