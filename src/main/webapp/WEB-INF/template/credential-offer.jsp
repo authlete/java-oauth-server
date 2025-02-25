@@ -1,7 +1,7 @@
 <!doctype html>
 <!--<%
 /*
- * Copyright (C) 2016-2023 Authlete, Inc.
+ * Copyright (C) 2016-2025 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,7 +130,7 @@
                 <td colspan="2"><nobr>Credential Configuration IDs</nobr></td>
                 <td>
                   <textarea id="credentialConfigurationIds" name="credentialConfigurationIds"
-                            rows="4" cols="40">${model.credentialConfigurationIds}</textarea>
+                            rows="5" cols="40">${model.credentialConfigurationIds}</textarea>
                 </td>
               </tr>
 
