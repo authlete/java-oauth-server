@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2024 Authlete, Inc.
+ * Copyright (C) 2016-2025 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.util.Utils;
 import com.authlete.jaxrs.BaseTokenEndpoint;
 import com.authlete.jaxrs.TokenRequestHandler.Params;
+import com.authlete.jaxrs.spi.TokenRequestHandlerSpi;
 
 
 /**
@@ -98,8 +99,11 @@ public class TokenEndpoint extends BaseTokenEndpoint
         // Parameters for Authlete's /api/auth/token API.
         Params params = buildParams(request, parameters);
 
+        // The implementation of the SPI.
+        TokenRequestHandlerSpi spi = new TokenRequestHandlerSpiImpl(authleteApi, request);
+
         // Handle the token request.
-        return handle(authleteApi, new TokenRequestHandlerSpiImpl(authleteApi), params);
+        return handle(authleteApi, spi, params);
     }
 
 

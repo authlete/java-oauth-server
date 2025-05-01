@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Authlete, Inc.
+ * Copyright (C) 2022-2025 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,13 @@ package com.authlete.jaxrs.server.api;
 
 
 import java.net.URI;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.dto.TokenCreateRequest;
@@ -58,17 +61,23 @@ import com.nimbusds.jwt.JWTParser;
 class TokenExchanger
 {
     private final AuthleteApi mAuthleteApi;
+    private final HttpServletRequest mRequest;
     private final TokenResponse mTokenResponse;
+    private final Map<String, Object> mHeaders;
 
 
-    public TokenExchanger(AuthleteApi authleteApi, TokenResponse tokenResponse)
+    public TokenExchanger(
+            AuthleteApi authleteApi, HttpServletRequest request,
+            TokenResponse tokenResponse, Map<String, Object> headers)
     {
         mAuthleteApi   = authleteApi;
+        mRequest       = request;
         mTokenResponse = tokenResponse;
+        mHeaders       = headers;
     }
 
 
-    public Response handle()
+    public Response process()
     {
         try
         {
@@ -346,12 +355,29 @@ class TokenExchanger
         cacheControl.setNoCache(true);
         cacheControl.setNoStore(true);
 
-        return Response
-                .status(status)
+        ResponseBuilder builder = Response.status(status)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .cacheControl(cacheControl)
                 .entity(content)
-                .build();
+                ;
+
+        addResponseHeaders(builder, mHeaders);
+
+        return builder.build();
+    }
+
+
+    private static void addResponseHeaders(ResponseBuilder builder, Map<String, Object> headers)
+    {
+        if (headers == null)
+        {
+            return;
+        }
+
+        for (Map.Entry<String, Object> header : headers.entrySet())
+        {
+            builder.header(header.getKey(), header.getValue());
+        }
     }
 
 

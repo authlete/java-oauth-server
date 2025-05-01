@@ -12,6 +12,10 @@
     <listener-class>com.authlete.jaxrs.server.core.AppContextListener</listener-class>
   </listener>
 
+  <listener>
+    <listener-class>com.authlete.jaxrs.server.core.SessionTracker</listener-class>
+  </listener>
+
   <filter>
     <filter-name>API</filter-name>
 
