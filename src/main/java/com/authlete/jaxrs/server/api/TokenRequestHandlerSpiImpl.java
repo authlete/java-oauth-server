@@ -17,6 +17,8 @@
 package com.authlete.jaxrs.server.api;
 
 
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.dto.Property;
@@ -37,11 +39,13 @@ import com.authlete.jaxrs.spi.TokenRequestHandlerSpiAdapter;
 class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
 {
     private final AuthleteApi mAuthleteApi;
+    private final HttpServletRequest mRequest;
 
 
-    public TokenRequestHandlerSpiImpl(AuthleteApi authleteApi)
+    public TokenRequestHandlerSpiImpl(AuthleteApi authleteApi, HttpServletRequest request)
     {
         mAuthleteApi = authleteApi;
+        mRequest     = request;
     }
 
 
@@ -76,18 +80,29 @@ class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
 
 
     @Override
-    public Response tokenExchange(TokenResponse tokenResponse)
+    public Response tokenExchange(
+            TokenResponse tokenResponse, Map<String, Object> headers)
     {
         // Handle the token exchange request (RFC 8693).
-        return new TokenExchanger(mAuthleteApi, tokenResponse).handle();
+        return new TokenExchanger(mAuthleteApi, mRequest, tokenResponse, headers).process();
     }
 
 
     @Override
-    public Response jwtBearer(TokenResponse tokenResponse)
+    public Response jwtBearer(
+            TokenResponse tokenResponse, Map<String, Object> headers)
     {
         // Handle the token request that uses the grant type
         // "urn:ietf:params:oauth:grant-type:jwt-bearer" (RFC 7523).
-        return new JwtAuthzGrantProcessor(mAuthleteApi, tokenResponse).process();
+        return new JwtAuthzGrantProcessor(mAuthleteApi, mRequest, tokenResponse, headers).process();
+    }
+
+
+    @Override
+    public Response nativeSso(TokenResponse tokenResponse, Map<String, Object> headers)
+    {
+        // Handle the token request that complies with the
+        // "OpenID Connect Native SSO for Mobile Apps 1.0" specification.
+        return new NativeSsoProcessor(mAuthleteApi, mRequest, tokenResponse, headers).process();
     }
 }

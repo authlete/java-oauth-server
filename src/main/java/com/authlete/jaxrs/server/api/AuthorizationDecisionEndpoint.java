@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Authlete, Inc.
+ * Copyright (C) 2016-2025 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package com.authlete.jaxrs.server.api;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
@@ -110,7 +109,8 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
         // Implementation of AuthorizationDecisionHandlerSpi.
         AuthorizationDecisionHandlerSpi spi =
             new AuthorizationDecisionHandlerSpiImpl(
-                parameters, user, authTime, idTokenClaims, acrs, client);
+                parameters, user, authTime, idTokenClaims, acrs, client,
+                session.getId());
 
         // Handle the end-user's decision.
         return handle(AuthleteApiFactory.getDefaultApi(), spi, params);

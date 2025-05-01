@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2022 Authlete, Inc.
+ * Copyright (C) 2016-2025 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,6 +105,12 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
 
 
     /**
+     * The session ID of the user's authentication session.
+     */
+    private String mSessionId;
+
+
+    /**
      * Constructor with a request from the form in the authorization page.
      *
      * <p>
@@ -114,7 +120,8 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
      */
     public AuthorizationDecisionHandlerSpiImpl(
             MultivaluedMap<String, String> parameters, User user,
-            Date userAuthenticatedAt, String idTokenClaims, String[] acrs, Client client)
+            Date userAuthenticatedAt, String idTokenClaims, String[] acrs,
+            Client client, String sessionId)
     {
         // If the end-user clicked the "Authorize" button, "authorized"
         // is contained in the request.
@@ -159,6 +166,9 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
 
         // The client associated with the request.
         mClient = client;
+
+        // The session ID of the user's authentication session.
+        mSessionId = sessionId;
     }
 
 
@@ -255,7 +265,7 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
 
         try
         {
-            return (Map<String, Object>)Utils.fromJson(json, Map.class);
+            return Utils.fromJson(json, Map.class);
         }
         catch (Exception e)
         {
@@ -482,5 +492,12 @@ class AuthorizationDecisionHandlerSpiImpl extends AuthorizationDecisionHandlerSp
         // Build the content of "verified_claims" which meets conditions
         // of the request from the available datasets.
         return new VerifiedClaimsBuilder(verifiedClaimsRequest, datasets).build();
+    }
+
+
+    @Override
+    public String getSessionId()
+    {
+        return mSessionId;
     }
 }
