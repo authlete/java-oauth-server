@@ -28,7 +28,10 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.common.api.Options;
 import com.authlete.jaxrs.BaseAuthorizationEndpoint;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -68,8 +71,13 @@ public class AuthorizationEndpoint extends BaseAuthorizationEndpoint
             @Context HttpServletRequest request,
             @Context UriInfo uriInfo)
     {
+        Options requestOptions = new Options();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Request-Id", "my-request-id-authorization-endpoint");
+        requestOptions.setHeaders(headers);
+
         // Handle the authorization request.
-        return handle(request, uriInfo.getQueryParameters());
+        return handle(request, uriInfo.getQueryParameters(), requestOptions);
     }
 
 
@@ -106,5 +114,11 @@ public class AuthorizationEndpoint extends BaseAuthorizationEndpoint
     {
         return handle(AuthleteApiFactory.getDefaultApi(),
                 new AuthorizationRequestHandlerSpiImpl(request), parameters);
+    }
+
+    private Response handle(HttpServletRequest request, MultivaluedMap<String, String> parameters, Options options)
+    {
+        return handle(AuthleteApiFactory.getDefaultApi(),
+                new AuthorizationRequestHandlerSpiImpl(request), parameters, options, options, options);
     }
 }

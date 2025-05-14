@@ -20,6 +20,7 @@ package com.authlete.jaxrs.server.api;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
@@ -33,6 +34,8 @@ import com.authlete.common.types.User;
 import com.authlete.jaxrs.AuthorizationDecisionHandler.Params;
 import com.authlete.jaxrs.server.federation.FederationManager;
 import com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -56,6 +59,8 @@ import com.authlete.jaxrs.spi.AuthorizationRequestHandlerSpiAdapter;
  */
 class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiAdapter
 {
+    private static final Logger logger = LoggerFactory.getLogger(AuthorizationRequestHandlerSpiImpl.class);
+
     /**
      * {@code "text/html;charset=UTF-8"}
      */
@@ -93,6 +98,10 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
     @Override
     public Response generateAuthorizationPage(AuthorizationResponse info)
     {
+        System.out.println("96");
+        Map<String, List<String>> headers = info.getResponseHeaders();
+        logger.debug("{}", headers);
+
         // Create an HTTP session.
         HttpSession session = mRequest.getSession(true);
 
