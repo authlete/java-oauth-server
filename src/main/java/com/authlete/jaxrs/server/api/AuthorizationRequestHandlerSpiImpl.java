@@ -98,9 +98,8 @@ class AuthorizationRequestHandlerSpiImpl extends AuthorizationRequestHandlerSpiA
     @Override
     public Response generateAuthorizationPage(AuthorizationResponse info)
     {
-        System.out.println("96");
         Map<String, List<String>> headers = info.getResponseHeaders();
-        logger.debug("{}", headers);
+        logger.debug("Authorization Endpoint Response Headers: {}", headers);
 
         // Create an HTTP session.
         HttpSession session = mRequest.getSession(true);
