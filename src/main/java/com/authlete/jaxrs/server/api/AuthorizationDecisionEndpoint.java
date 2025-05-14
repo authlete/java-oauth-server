@@ -16,8 +16,9 @@
  */
 package com.authlete.jaxrs.server.api;
 
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
@@ -35,8 +36,6 @@ import com.authlete.jaxrs.AuthorizationDecisionHandler.Params;
 import com.authlete.jaxrs.BaseAuthorizationDecisionEndpoint;
 import com.authlete.jaxrs.server.util.ProcessingUtil;
 import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpi;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -114,11 +113,6 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
                 session.getId());
 
         // Handle the end-user's decision.
-        Options requestOptions = new Options();
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Request-Id", "my-request-id-1-decision-endpoint");
-        requestOptions.setHeaders(headers);
-
-        return handle(AuthleteApiFactory.getDefaultApi(), spi, params, requestOptions, requestOptions);
+        return handle(AuthleteApiFactory.getDefaultApi(), spi, params);
     }
 }
