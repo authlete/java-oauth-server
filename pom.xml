@@ -42,7 +42,7 @@
         <dependency>
           <groupId>org.glassfish.jaxb</groupId>
           <artifactId>jaxb-runtime</artifactId>
-          <version>2.3.1</version>
+          <version>2.3.3</version>
           <scope>runtime</scope>
         </dependency>
       </dependencies>
@@ -53,56 +53,56 @@
     <dependency>
       <groupId>com.authlete</groupId>
       <artifactId>authlete-java-common</artifactId>
-      <version>${authlete.java.common.version}</version>
+      <version>4.19</version>
     </dependency>
 
     <dependency>
       <groupId>com.authlete</groupId>
       <artifactId>authlete-java-jaxrs</artifactId>
-      <version>${authlete.java.jaxrs.version}</version>
+      <version>2.86</version>
     </dependency>
 
     <dependency>
       <groupId>com.authlete</groupId>
       <artifactId>cbor</artifactId>
-      <version>${authlete.cbor.version}</version>
+      <version>1.18</version>
     </dependency>
 
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-      <version>${javax.servlet-api.version}</version>
+      <version>3.1.0</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.glassfish.jersey.containers</groupId>
       <artifactId>jersey-container-servlet</artifactId>
-      <version>${jersey.version}</version>
+      <version>2.34</version>
     </dependency>
 
     <dependency>
       <groupId>org.glassfish.jersey.media</groupId>
       <artifactId>jersey-media-moxy</artifactId>
-      <version>${jersey.version}</version>
+      <version>2.34</version>
     </dependency>
 
     <dependency>
       <groupId>org.glassfish.jersey.ext</groupId>
       <artifactId>jersey-mvc</artifactId>
-      <version>${jersey.version}</version>
+      <version>2.34</version>
     </dependency>
 
     <dependency>
       <groupId>org.glassfish.jersey.ext</groupId>
       <artifactId>jersey-mvc-jsp</artifactId>
-      <version>${jersey.version}</version>
+      <version>2.34</version>
     </dependency>
 
     <dependency>
       <groupId>org.glassfish.jersey.inject</groupId>
       <artifactId>jersey-hk2</artifactId>
-      <version>${jersey.version}</version>
+      <version>2.34</version>
     </dependency>
 
     <dependency>
@@ -114,26 +114,26 @@
     <dependency>
         <groupId>org.bouncycastle</groupId>
         <artifactId>bcpkix-jdk18on</artifactId>
-        <version>1.77</version>
+        <version>1.78.1</version>
     </dependency>
 
     <dependency>
       <groupId>com.nimbusds</groupId>
       <artifactId>oauth2-oidc-sdk</artifactId>
       <classifier>jdk8</classifier>
-      <version>9.22</version>
+      <version>9.43.4</version>
     </dependency>
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <version>1.2.13</version>
+      <version>1.3.15</version>
     </dependency>
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.2.13</version>
+      <version>1.3.15</version>
     </dependency>
 
     <dependency>
