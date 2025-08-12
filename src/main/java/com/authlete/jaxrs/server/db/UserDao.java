@@ -70,7 +70,7 @@ public class UserDao
                         .setCountry("USA")
                         .setLocality("Shoshone")
                         .setStreetAddress("114 Old State Hwy 127")
-                        .setPostaCode("CA 92384"),
+                        .setPostalCode("CA 92384"),
                     null, null, "Inga", "Silverstone", null, null,
                     "https://example.com/inga/profile", "https://example.com/inga/me.jpg",
                     "https://example.com/inga/", "female", "America/Toronto", "en-US",
