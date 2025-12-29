@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Authlete, Inc.
+ * Copyright (C) 2023-2025 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,50 +19,28 @@ package com.authlete.jaxrs.server.api.vci;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.dto.CredentialIssuerMetadataRequest;
-import com.authlete.common.dto.CredentialIssuerMetadataResponse;
-import com.authlete.jaxrs.server.util.ExceptionUtil;
-import com.authlete.jaxrs.server.util.ResponseUtil;
+import com.authlete.jaxrs.BaseCredentialIssuerMetadataEndpoint;
 
 
 @Path("/.well-known/openid-credential-issuer")
-public class CredentialMetadataEndpoint extends AbstractCredentialEndpoint
+public class CredentialMetadataEndpoint extends BaseCredentialIssuerMetadataEndpoint
 {
     @GET
     public Response get()
     {
-        final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        // Authlete API interface
+        AuthleteApi api = AuthleteApiFactory.getDefaultApi();
 
-        return metadata(api);
-    }
-
-
-    private Response metadata(final AuthleteApi api)
-            throws WebApplicationException
-    {
-        final CredentialIssuerMetadataRequest request =
+        // Request to the Authlete's /api/{service-id}/vci/metadata API
+        CredentialIssuerMetadataRequest request =
                 new CredentialIssuerMetadataRequest()
                         .setPretty(true);
 
-        final CredentialIssuerMetadataResponse response =
-                api.credentialIssuerMetadata(request);
-        final String content = response.getResponseContent();
-
-        switch (response.getAction())
-        {
-            case NOT_FOUND:
-                return ResponseUtil.notFoundJson(content);
-
-            case OK:
-                return ResponseUtil.okJson(response.getResponseContent());
-
-            case INTERNAL_SERVER_ERROR:
-            default:
-                throw ExceptionUtil.internalServerErrorExceptionJson(content);
-        }
+        // Process the request.
+        return handle(api, request);
     }
 }

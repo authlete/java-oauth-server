@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Authlete, Inc.
+ * Copyright (C) 2023-2025 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,49 +19,28 @@ package com.authlete.jaxrs.server.api.vci;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.dto.CredentialJwtIssuerMetadataRequest;
-import com.authlete.common.dto.CredentialJwtIssuerMetadataResponse;
-import com.authlete.jaxrs.server.util.ResponseUtil;
+import com.authlete.jaxrs.BaseCredentialJwtIssuerMetadataEndpoint;
 
 
 @Path("/.well-known/{path : jwt-issuer|jwt-vc-issuer}")
-public class CredentialJwtIssuerEndpoint extends AbstractCredentialEndpoint
+public class CredentialJwtIssuerEndpoint extends BaseCredentialJwtIssuerMetadataEndpoint
 {
     @GET
     public Response get()
     {
-        final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        // Authlete API interface
+        AuthleteApi api = AuthleteApiFactory.getDefaultApi();
 
-        return metadata(api);
-    }
-
-
-    private Response metadata(AuthleteApi api) throws WebApplicationException
-    {
+        // Request to the Authlete's /api/{service-id}/vci/jwtissuer API
         CredentialJwtIssuerMetadataRequest request =
                 new CredentialJwtIssuerMetadataRequest()
                         .setPretty(true);
 
-        CredentialJwtIssuerMetadataResponse response =
-                api.credentialJwtIssuerMetadata(request);
-
-        String content = response.getResponseContent();
-
-        switch (response.getAction())
-        {
-            case NOT_FOUND:
-                return ResponseUtil.notFoundJson(content);
-
-            case OK:
-                return ResponseUtil.okJson(content);
-
-            case INTERNAL_SERVER_ERROR:
-            default:
-                return ResponseUtil.internalServerError(content);
-        }
+        // Process the request.
+        return handle(api, request);
     }
 }
