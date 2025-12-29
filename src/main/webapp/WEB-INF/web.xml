@@ -40,6 +40,7 @@
         com.authlete.jaxrs.server.api.vci.BatchCredentialEndpoint,
         com.authlete.jaxrs.server.api.vci.CredentialEndpoint,
         com.authlete.jaxrs.server.api.vci.CredentialMetadataEndpoint,
+        com.authlete.jaxrs.server.api.vci.CredentialNonceEndpoint,
         com.authlete.jaxrs.server.api.vci.CredentialJwtIssuerEndpoint,
         com.authlete.jaxrs.server.api.vci.DeferredCredentialEndpoint,
         com.authlete.jaxrs.server.api.vci.CredentialOfferEndpoint,

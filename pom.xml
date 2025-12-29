@@ -12,9 +12,9 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <authlete.java.common.version>4.22</authlete.java.common.version>
-    <authlete.java.jaxrs.version>2.86</authlete.java.jaxrs.version>
-    <authlete.cbor.version>1.18</authlete.cbor.version>
+    <authlete.java.common.version>4.33</authlete.java.common.version>
+    <authlete.java.jaxrs.version>2.90</authlete.java.jaxrs.version>
+    <authlete.cbor.version>1.21</authlete.cbor.version>
     <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
     <jersey.version>2.34</jersey.version>
     <jetty.version>9.4.27.v20200227</jetty.version>
