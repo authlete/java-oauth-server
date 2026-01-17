@@ -69,7 +69,8 @@
         com.authlete.jaxrs.server.api.obb.ConsentsEndpoint,
         com.authlete.jaxrs.server.api.obb.ResourcesEndpoint,
         org.glassfish.jersey.moxy.json.MoxyJsonFeature,
-        org.glassfish.jersey.server.mvc.jsp.JspMvcFeature
+        org.glassfish.jersey.server.mvc.jsp.JspMvcFeature,
+        com.authlete.jaxrs.server.decorator.FapiInteractionIdResponseFilter,
       </param-value>
     </init-param>
 
