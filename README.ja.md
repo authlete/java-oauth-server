@@ -255,7 +255,7 @@ Authlete はユーザーアカウントを管理しないので、基本的に�
 [6]: https://docs.authlete.com/
 [7]: https://www.authlete.com/
 [8]: https://www.authlete.com/ja/developers/overview/
-[9]: https://so.authlete.com/accounts/signup
+[9]: https://console.authlete.com/register
 [10]: https://www.authlete.com/ja/developers/getting_started/
 [11]: https://www.rfc-editor.org/rfc/rfc6749.html#section-3.1
 [12]: https://www.rfc-editor.org/rfc/rfc6749.html#section-3.2
