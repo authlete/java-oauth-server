@@ -50,6 +50,13 @@ public class FapiInteractionIdResponseFilter implements ContainerResponseFilter
             ContainerRequestContext requestContext,
             ContainerResponseContext responseContext) throws IOException
     {
+        // If the response already contains the x-fapi-interaction-id HTTP header
+        // (e.g., set by an endpoint such as the OBB endpoints), do nothing.
+        if (responseContext.getHeaders().containsKey(CustomHttpHeaders.X_FAPI_INTERACTION_ID))
+        {
+            return;
+        }
+
         // The value of the x-fapi-interaction-id HTTP header in the HTTP request.
         String interactionId = RequestUtility.extractFapiInteractionId(requestContext);
 
