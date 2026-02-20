@@ -15,4 +15,5 @@ USER root
 COPY certs/ certs/
 RUN certs/import-certificate.sh certs/Open_Banking_Brasil_Sandbox_Root_G2.pem
 USER jetty
+ENV JAVA_OPTIONS="$JAVA_OPTIONS -Djetty.httpConfig.requestHeaderSize=65536"
 COPY --from=builder /build/target/*.war /var/lib/jetty/webapps/ROOT.war

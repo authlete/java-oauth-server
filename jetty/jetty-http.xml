@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_3.dtd">
+<Configure id="Server" class="org.eclipse.jetty.server.Server">
+  <New id="httpConfig" class="org.eclipse.jetty.server.HttpConfiguration">
+    <Set name="requestHeaderSize">
+      <Property name="jetty.httpConfig.requestHeaderSize" default="65536" />
+    </Set>
+  </New>
+
+  <New id="httpConnector" class="org.eclipse.jetty.server.ServerConnector">
+    <Arg><Ref id="Server" /></Arg>
+    <Arg>
+      <Array type="org.eclipse.jetty.server.ConnectionFactory">
+        <Item>
+          <New class="org.eclipse.jetty.server.HttpConnectionFactory">
+            <Arg><Ref id="httpConfig" /></Arg>
+          </New>
+        </Item>
+      </Array>
+    </Arg>
+    <Set name="port">
+      <Property name="jetty.http.port" deprecated="jetty.port" default="8080" />
+    </Set>
+  </New>
+
+  <Call name="addConnector">
+    <Arg><Ref id="httpConnector" /></Arg>
+  </Call>
+</Configure>

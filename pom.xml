@@ -188,12 +188,10 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${jetty.version}</version>
         <configuration>
+          <jettyXml>${project.basedir}/jetty/jetty-http.xml</jettyXml>
           <webApp>
             <webInfIncludeJarPattern>.*/.*jersey-[^/]\.jar$</webInfIncludeJarPattern>
           </webApp>
-          <httpConnector>
-            <port>8080</port>
-          </httpConnector>
           <stopPort>9090</stopPort>
           <stopKey>stop</stopKey>
           <systemProperties>
