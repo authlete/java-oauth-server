@@ -58,7 +58,7 @@ public class ConsentDao
     }
 
 
-    public Consent create(CreateConsent createConsent, long clientId)
+    public synchronized Consent create(CreateConsent createConsent, long clientId)
     {
         CreateConsentData data = createConsent.getData();
         String consentId = generateConsentId();
