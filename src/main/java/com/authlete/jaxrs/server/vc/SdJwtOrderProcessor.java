@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2024 Authlete, Inc.
+ * Copyright (C) 2023-2026 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,13 @@ package com.authlete.jaxrs.server.vc;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import com.authlete.common.dto.CredentialRequestInfo;
 import com.authlete.common.types.User;
 
 
+/**
+ * An implementation of {@link OrderProcessor} for SD-JWT VC.
+ */
 public class SdJwtOrderProcessor extends AbstractOrderProcessor
 {
     private static final String KEY_FORMAT = "format";
@@ -31,19 +35,11 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
 
 
     @Override
-    protected void checkPermissions(
-            OrderContext context,
-            List<Map<String, Object>> issuableCredentials,
-            String format, Map<String, Object> requestedCredential)
+    @SuppressWarnings("unchecked")
+    protected void checkPermissions10ID1(
+            List<Map<String, Object>> issuableCredentials, CredentialRequestInfo info)
                     throws InvalidCredentialRequestException
     {
-        // If no issuable credential is associated with the access token.
-        if (issuableCredentials == null)
-        {
-            throw new InvalidCredentialRequestException(
-                    "No credential can be issued with the access token.");
-        }
-
         // As explained in https://www.authlete.com/developers/oid4vci/,
         // it is challenging to implement this step in a manner consistent
         // across all implementations due to the flaws of the OID4VCI spec.
@@ -52,6 +48,14 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
         // as much as possible.
         //
         //   https://datatracker.ietf.org/doc/draft-ietf-oauth-sd-jwt-vc/
+
+        // The credential format requested by the credential request.
+        String format = info.getFormat();
+
+        // The other properties in the credential request rather than the
+        // common ones such as credential_configuration_id.
+        Map<String, Object> requestedCredential =
+                parseJson(info.getDetails(), Map.class);
 
         // The requested credential must contain "vct".
         String vct = extractVct(requestedCredential);
@@ -119,10 +123,13 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
 
 
     @Override
-    protected Map<String, Object> collectClaims(
-            OrderContext context, User user, String format,
-            Map<String, Object> requestedCredential) throws VerifiableCredentialException
+    @SuppressWarnings("unchecked")
+    protected Map<String, Object> collectClaims10ID1(
+            OrderContext context, List<Map<String, Object>> issuableCredentials,
+            CredentialRequestInfo info, User user) throws VerifiableCredentialException
     {
+        Map<String, Object> requestedCredential = parseJson(info.getDetails(), Map.class);
+
         // The "vct" in the requested credential.
         String vctId = (String)requestedCredential.get(KEY_VCT);
 
@@ -145,11 +152,17 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
             return null;
         }
 
+        return buildClaims(user, vct);
+    }
+
+
+    private static Map<String, Object> buildClaims(User user, VerifiableCredentialType vct)
+    {
         // Claims.
         Map<String, Object> claims = new LinkedHashMap<>();
 
         // "vct"
-        claims.put(KEY_VCT, vctId);
+        claims.put(KEY_VCT, vct.getId());
 
         // "sub"
         claims.put(KEY_SUB, user.getSubject());
@@ -169,5 +182,31 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
         }
 
         return claims;
+    }
+
+
+    @Override
+    protected Map<String, Object> collectClaims10Final(
+            OrderContext context, List<Map<String, Object>> issuableCredentials,
+            CredentialRequestInfo info, User user) throws VerifiableCredentialException
+    {
+        // Issuable credential corresponding to the credential request.
+        Map<String, Object> issuableCredential =
+                findMatchingIssuableCredential(issuableCredentials, info);
+
+        // The vct property associated with the issuable credential.
+        String vctId = (String)issuableCredential.get(KEY_VCT);
+
+        // Find a VerifiableCredentialType corresponding to the vct.
+        VerifiableCredentialType vct = VerifiableCredentialType.byId(vctId);
+
+        if (vct == null)
+        {
+            // The vct is not supported.
+            throw new InvalidCredentialRequestException(String.format(
+                    "The vct '%s' is not supported.", vctId));
+        }
+
+        return buildClaims(user, vct);
     }
 }

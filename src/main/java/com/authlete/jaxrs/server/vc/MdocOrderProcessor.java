@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Authlete, Inc.
+ * Copyright (C) 2023-2026 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,38 +25,41 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import com.authlete.common.dto.CredentialRequestInfo;
 import com.authlete.common.types.User;
 import com.authlete.mdoc.constants.MDLClaimNames;
 import com.authlete.mdoc.constants.MDLConstants;
 
 
+/**
+ * An implementation of {@link OrderProcessor} for mdoc.
+ */
 class MdocOrderProcessor extends AbstractOrderProcessor
 {
-    private static final String KEY_CLAIMS   = "claims";
-    private static final String KEY_DOC_TYPE = "doctype";
-    private static final String KEY_FORMAT   = "format";
+    private static final String KEY_CLAIMS              = "claims";
+    private static final String KEY_CREDENTIAL_METADATA = "credential_metadata";
+    private static final String KEY_DOC_TYPE            = "doctype";
+    private static final String KEY_FORMAT              = "format";
+    private static final String KEY_PATH                = "path";
 
 
     @Override
-    protected void checkPermissions(
-            OrderContext context,
-            List<Map<String, Object>> issuableCredentials,
-            String format, Map<String, Object> requestedCredential)
+    @SuppressWarnings("unchecked")
+    protected void checkPermissions10ID1(
+            List<Map<String, Object>> issuableCredentials, CredentialRequestInfo info)
                     throws InvalidCredentialRequestException
     {
-        // If no issuable credential is associated with the access token.
-        if (issuableCredentials == null)
-        {
-            throw new InvalidCredentialRequestException(
-                    "No credential can be issued with the access token.");
-        }
+        // The other properties in the credential request rather than the
+        // common ones such as credential_configuration_id.
+        Map<String, Object> requestedCredential = parseJson(info.getDetails(), Map.class);
 
         // For each issuable credential.
         for (Map<String, Object> issuableCredential : issuableCredentials)
         {
             // If the format of the issuable credential does not match
             // the target format.
-            if (!matchFormat(format, issuableCredential))
+            if (!matchFormat(info.getFormat(), issuableCredential))
             {
                 continue;
             }
@@ -235,12 +238,14 @@ class MdocOrderProcessor extends AbstractOrderProcessor
     }
 
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected Map<String, Object> collectClaims(
-            OrderContext context, User user, String format,
-            Map<String, Object> requestedCredential) throws VerifiableCredentialException
+    @SuppressWarnings("unchecked")
+    protected Map<String, Object> collectClaims10ID1(
+            OrderContext context, List<Map<String, Object>> issuableCredentials,
+            CredentialRequestInfo info, User user) throws VerifiableCredentialException
     {
+        Map<String, Object> requestedCredential = parseJson(info.getDetails(), Map.class);
+
         // The document type of the requested credential.
         String docType = (String)requestedCredential.get(KEY_DOC_TYPE);
 
@@ -413,5 +418,247 @@ class MdocOrderProcessor extends AbstractOrderProcessor
 
         // The seconds between the current time and the expiration datetime.
         return ChronoUnit.SECONDS.between(now, exp);
+    }
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected Map<String, Object> collectClaims10Final(
+            OrderContext context, List<Map<String, Object>> issuableCredentials,
+            CredentialRequestInfo info, User user) throws VerifiableCredentialException
+    {
+        // Issuable credential corresponding to the credential request.
+        Map<String, Object> issuableCredential =
+                findMatchingIssuableCredential(issuableCredentials, info);
+
+        // The doctype property associated with the issuable credential.
+        String docType = (String)issuableCredential.get(KEY_DOC_TYPE);
+
+        // The claims supported by the issuable credential.
+        Map<String, Object> supportedClaims =
+                extractSupportedClaims(issuableCredential);
+
+        // The user's claims for the document type.
+        Map<String, Object> userClaims =
+                (Map<String, Object>)user.getAttribute(docType);
+        if (userClaims == null)
+        {
+            userClaims = Collections.emptyMap();
+        }
+
+        // Build claims
+        Map<String, Object> claims = buildClaims(userClaims, supportedClaims);
+
+        // In the case of mdoc, CredentialIssuanceOrder.credentialPayload
+        // is required to have the following structure.
+        //
+        //   {
+        //     "doctype": "{doctype}",
+        //     "claims": {
+        //       ...
+        //     }
+        //   }
+        //
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put(KEY_DOC_TYPE, docType);
+        payload.put(KEY_CLAIMS,   claims);
+
+        return payload;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> extractSupportedClaims(Map<String, Object> issuableCredential)
+    {
+        // The expected structure of the supported claims in the
+        // issuable credential is as follows:
+        //
+        //   {
+        //     "credential_metadata": {
+        //       ...,
+        //       "claims": [
+        //         {
+        //           "path": ["namespace1", "claimName1"],
+        //           ...
+        //         },
+        //         {
+        //           "path": ["namespace1", "claimName2"],
+        //           ...
+        //         },
+        //         ...
+        //       ]
+        //     }
+        //   }
+        //
+        // Example:
+        //
+        //   {
+        //     "credential_metadata": {
+        //       "claims": [
+        //         { "path": ["org.iso.18013.5.1", "given_name"] },
+        //         { "path": ["org.iso.18013.5.1", "family_name"] }
+        //       ]
+        //     }
+        //   }
+
+        // The code below builds the following from the above structure:
+        //
+        //   {
+        //     "namespace1": {
+        //       "claimName1": {},
+        //       "claimName2": {},
+        //       ...
+        //     },
+        //     ...
+        //   }
+        //
+        // Example:
+        //
+        //   {
+        //     "org.iso.18013.5.1": {
+        //       "given_name": {},
+        //       "family_name": {}
+        //     }
+        //   }
+
+        // Extract credential_metadata.claims as a JSON array from
+        // the issuable credential.
+        List<?> claims = extractCredentialMetadataClaims(issuableCredential);
+
+        if (claims == null)
+        {
+            // No supported claims.
+            return null;
+        }
+
+        Map<String, Object> supportedClaims = new LinkedHashMap<>();
+
+        // For each element in the "claims" array.
+        for (Object claimObject : claims)
+        {
+            // If the element is not a JSON object.
+            if (!(claimObject instanceof Map))
+            {
+                // Unexpected format.
+                continue;
+            }
+
+            processClaimObject(supportedClaims, (Map<String, Object>)claimObject);
+        }
+
+        return supportedClaims;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private static List<?> extractCredentialMetadataClaims(Map<String, Object> issuableCredential)
+    {
+        // The value of "credential_metadata".
+        Object metadataObject = issuableCredential.get(KEY_CREDENTIAL_METADATA);
+
+        // If the issuable credential does not contain "credential_metadata",
+        // or if the value of "credential_metadata" is not a JSON object.
+        if (!(metadataObject instanceof Map))
+        {
+            // No supported claims.
+            return null;
+        }
+
+        // "credential_metadata" as a JSON object.
+        Map<String, Object> metadata = (Map<String, Object>)metadataObject;
+
+        // The value of "claims" under the "credential_metadata" object.
+        Object claimsObject = metadata.get(KEY_CLAIMS);
+
+        // If the metadata does not contain "claims", or if the value of
+        // "claims" is not a JSON array.
+        if (!(claimsObject instanceof List))
+        {
+            // No supported claims.
+            return null;
+        }
+
+        // "claims" as a JSON array.
+        List<?> claims = (List<?>)claimsObject;
+
+        return claims;
+    }
+
+
+    private static void processClaimObject(
+            Map<String, Object> supportedClaims, Map<String, Object> claimObject)
+    {
+        // Extract "path" as a JSON array from the claim object.
+        List<String> path = extractPath(claimObject);
+
+        // If the claim object does not contain a valid "path", or
+        // if the number of elements in the path array is less than 2.
+        if (path == null || path.size() < 2)
+        {
+            // Invalid path.
+            return;
+        }
+
+        // The first element in the path array represents a namespace.
+        String namespace = path.get(0);
+
+        // The second element in the path array represents a top-level claim name.
+        String claimName = path.get(1);
+
+        processNamespaceClaimName(supportedClaims, namespace, claimName);
+    }
+
+
+    private static List<String> extractPath(Map<String, Object> claimObject)
+    {
+        // The value of the "path" in the claim object.
+        Object pathObject = claimObject.get(KEY_PATH);
+
+        // If the claim object does not contain "path", or if the value of
+        // "path" is not a JSON array.
+        if (!(pathObject instanceof List))
+        {
+            // Invalid claim path.
+            return null;
+        }
+
+        // For each element in the "path" array.
+        for (Object element : (List<?>)pathObject)
+        {
+            // If the element is not a string.
+            if (!(element instanceof String))
+            {
+                // Invalid claim path.
+                return null;
+            }
+        }
+
+        // Convert the path object into a string list.
+        return ((List<?>)pathObject).stream()
+                .map(String.class::cast)
+                .collect(Collectors.toList());
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private static void processNamespaceClaimName(
+            Map<String, Object> supportedClaims, String namespace, String claimName)
+    {
+        // Obtain the map for the namespace.
+        Map<String, Object> namespaceObject =
+                (Map<String, Object>)supportedClaims.get(namespace);
+
+        // If a map for the namespace has not been created yet.
+        if (namespaceObject == null)
+        {
+            // Create a map for the namespace.
+            namespaceObject = new LinkedHashMap<>();
+            supportedClaims.put(namespace, namespaceObject);
+        }
+
+        // "namespace": {
+        //   "claimName": {}
+        // }
+        namespaceObject.put(claimName, Collections.emptyMap());
     }
 }
