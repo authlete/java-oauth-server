@@ -156,6 +156,14 @@ public class SdJwtOrderProcessor extends AbstractOrderProcessor
     }
 
 
+    @Override
+    protected long computeCredentialDuration()
+    {
+        // 30 days in seconds.
+        return 30 * 24 * 60 * 60;
+    }
+
+
     private static Map<String, Object> buildClaims(User user, VerifiableCredentialType vct)
     {
         // Claims.
