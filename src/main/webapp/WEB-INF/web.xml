@@ -71,6 +71,7 @@
         org.glassfish.jersey.moxy.json.MoxyJsonFeature,
         org.glassfish.jersey.server.mvc.jsp.JspMvcFeature,
         com.authlete.jaxrs.server.decorator.FapiInteractionIdResponseFilter,
+        com.authlete.jaxrs.server.api.attestation.AttestationChallengeEndpoint,
       </param-value>
     </init-param>
 
