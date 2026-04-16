@@ -47,7 +47,7 @@ import com.authlete.jaxrs.server.vc.OrderContext;
 public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
 {
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes({ MediaType.APPLICATION_JSON, "application/jwt" })
     public Response post(
             @Context HttpServletRequest request,
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
