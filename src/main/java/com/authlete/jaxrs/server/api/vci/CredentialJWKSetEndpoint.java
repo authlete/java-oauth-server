@@ -22,7 +22,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.CredentialIssuerJwksRequest;
 import com.authlete.common.dto.CredentialIssuerJwksResponse;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
@@ -35,7 +35,7 @@ public class CredentialJWKSetEndpoint extends AbstractCredentialEndpoint
     @GET
     public Response get()
     {
-        final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        final AuthleteApi api = ResilientAuthleteApiFactory.getDefaultApi();
 
         return process(api);
     }

@@ -21,7 +21,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.CredentialNonceRequest;
 import com.authlete.jaxrs.BaseCredentialNonceEndpoint;
 
@@ -64,7 +64,7 @@ public class CredentialNonceEndpoint extends BaseCredentialNonceEndpoint
     public Response post()
     {
         // Authlete API interface
-        AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        AuthleteApi api = ResilientAuthleteApiFactory.getDefaultApi();
 
         // Request to the Authlete's /api/{service-id}/vci/nonce API
         CredentialNonceRequest request =

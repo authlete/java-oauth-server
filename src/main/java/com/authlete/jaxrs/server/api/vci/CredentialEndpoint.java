@@ -30,7 +30,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.CredentialIssuanceOrder;
 import com.authlete.common.dto.CredentialRequestInfo;
 import com.authlete.common.dto.CredentialSingleIssueRequest;
@@ -55,7 +55,7 @@ public class CredentialEndpoint extends AbstractCredentialEndpoint
             @QueryParam("deferred") String deferred,
             String requestContent)
     {
-        final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        final AuthleteApi api = ResilientAuthleteApiFactory.getDefaultApi();
 
         // Extract the access token from the request.
         String accessToken = extractAccessToken(authorization, null);

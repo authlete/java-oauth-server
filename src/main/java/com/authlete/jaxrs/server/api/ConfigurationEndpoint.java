@@ -22,7 +22,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.ServiceConfigurationRequest;
 import com.authlete.jaxrs.BaseConfigurationEndpoint;
 
@@ -105,7 +105,7 @@ public class ConfigurationEndpoint extends BaseConfigurationEndpoint
             )
     {
         // An AuthleteApi instance to access Authlete APIs.
-        AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        AuthleteApi api = ResilientAuthleteApiFactory.getDefaultApi();
 
         // If either or both of the 'pretty' request parameter
         // and the 'patch' request parameter are given.

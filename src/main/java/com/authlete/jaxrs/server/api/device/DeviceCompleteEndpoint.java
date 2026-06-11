@@ -28,7 +28,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.BaseDeviceCompleteEndpoint;
 
@@ -125,7 +125,7 @@ public class DeviceCompleteEndpoint extends BaseDeviceCompleteEndpoint
             MultivaluedMap<String, String> parameters, User user, Date userAuthenticatedAt,
             String[] acrs, String userCode, String[] claimNames)
     {
-        return handle(AuthleteApiFactory.getDefaultApi(), new DeviceCompleteRequestHandlerSpiImpl(
+        return handle(ResilientAuthleteApiFactory.getDefaultApi(), new DeviceCompleteRequestHandlerSpiImpl(
                 parameters, user, userAuthenticatedAt, acrs), userCode, claimNames);
     }
 }
