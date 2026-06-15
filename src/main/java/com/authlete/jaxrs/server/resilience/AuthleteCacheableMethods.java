@@ -176,21 +176,19 @@ class AuthleteCacheableMethods
 
         // The key must capture every remaining input that influences the
         // introspection result, so that requests differing in any binding
-        // (e.g. mTLS client certificate or target URI) never share an entry.
+        // never share an entry. Parameters that only apply to DPoP or HTTP
+        // message signature requests (htm, htu, targetUri, uri,
+        // dpopNonceRequired, requestBodyContained) are intentionally omitted:
+        // those requests are excluded above, so such parameters do not affect
+        // the result of a cacheable request.
         StringBuilder detail = new StringBuilder();
         detail.append(req.getToken());
         detail.append('|').append(join(req.getScopes()));
         detail.append('|').append(req.getSubject());
         detail.append('|').append(req.getClientCertificate());
-        detail.append('|').append(req.getHtm());
-        detail.append('|').append(req.getHtu());
         detail.append('|').append(join(req.getResources()));
-        detail.append('|').append(req.getUri());
-        detail.append('|').append(req.getTargetUri());
         detail.append('|').append(join(req.getAcrValues()));
         detail.append('|').append(req.getMaxAge());
-        detail.append('|').append(req.isRequestBodyContained());
-        detail.append('|').append(req.isDpopNonceRequired());
 
         return key("introspection", detail.toString(),
                 config.getCacheTtlIntrospection(), true);

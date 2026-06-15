@@ -48,7 +48,7 @@ class AuthleteRetryPolicy
 {
     // Common spellings of the rate-limit reset header, matched case-insensitively.
     private static final String[] RESET_HEADERS = {
-        "RateLimit-Reset", "Ratelimit-Reset", "X-RateLimit-Reset", "Retry-After"
+        "RateLimit-Reset", "X-RateLimit-Reset", "Retry-After"
     };
 
 
