@@ -18,7 +18,7 @@ package com.authlete.jaxrs.server.api.obb;
 
 
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.IntrospectionResponse;
 import com.authlete.jaxrs.server.obb.model.AccountData;
 import com.authlete.jaxrs.server.obb.model.Links;
@@ -57,7 +57,7 @@ public class FAPI2BaseAccountsEndpoint
                 ObbUtils.computeOutgoingInteractionId(code, incomingInteractionId);
 
         // Validate the access token.
-        AuthleteApi authleteApi = AuthleteApiFactory.getDefaultApi();
+        AuthleteApi authleteApi = ResilientAuthleteApiFactory.getDefaultApi();
         IntrospectionResponse info = ObbUtils.validateAccessToken(
                 outgoingInteractionId, code, authleteApi, request, "fapi2base-accounts");
 

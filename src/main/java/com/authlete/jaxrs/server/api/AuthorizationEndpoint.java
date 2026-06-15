@@ -27,7 +27,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.jaxrs.BaseAuthorizationEndpoint;
 
 
@@ -104,7 +104,7 @@ public class AuthorizationEndpoint extends BaseAuthorizationEndpoint
      */
     private Response handle(HttpServletRequest request, MultivaluedMap<String, String> parameters)
     {
-        return handle(AuthleteApiFactory.getDefaultApi(),
+        return handle(ResilientAuthleteApiFactory.getDefaultApi(),
                 new AuthorizationRequestHandlerSpiImpl(request), parameters);
     }
 }

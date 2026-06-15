@@ -29,7 +29,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.Client;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.AuthorizationDecisionHandler.Params;
@@ -113,7 +113,7 @@ public class AuthorizationDecisionEndpoint extends BaseAuthorizationDecisionEndp
                 session.getId());
 
         // Handle the end-user's decision.
-        return handle(AuthleteApiFactory.getDefaultApi(), spi, params);
+        return handle(ResilientAuthleteApiFactory.getDefaultApi(), spi, params);
     }
 
 }

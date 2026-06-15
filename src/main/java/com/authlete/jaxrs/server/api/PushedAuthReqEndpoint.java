@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.jaxrs.BasePushedAuthReqEndpoint;
 import com.authlete.jaxrs.PushedAuthReqHandler.Params;
 
@@ -40,7 +40,7 @@ public class PushedAuthReqEndpoint extends BasePushedAuthReqEndpoint
             MultivaluedMap<String, String> parameters)
     {
         // Authlete API
-        AuthleteApi authleteApi = AuthleteApiFactory.getDefaultApi();
+        AuthleteApi authleteApi = ResilientAuthleteApiFactory.getDefaultApi();
 
         // Parameters for Authlete's pushed_auth_req API.
         Params params = buildParams(request, parameters);
