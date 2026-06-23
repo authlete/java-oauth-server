@@ -40,8 +40,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
-import com.authlete.jaxrs.util.CertificateUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import com.authlete.jakarta.util.CertificateUtils;
 
 
 public class CertValidator

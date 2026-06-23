@@ -21,23 +21,23 @@ import static com.authlete.jaxrs.server.util.ExceptionUtil.internalServerErrorEx
 import java.net.URI;
 import java.util.Date;
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import org.glassfish.jersey.client.ClientProperties;
 import com.authlete.common.dto.BackchannelAuthenticationCompleteRequest.Result;
 import com.authlete.common.dto.BackchannelAuthenticationCompleteResponse;
 import com.authlete.common.types.User;
-import com.authlete.jaxrs.spi.BackchannelAuthenticationCompleteRequestHandlerSpiAdapter;
+import com.authlete.jakarta.spi.BackchannelAuthenticationCompleteRequestHandlerSpiAdapter;
 
 
 /**
- * Implementation of {@link com.authlete.jaxrs.spi.BackchannelAuthenticationCompleteRequestHandlerSpi
+ * Implementation of {@link com.authlete.jakarta.spi.BackchannelAuthenticationCompleteRequestHandlerSpi
  * BackchannelAuthenticationCompleteRequestHandlerSpi} interface which needs to
- * be given to the constructor of {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+ * be given to the constructor of {@link com.authlete.jakarta.BackchannelAuthenticationCompleteRequestHandler
  * BackchannelAuthenticationCompleteRequestHandler}.
  *
  * @author Hideki Ikeda

@@ -19,8 +19,8 @@ package com.authlete.jaxrs.server.core;
 
 import java.security.Provider;
 import java.security.Security;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import com.nimbusds.jose.crypto.bc.BouncyCastleProviderSingleton;
 
 

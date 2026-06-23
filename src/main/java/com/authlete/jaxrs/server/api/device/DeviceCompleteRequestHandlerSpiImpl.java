@@ -21,17 +21,17 @@ import static com.authlete.jaxrs.server.util.ResponseUtil.badRequest;
 import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerError;
 import static com.authlete.jaxrs.server.util.ResponseUtil.ok;
 import java.util.Date;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 import com.authlete.common.dto.DeviceCompleteRequest.Result;
 import com.authlete.common.types.User;
-import com.authlete.jaxrs.spi.DeviceCompleteRequestHandlerSpiAdapter;
+import com.authlete.jakarta.spi.DeviceCompleteRequestHandlerSpiAdapter;
 
 
 /**
- * Implementation of {@link com.authlete.jaxrs.spi.DeviceCompleteRequestHandlerSpi
+ * Implementation of {@link com.authlete.jakarta.spi.DeviceCompleteRequestHandlerSpi
  * DeviceCompleteRequestHandlerSpi} interface which needs to be given to the constructor
- * of {@link com.authlete.jaxrs.DeviceCompleteRequestHandler DeviceCompleteRequestHandler}.
+ * of {@link com.authlete.jakarta.DeviceCompleteRequestHandler DeviceCompleteRequestHandler}.
  *
  * @author Hideki Ikeda
  */

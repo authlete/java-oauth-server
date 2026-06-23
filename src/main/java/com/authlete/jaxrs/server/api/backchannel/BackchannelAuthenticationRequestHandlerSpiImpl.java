@@ -18,7 +18,7 @@ package com.authlete.jaxrs.server.api.backchannel;
 
 
 import java.util.concurrent.Executors;
-import javax.ws.rs.WebApplicationException;
+import jakarta.ws.rs.WebApplicationException;
 import com.authlete.common.dto.BackchannelAuthenticationIssueResponse;
 import com.authlete.common.dto.BackchannelAuthenticationResponse;
 import com.authlete.common.dto.Scope;
@@ -27,7 +27,7 @@ import com.authlete.common.types.UserIdentificationHintType;
 import com.authlete.jaxrs.server.ServerConfig;
 import com.authlete.jaxrs.server.ad.type.Mode;
 import com.authlete.jaxrs.server.db.UserDao;
-import com.authlete.jaxrs.spi.BackchannelAuthenticationRequestHandlerSpiAdapter;
+import com.authlete.jakarta.spi.BackchannelAuthenticationRequestHandlerSpiAdapter;
 
 
 public class BackchannelAuthenticationRequestHandlerSpiImpl extends BackchannelAuthenticationRequestHandlerSpiAdapter

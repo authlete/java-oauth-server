@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 import com.authlete.common.assurance.VerifiedClaims;
 import com.authlete.common.assurance.constraint.VerifiedClaimsConstraint;
 import com.authlete.common.dto.Client;
@@ -36,13 +36,13 @@ import com.authlete.common.util.Utils;
 import com.authlete.jaxrs.server.db.DatasetDao;
 import com.authlete.jaxrs.server.db.VerifiedClaimsDao;
 import com.authlete.jaxrs.server.util.ResponseUtil;
-import com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpiAdapter;
+import com.authlete.jakarta.spi.AuthorizationDecisionHandlerSpiAdapter;
 
 
 /**
- * Implementation of {@link com.authlete.jaxrs.spi.AuthorizationDecisionHandlerSpi
+ * Implementation of {@link com.authlete.jakarta.spi.AuthorizationDecisionHandlerSpi
  * AuthorizationDecisionHandlerSpi} interface which needs to be given
- * to the constructor of {@link com.authlete.jaxrs.AuthorizationDecisionHandler
+ * to the constructor of {@link com.authlete.jakarta.AuthorizationDecisionHandler
  * AuthorizationDecisionHandler}.
  *
  * <p>

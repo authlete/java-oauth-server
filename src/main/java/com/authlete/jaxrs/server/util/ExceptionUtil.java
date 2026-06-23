@@ -26,7 +26,7 @@ import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerErrorJso
 import static com.authlete.jaxrs.server.util.ResponseUtil.notFound;
 import static com.authlete.jaxrs.server.util.ResponseUtil.unauthorized;
 import java.util.Map;
-import javax.ws.rs.WebApplicationException;
+import jakarta.ws.rs.WebApplicationException;
 import org.glassfish.jersey.server.mvc.Viewable;
 
 

@@ -27,7 +27,7 @@ import javax.imageio.ImageIO;
 import com.authlete.common.dto.CredentialOfferCreateRequest;
 import com.authlete.common.dto.CredentialOfferInfo;
 import com.authlete.common.types.User;
-import com.authlete.jaxrs.AuthorizationPageModel;
+import com.authlete.jakarta.AuthorizationPageModel;
 import com.authlete.jaxrs.server.util.ExceptionUtil;
 import com.authlete.jaxrs.server.util.ProcessingUtil;
 import com.google.gson.Gson;
