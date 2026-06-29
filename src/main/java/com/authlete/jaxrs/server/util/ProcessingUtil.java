@@ -5,9 +5,9 @@ import static com.authlete.jaxrs.server.util.ExceptionUtil.badRequestException;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.MultivaluedMap;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.ws.rs.core.MultivaluedMap;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.server.db.UserDao;
 

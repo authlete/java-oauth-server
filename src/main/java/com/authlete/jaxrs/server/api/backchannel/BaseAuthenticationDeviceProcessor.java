@@ -25,7 +25,7 @@ import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.dto.Scope;
 import com.authlete.common.dto.BackchannelAuthenticationCompleteRequest.Result;
 import com.authlete.common.types.User;
-import com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler;
+import com.authlete.jakarta.BackchannelAuthenticationCompleteRequestHandler;
 import com.authlete.jaxrs.server.ServerConfig;
 import com.authlete.jaxrs.server.ad.AuthenticationDevice;
 
@@ -121,7 +121,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
 
     /**
-     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * Delegate the process to {@link com.authlete.jakarta.BackchannelAuthenticationCompleteRequestHandler
      * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
      * Result#AUTHORIZED AUTHORIZED}. This method is equivalent to {@link #complete(Result,
      * Date) complete}({@link Result}.{@link Result#AUTHORIZED AUTHORIZED}, {@code authTime},
@@ -140,7 +140,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
 
     /**
-     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * Delegate the process to {@link com.authlete.jakarta.BackchannelAuthenticationCompleteRequestHandler
      * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
      * Result#ACCESS_DENIED ACCESS_DENIED}, the description of the error and the
      * URI of a document which describes the error in detail. This method is
@@ -161,7 +161,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
 
     /**
-     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * Delegate the process to {@link com.authlete.jakarta.BackchannelAuthenticationCompleteRequestHandler
      * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
      * Result#ACCESS_DENIED ACCESS_DENIED} and the description of the error. This
      * method is equivalent to {@link #completeWithAccessDenied(String, URI)
@@ -177,7 +177,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
 
     /**
-     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * Delegate the process to {@link com.authlete.jakarta.BackchannelAuthenticationCompleteRequestHandler
      * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
      * Result#ACCESS_DENIED ACCESS_DENIED} and the URI of a document which describes
      * the error in detail. This method is equivalent to {@link #completeWithAccessDenied(String, URI)
@@ -193,7 +193,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
 
     /**
-     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * Delegate the process to {@link com.authlete.jakarta.BackchannelAuthenticationCompleteRequestHandler
      * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
      * Result#ACCESS_DENIED ACCESS_DENIED}. This method is equivalent to {@link
      * #completeWithAccessDenied(String, URI) completeWithAccessDenied}({@code null}
@@ -206,7 +206,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
 
     /**
-     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * Delegate the process to {@link com.authlete.jakarta.BackchannelAuthenticationCompleteRequestHandler
      * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
      * Result#TRANSACTION_FAILED TRANSACTION_FAILED}, the description of the error
      * and the URI of a document which describes the error in detail. This method
@@ -227,7 +227,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
 
     /**
-     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * Delegate the process to {@link com.authlete.jakarta.BackchannelAuthenticationCompleteRequestHandler
      * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
      * Result#TRANSACTION_FAILED TRANSACTION_FAILED} and the description of the
      * error. This method is equivalent to {@link #completeWithTransactionFailed
@@ -244,7 +244,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
 
     /**
-     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * Delegate the process to {@link com.authlete.jakarta.BackchannelAuthenticationCompleteRequestHandler
      * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
      * Result#TRANSACTION_FAILED TRANSACTION_FAILED} and the URI of a document
      * which describes the error in detail. This method is equivalent to {@link
@@ -261,7 +261,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
 
     /**
-     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * Delegate the process to {@link com.authlete.jakarta.BackchannelAuthenticationCompleteRequestHandler
      * BackchannelAuthenticationCompleteRequestHandler} with the result of {@link
      * Result#TRANSACTION_FAILED TRANSACTION_FAILED}. This method is equivalent
      * to {@link #completeWithTransactionFailed(String, URI) completeWithTransactionFailed}
@@ -274,7 +274,7 @@ public abstract class BaseAuthenticationDeviceProcessor implements Authenticatio
 
 
     /**
-     * Delegate the process to {@link com.authlete.jaxrs.BackchannelAuthenticationCompleteRequestHandler
+     * Delegate the process to {@link com.authlete.jakarta.BackchannelAuthenticationCompleteRequestHandler
      * BackchannelAuthenticationCompleteRequestHandler}.
      *
      * @param result

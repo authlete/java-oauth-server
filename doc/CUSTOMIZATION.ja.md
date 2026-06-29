@@ -35,26 +35,26 @@ java-oauth-server のソースツリー内ではなくクラウド上の Authlet
 
 Authlete が提供する [Web API][4] を使い、認可サーバーを書くことができます。
 [authlete-java-common][5] は、その Web API と直接通信をおこなうライブラリです。
-[authlete-java-jaxrs][6] は、[authlete-java-common API][7]
+[authlete-java-jakarta][6] は、[authlete-java-common API][7]
 をラッピングするユーティリティークラス群を含むライブラリで、それらのクラス群を使えば、
 authlete-java-common API を直接使用するよりもかなり簡単に認可サーバーを書くことができます。
-java-oauth-server は、authlete-java-jaxrs のユーティリティークラス群によって構成される
-[authlete-java-jaxrs API][8] を使用して書かれています。
+java-oauth-server は、authlete-java-jakarta のユーティリティークラス群によって構成される
+[authlete-java-jakarta API][8] を使用して書かれています。
 
-名前が示唆するように、authlete-java-jaxrs ライブラリは JAX-RS 2.0 API に依存しています。
-JAX-RS は _The Java API for RESTful Web Services_ の略称です。
-JAX-RS 2.0 API は [JSR 339][9] で標準化され、Java EE 7 に含まれています。
+名前が示唆するように、authlete-java-jakarta ライブラリは Jakarta RESTful Web Services API
+(_Jakarta REST_、旧称 JAX-RS) に依存しています。 Jakarta REST は [Jakarta EE][9] の一部です。
+この認可サーバーは Jakarta EE 10 (Jakarta REST 3.1 / Servlet 6.0) を対象としています。
 
 次の図は、これまでに言及したコンポーネント群の関係を示したものです。
 
 ```
-+-------------------------------+
-|          java-oauth-server    |
-+----+--------------------------+
-|    |     authlete-java-jaxrs  |
-|    +---+----------------------+          +----------+
-| JAX-RS | authlete-java-common | <------> | Authlete |
-+--------+----------------------+          +----------+
++----------------------------------+
+|          java-oauth-server       |
++---------+------------------------+
+|         | authlete-java-jakarta  |
+|         +----+-------------------+          +----------+
+| Jakarta | authlete-java-common   | <------> | Authlete |
++---------+------------------------+          +----------+
 ```
 
 
@@ -67,14 +67,14 @@ OAuth 2.0 に加えて OpenID Connect もサポートしているにもかかわ
 
 実装では、<code>[AuthorizationRequestHandler][15]</code>
 クラスを使い、認可リクエストを処理する作業をそのクラスの `handle()` メソッドに委譲しています。
-クラスの詳細については [authlete-java-jaxrs][6] ライブラリの README ファイルに書かれています。
+クラスの詳細については [authlete-java-jakarta][6] ライブラリの README ファイルに書かれています。
 ここで重要なのは、このクラスのコンストラクタが <code>[AuthorizationRequestHandlerSpi][16]</code>
 インターフェースの実装を必要とし、その実装はあなたが提供しなければならないという点です。
 別の言い方をすると、`AuthorizationRequestHandlerSpi`
 インターフェースのメソッド群がカスタマイズポイントです。
 
 当該インターフェースには、次のようなメソッド群が定義されています。
-これらのメソッド群の要求事項の詳細については authlete-java-jaxrs API の
+これらのメソッド群の要求事項の詳細については authlete-java-jakarta API の
 [JavaDoc][8] を参照してください。
 
   1. `boolean isUserAuthenticated()`
@@ -121,8 +121,8 @@ java-oauth-server の現在の実装では、(Authlete の `/api/auth/authorizat
 からの応答を表す <code>[AuthorizationResponse][20]</code> クラスのインスタンスである)
 引数からデータを取り出し、そのデータを <code>[authorization.jsp][21]</code>
 という HTML テンプレートに埋め込みます。 これをおこなうため、実装では `Viewable`
-というクラスを使用しています。 このクラスは [Jersey][12] (JAX-RS のレファレンス実装)
-に含まれていますが、JAX-RS 2.0 API の一部ではありません。
+というクラスを使用しています。 このクラスは [Jersey][12] (Jakarta REST のレファレンス実装)
+に含まれていますが、Jakarta REST API の一部ではありません。
 
 認可ページをカスタマイズしたい場合は、`generateAuthorizationPage()`
 メソッドと認可ページのテンプレート (`authorization.jsp`)
@@ -200,13 +200,13 @@ java-oauth-server の現在の実装は、エンドユーザーの決定を `/ap
 
 実装では、<code>[AuthorizationDecisionHandler][30]</code>
 クラスを使い、エンドユーザーの決定を処理する作業をそのクラスの `handle()` メソッドに委譲しています。
-クラスの詳細については [authlete-java-jaxrs][6] ライブラリの README ファイルに書かれています。
+クラスの詳細については [authlete-java-jakarta][6] ライブラリの README ファイルに書かれています。
 ここで重要なのは、このクラスのコンストラクタが <code>[AuthorizationDecisionHandlerSpi][31]</code>
 インターフェースの実装を必要とし、その実装はあなたが提供しなければならないという点です。
 別の言い方をすると、`AuthorizationDecisionHandlerSpi` インターフェースのメソッド群がカスタマイズポイントです。
 
 当該インターフェースには、次のようなメソッド群が定義されています。
-これらのメソッド群の要求事項の詳細については authlete-java-jaxrs API の
+これらのメソッド群の要求事項の詳細については authlete-java-jakarta API の
 [JavaDoc][8] を参照してください。
 
   1. `boolean isClientAuthorized()`
@@ -281,7 +281,7 @@ Authlete に伝える必要があります。 `AuthorizationDecisionhandlerSpi` 
 
 実装では、<code>[TokenRequestHandler][24]</code>
 クラスを使い、トークンリクエストを処理する作業をそのクラスの `handle()` メソッドに委譲しています。
-クラスの詳細については [authlete-java-jaxrs][6] ライブラリの README ファイルに書かれています。
+クラスの詳細については [authlete-java-jakarta][6] ライブラリの README ファイルに書かれています。
 ここで重要なのは、このクラスのコンストラクタが <code>[TokenRequestHandlerSpi][25]</code>
 インターフェースの実装を必要とし、その実装はあなたが提供しなければならないという点です。
 別の言い方をすると、`TokenRequestHandlerSpi` インターフェースのメソッド群がカスタマイズポイントです。
@@ -331,8 +331,8 @@ class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
 - [Authlete][1] - Authlete ホームページ
 - [authlete-java-common][5] - Java 用 Authlete 共通ライブラリ
 - [authlete-java-common API][7] - Java 用 Authlete 共通ライブラリの JavaDoc
-- [authlete-java-jaxrs][6] - JAX-RS (Java) 用 Authlete ライブラリ
-- [authlete-java-jaxrs API][8] - JAX-RS (Java) 用 Authlete ライブラリの JavaDoc
+- [authlete-java-jakarta][6] - Jakarta (Java) 用 Authlete ライブラリ
+- [authlete-java-jakarta API][8] - Jakarta (Java) 用 Authlete ライブラリの JavaDoc
 
 
 コンタクト
@@ -351,33 +351,33 @@ class TokenRequestHandlerSpiImpl extends TokenRequestHandlerSpiAdapter
 [3]: https://openid.net/connect/
 [4]: https://docs.authlete.com/
 [5]: https://github.com/authlete/authlete-java-common
-[6]: https://github.com/authlete/authlete-java-jaxrs
+[6]: https://github.com/authlete/authlete-java-jakarta
 [7]: https://authlete.github.io/authlete-java-common/
-[8]: https://authlete.github.io/authlete-java-jaxrs/
-[9]: https://jcp.org/en/jsr/detail?id=339
+[8]: https://authlete.github.io/authlete-java-jakarta/
+[9]: https://jakarta.ee/specifications/restful-ws/
 [10]: https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest
 [11]: https://openid.net/specs/openid-connect-core-1_0.html
 [12]: https://jersey.java.net/
 [13]: https://www.authlete.com/documents/so_console/
 [14]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationEndpoint.java
-[15]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/AuthorizationRequestHandler.html
-[16]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationRequestHandlerSpi.html
-[17]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationRequestHandlerSpi.html#generateAuthorizationPage-com.authlete.common.dto.AuthorizationResponse-
+[15]: https://authlete.github.io/authlete-java-jakarta/com/authlete/jakarta/AuthorizationRequestHandler.html
+[16]: https://authlete.github.io/authlete-java-jakarta/com/authlete/jakarta/spi/AuthorizationRequestHandlerSpi.html
+[17]: https://authlete.github.io/authlete-java-jakarta/com/authlete/jakarta/spi/AuthorizationRequestHandlerSpi.html#generateAuthorizationPage-com.authlete.common.dto.AuthorizationResponse-
 [18]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationRequestHandlerSpiImpl.java
-[19]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationRequestHandlerSpiAdapter.html
+[19]: https://authlete.github.io/authlete-java-jakarta/com/authlete/jakarta/spi/AuthorizationRequestHandlerSpiAdapter.html
 [20]: https://authlete.github.io/authlete-java-common/com/authlete/common/dto/AuthorizationResponse.html
 [21]: ../src/main/webapp/WEB-INF/template/authorization.jsp
 [22]: https://authlete.github.io/authlete-java-common/com/authlete/common/types/Display.html
 [23]: ../src/main/java/com/authlete/jaxrs/server/api/TokenEndpoint.java
-[24]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/TokenRequestHandler.html
-[25]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/TokenRequestHandlerSpi.html
+[24]: https://authlete.github.io/authlete-java-jakarta/com/authlete/jakarta/TokenRequestHandler.html
+[25]: https://authlete.github.io/authlete-java-jakarta/com/authlete/jakarta/spi/TokenRequestHandlerSpi.html
 [26]: https://tools.ietf.org/html/rfc6749#section-4.3
 [27]: ../src/main/java/com/authlete/jaxrs/server/api/TokenRequestHandlerSpiImpl.java
-[28]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/TokenRequestHandlerSpiAdapter.html
+[28]: https://authlete.github.io/authlete-java-jakarta/com/authlete/jakarta/spi/TokenRequestHandlerSpiAdapter.html
 [29]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationDecisionEndpoint.java
-[30]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/AuthorizationDecisionHandler.html
-[31]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationDecisionHandlerSpi.html
+[30]: https://authlete.github.io/authlete-java-jakarta/com/authlete/jakarta/AuthorizationDecisionHandler.html
+[31]: https://authlete.github.io/authlete-java-jakarta/com/authlete/jakarta/spi/AuthorizationDecisionHandlerSpi.html
 [32]: ../src/main/java/com/authlete/jaxrs/server/api/AuthorizationDecisionHandlerSpiImpl.java
-[33]: https://authlete.github.io/authlete-java-jaxrs/com/authlete/jaxrs/spi/AuthorizationDecisionHandlerSpiAdapter.html
+[33]: https://authlete.github.io/authlete-java-jakarta/com/authlete/jakarta/spi/AuthorizationDecisionHandlerSpiAdapter.html
 [34]: ../src/main/java/com/authlete/jaxrs/server/api/IntrospectionEndpoint.java
 [35]: https://tools.ietf.org/html/rfc7662

@@ -21,14 +21,14 @@ import static com.authlete.jaxrs.server.util.ResponseUtil.badRequest;
 import static com.authlete.jaxrs.server.util.ResponseUtil.internalServerError;
 import static com.authlete.jaxrs.server.util.ResponseUtil.notFound;
 import static com.authlete.jaxrs.server.util.ResponseUtil.ok;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.Response;
+import jakarta.servlet.http.HttpSession;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.server.mvc.Viewable;
 import com.authlete.common.dto.DeviceVerificationResponse;
 import com.authlete.common.types.User;
-import com.authlete.jaxrs.DeviceAuthorizationPageModel;
-import com.authlete.jaxrs.DeviceVerificationPageModel;
-import com.authlete.jaxrs.spi.DeviceVerificationRequestHandlerSpiAdapter;
+import com.authlete.jakarta.DeviceAuthorizationPageModel;
+import com.authlete.jakarta.DeviceVerificationPageModel;
+import com.authlete.jakarta.spi.DeviceVerificationRequestHandlerSpiAdapter;
 
 
 /**

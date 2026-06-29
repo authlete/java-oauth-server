@@ -1,6 +1,6 @@
 # Production-friendly Dockerfile with multi-stage build and decent layer caching
 
-FROM --platform=$BUILDPLATFORM maven:3.9.9-eclipse-temurin-21 AS builder
+FROM --platform=$BUILDPLATFORM maven:3.9-eclipse-temurin-25 AS builder
 
 WORKDIR /build
 COPY pom.xml .
@@ -9,11 +9,17 @@ COPY src/ /build/src/
 RUN mvn -Dmaven.test.skip=true -Dmaven.javadoc.skip=true package
 
 
-FROM jetty:9.4.56-jre21-eclipse-temurin
+FROM jetty:12.1.10-jdk25-eclipse-temurin
 
 USER root
 COPY certs/ certs/
 RUN certs/import-certificate.sh certs/Open_Banking_Brasil_Sandbox_Root_G2.pem
 USER jetty
+
+# Jetty 12 deploys WARs through an EE environment module. This app targets
+# Jakarta EE 10 (Servlet 6.0 / Jersey 3.1), so enable the ee10 deployer,
+# annotation scanning and JSP support (used by the Jersey MVC pages).
+RUN java -jar "$JETTY_HOME/start.jar" --add-modules=ee10-deploy,ee10-annotations,ee10-jsp
+
 ENV JAVA_OPTIONS="$JAVA_OPTIONS -Djetty.httpConfig.requestHeaderSize=65536"
 COPY --from=builder /build/target/*.war /var/lib/jetty/webapps/ROOT.war

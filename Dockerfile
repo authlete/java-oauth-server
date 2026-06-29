@@ -1,4 +1,4 @@
-FROM maven:3.8.5-openjdk-8
+FROM maven:3.9-eclipse-temurin-25
 EXPOSE 8080
 
 RUN mkdir -p /authlete/app
