@@ -17,14 +17,17 @@
 package com.authlete.jaxrs.server.resilience;
 
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.api.AuthleteApiException;
 import com.authlete.common.dto.IntrospectionResponse;
+import com.authlete.common.dto.RevocationRequest;
 import com.authlete.jaxrs.server.resilience.AuthleteCacheableMethods.CachePolicy;
 
 
@@ -147,6 +150,14 @@ class ResilientAuthleteApiInvocationHandler implements InvocationHandler
                     cache.put(policy.key, result, effectiveTtl(policy, result));
                 }
 
+                // Best-effort local eviction: once a revocation goes through,
+                // this instance must stop serving cached introspection results
+                // that still report the token as active.
+                if (cacheEnabled && "revocation".equals(method.getName()))
+                {
+                    evictIntrospectionEntriesForRevokedToken(args);
+                }
+
                 return result;
             }
             catch (InvocationTargetException ite)
@@ -256,6 +267,86 @@ class ResilientAuthleteApiInvocationHandler implements InvocationHandler
         }
 
         return ttl;
+    }
+
+
+    /**
+     * Drop every cached introspection entry for the token named in a
+     * successful revocation request, so this instance stops reporting the
+     * token as active right away instead of waiting for the TTL.
+     *
+     * <p>
+     * Introspection cache keys start with the raw token, so a prefix match
+     * finds all of them; standard-introspection keys embed the token inside
+     * the form parameters, so a contains match is used there. This is
+     * best-effort and local only: other instances still rely on the short
+     * TTL, and a refresh-token revocation cannot evict the access tokens
+     * Authlete revokes alongside it.
+     * </p>
+     */
+    private void evictIntrospectionEntriesForRevokedToken(Object[] args)
+    {
+        String token = revokedToken(args);
+
+        if (token == null || token.isEmpty())
+        {
+            return;
+        }
+
+        String prefix = "introspection::" + token + "|";
+
+        int removed = cache.removeIf(key ->
+                key.startsWith(prefix)
+                || (key.startsWith("standardIntrospection::") && key.contains(token)));
+
+        if (removed > 0)
+        {
+            logger.debug("Evicted {} cached introspection entries for a revoked token.", removed);
+        }
+    }
+
+
+    /**
+     * Extract the {@code token} request parameter from the revocation
+     * request's form-encoded parameters, or {@code null} if absent.
+     */
+    private static String revokedToken(Object[] args)
+    {
+        if (args == null || args.length == 0 || !(args[0] instanceof RevocationRequest))
+        {
+            return null;
+        }
+
+        String parameters = ((RevocationRequest) args[0]).getParameters();
+
+        if (parameters == null)
+        {
+            return null;
+        }
+
+        for (String pair : parameters.split("&"))
+        {
+            int eq = pair.indexOf('=');
+
+            if (eq < 0 || !"token".equals(pair.substring(0, eq)))
+            {
+                continue;
+            }
+
+            String value = pair.substring(eq + 1);
+
+            try
+            {
+                return URLDecoder.decode(value, "UTF-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                // UTF-8 is always supported; fall back to the raw value.
+                return value;
+            }
+        }
+
+        return null;
     }
 
 

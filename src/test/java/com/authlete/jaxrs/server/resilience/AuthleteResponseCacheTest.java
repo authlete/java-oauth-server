@@ -92,4 +92,22 @@ public class AuthleteResponseCacheTest
         cache.put("a", "1b", 500);
         assertEquals("1b", cache.getFresh("a"));
     }
+
+
+    @Test
+    public void removeIfDropsOnlyMatchingKeys()
+    {
+        AuthleteResponseCache cache = new AuthleteResponseCache(1000, 100, clock);
+        cache.put("introspection::tokenA|scope1", "a1", 500);
+        cache.put("introspection::tokenA|scope2", "a2", 500);
+        cache.put("introspection::tokenB|scope1", "b1", 500);
+
+        int removed = cache.removeIf(key -> key.startsWith("introspection::tokenA|"));
+
+        assertEquals(2, removed);
+        assertNull(cache.getFresh("introspection::tokenA|scope1"));
+        assertNull(cache.getFresh("introspection::tokenA|scope2"));
+        assertEquals("other tokens untouched", "b1",
+                cache.getFresh("introspection::tokenB|scope1"));
+    }
 }

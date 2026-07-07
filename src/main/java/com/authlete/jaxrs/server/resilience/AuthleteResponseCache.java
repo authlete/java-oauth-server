@@ -20,6 +20,7 @@ package com.authlete.jaxrs.server.resilience;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.LongSupplier;
+import java.util.function.Predicate;
 
 
 /**
@@ -184,6 +185,35 @@ class AuthleteResponseCache
                 map.remove(e.getKey(), e.getValue());
             }
         }
+    }
+
+
+    /**
+     * Remove every entry whose key satisfies the given predicate.
+     *
+     * <p>
+     * Used for best-effort eviction of a revoked token's introspection
+     * entries: introspection cache keys start with the token (see
+     * {@link AuthleteCacheableMethods}), so all entries for one token can be
+     * matched without a reverse index.
+     * </p>
+     *
+     * @return
+     *         The number of entries removed.
+     */
+    int removeIf(Predicate<String> keyPredicate)
+    {
+        int removed = 0;
+
+        for (String key : map.keySet())
+        {
+            if (keyPredicate.test(key) && map.remove(key) != null)
+            {
+                removed++;
+            }
+        }
+
+        return removed;
     }
 
 
