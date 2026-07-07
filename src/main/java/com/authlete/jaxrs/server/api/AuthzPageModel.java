@@ -18,7 +18,7 @@ package com.authlete.jaxrs.server.api;
 
 import com.authlete.common.dto.AuthorizationResponse;
 import com.authlete.common.types.User;
-import com.authlete.jaxrs.AuthorizationPageModel;
+import com.authlete.jakarta.AuthorizationPageModel;
 import com.authlete.jaxrs.server.federation.FederationConfig;
 
 

@@ -17,13 +17,13 @@
 package com.authlete.jaxrs.server.api.attestation;
 
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.AttestationChallengeRequest;
-import com.authlete.jaxrs.BaseAttestationChallengeEndpoint;
+import com.authlete.jakarta.BaseAttestationChallengeEndpoint;
 
 
 /**

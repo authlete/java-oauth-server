@@ -17,13 +17,13 @@
 package com.authlete.jaxrs.server.api.vci;
 
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.CredentialIssuerMetadataRequest;
-import com.authlete.jaxrs.BaseCredentialIssuerMetadataEndpoint;
+import com.authlete.jakarta.BaseCredentialIssuerMetadataEndpoint;
 
 
 @Path("/.well-known/openid-credential-issuer")

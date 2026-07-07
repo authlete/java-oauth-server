@@ -25,13 +25,13 @@ import com.authlete.common.types.User;
 import com.authlete.jaxrs.server.db.DatasetDao;
 import com.authlete.jaxrs.server.db.UserDao;
 import com.authlete.jaxrs.server.db.VerifiedClaimsDao;
-import com.authlete.jaxrs.spi.UserInfoRequestHandlerSpiAdapter;
+import com.authlete.jakarta.spi.UserInfoRequestHandlerSpiAdapter;
 
 
 /**
- * Implementation of {@link com.authlete.jaxrs.spi.UserInfoRequestHandlerSpi
+ * Implementation of {@link com.authlete.jakarta.spi.UserInfoRequestHandlerSpi
  * UserInfoRequestHandlerSpi} interface which needs to be given to the
- * constructor of {@link com.authlete.jaxrs.UserInfoRequestHandler
+ * constructor of {@link com.authlete.jakarta.UserInfoRequestHandler
  * UserInfoRequestHandler}.
  */
 public class UserInfoRequestHandlerSpiImpl extends UserInfoRequestHandlerSpiAdapter

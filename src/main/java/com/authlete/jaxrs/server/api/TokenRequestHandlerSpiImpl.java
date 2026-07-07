@@ -18,20 +18,20 @@ package com.authlete.jaxrs.server.api;
 
 
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.common.dto.Property;
 import com.authlete.common.dto.TokenResponse;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.server.db.UserDao;
-import com.authlete.jaxrs.spi.TokenRequestHandlerSpiAdapter;
+import com.authlete.jakarta.spi.TokenRequestHandlerSpiAdapter;
 
 
 /**
- * Implementation of {@link com.authlete.jaxrs.spi.TokenRequestHandlerSpi
+ * Implementation of {@link com.authlete.jakarta.spi.TokenRequestHandlerSpi
  * TokenRequestHandlerSpi} interface which needs to be given to the
- * constructor of {@link com.authlete.jaxrs.TokenRequestHandler
+ * constructor of {@link com.authlete.jakarta.TokenRequestHandler
  * TokenRequestHandler}.
  *
  * @author Takahiko Kawasaki

@@ -7,13 +7,21 @@ Overview
 This is an authorization server implementation in Java which supports
 [OAuth 2.0][1] and [OpenID Connect][2].
 
-This implementation is written using JAX-RS 2.0 API and [authlete-java-jaxrs][3]
-library. JAX-RS is _The Java API for RESTful Web Services_. JAX-RS 2.0 API has
-been standardized by [JSR 339][4] and it is included in Java EE 7. On the other
-hand, authlete-java-jaxrs library is an open source library which provides utility
-classes for developers to implement an authorization server and a resource server.
-authlete-java-jaxrs in turn uses [authlete-java-common][5] library which is
-another open source library to communicate with [Authlete Web APIs][6].
+This implementation is written using the Jakarta RESTful Web Services API
+(_Jakarta REST_, formerly known as JAX-RS) and the [authlete-java-jakarta][3]
+library. Jakarta REST is part of [Jakarta EE][4]. This server targets the
+**Jakarta EE 10** stack (Jakarta REST 3.1 / Servlet 6.0, Jersey 3.1) and builds
+and runs on **Java 25**. On the other hand, authlete-java-jakarta library is an
+open source library which provides utility classes for developers to implement an
+authorization server and a resource server. authlete-java-jakarta in turn uses
+[authlete-java-common][5] library which is another open source library to
+communicate with [Authlete Web APIs][6].
+
+> **Note:** This server was previously built on the legacy Java EE stack
+> (JAX-RS 2.0 / `javax.*`, Jersey 2, Servlet 3, Java 8). It has been migrated to
+> **Jakarta EE 10** (`jakarta.*`), so it now deploys cleanly to modern servlet
+> containers such as Tomcat 10+ and Jetty 12. The default Authlete API version
+> is also now **Authlete 3.0** (see [Configuration File](#configuration-file)).
 
 This implementation is _DB-less_. What this means is that you don't have to
 have a database server that stores authorization data (e.g. access tokens),
@@ -69,7 +77,8 @@ How To Run
 
         $ vi authlete.properties
 
-3. Make sure that you have installed [maven][42] and set `JAVA_HOME` properly.
+3. Make sure that you have installed [maven][42] and a **JDK 25** (or later) and
+   set `JAVA_HOME` properly.
 
 4. Start the authorization server on [http://localhost:8080][38].
 
@@ -88,6 +97,12 @@ If you want to use another different file, specify the name of the file by
 the system property `authlete.configuration.file` like the following.
 
     $ mvn -Dauthlete.configuration.file=local.authlete.properties jetty:run &
+
+By default, `authlete.properties` is configured for **Authlete 3.0** (API `V3`):
+set your service's cluster `base_url` (e.g. `https://jp.authlete.com`), the
+`service.api_key` and a `service.access_token`. If you still use Authlete 2.x,
+the file contains a commented "Authlete 2.x (legacy)" block you can switch to
+(API key + API secret on `https://api.authlete.com`).
 
 
 Endpoints
@@ -201,8 +216,8 @@ Implementation Note
 -------------------
 
 This implementation uses `Viewable` class to implement the authorization page.
-The class is included in [Jersey][18] (the reference implementation of JAX-RS),
-but it is not a part of JAX-RS 2.0 API.
+The class is included in [Jersey][18] (the reference implementation of Jakarta
+REST), but it is not a part of the Jakarta REST API.
 
 
 Related Specifications
@@ -239,7 +254,7 @@ See Also
 
 - [Authlete][7] - Authlete Home Page
 - [authlete-java-common][5] - Authlete Common Library for Java
-- [authlete-java-jaxrs][3] - Authlete Library for JAX-RS (Java)
+- [authlete-java-jakarta][3] - Authlete Library for Jakarta (Java)
 - [java-resource-server][40] - Resource Server Implementation
 
 
@@ -256,8 +271,8 @@ Contact
 
 [1]: https://www.rfc-editor.org/rfc/rfc6749.html
 [2]: https://openid.net/connect/
-[3]: https://github.com/authlete/authlete-java-jaxrs
-[4]: https://jcp.org/en/jsr/detail?id=339
+[3]: https://github.com/authlete/authlete-java-jakarta
+[4]: https://jakarta.ee/specifications/restful-ws/
 [5]: https://github.com/authlete/authlete-java-common
 [6]: https://docs.authlete.com/
 [7]: https://www.authlete.com/

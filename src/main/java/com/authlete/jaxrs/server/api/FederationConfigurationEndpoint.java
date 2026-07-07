@@ -17,13 +17,13 @@
 package com.authlete.jaxrs.server.api;
 
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.FederationConfigurationRequest;
 import com.authlete.common.types.EntityType;
-import com.authlete.jaxrs.BaseFederationConfigurationEndpoint;
+import com.authlete.jakarta.BaseFederationConfigurationEndpoint;
 
 
 /**

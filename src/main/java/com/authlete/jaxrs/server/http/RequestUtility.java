@@ -17,7 +17,7 @@
 package com.authlete.jaxrs.server.http;
 
 
-import javax.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestContext;
 
 
 public class RequestUtility

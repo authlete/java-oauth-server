@@ -2,12 +2,12 @@ package com.authlete.jaxrs.server.api;
 
 
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.jaxrs.server.obb.database.ConsentDao;
 import com.authlete.jaxrs.server.obb.model.Consent;

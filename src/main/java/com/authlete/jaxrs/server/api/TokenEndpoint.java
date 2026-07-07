@@ -18,21 +18,21 @@ package com.authlete.jaxrs.server.api;
 
 
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
 import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.util.Utils;
-import com.authlete.jaxrs.BaseTokenEndpoint;
-import com.authlete.jaxrs.TokenRequestHandler.Params;
-import com.authlete.jaxrs.spi.TokenRequestHandlerSpi;
+import com.authlete.jakarta.BaseTokenEndpoint;
+import com.authlete.jakarta.TokenRequestHandler.Params;
+import com.authlete.jakarta.spi.TokenRequestHandlerSpi;
 
 
 /**
