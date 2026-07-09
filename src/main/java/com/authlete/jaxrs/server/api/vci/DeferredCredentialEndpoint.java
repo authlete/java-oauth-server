@@ -29,7 +29,7 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.CredentialDeferredIssueRequest;
 import com.authlete.common.dto.CredentialDeferredIssueResponse;
 import com.authlete.common.dto.CredentialDeferredParseRequest;
@@ -54,7 +54,7 @@ public class DeferredCredentialEndpoint extends AbstractCredentialEndpoint
             @HeaderParam("DPoP") String dpop,
             String requestContent)
     {
-        final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        final AuthleteApi api = ResilientAuthleteApiFactory.getDefaultApi();
 
         // Extract the access token from the request.
         String accessToken = extractAccessToken(authorization, null);

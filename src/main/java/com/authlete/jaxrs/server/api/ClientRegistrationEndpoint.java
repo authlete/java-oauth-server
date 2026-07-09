@@ -34,7 +34,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.util.Utils;
 import com.authlete.jakarta.BaseClientRegistrationEndpoint;
 import com.authlete.jaxrs.server.obb.util.ObbUtils;
@@ -71,7 +71,7 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
             @Context HttpServletRequest httpServletRequest)
     {
         // The interface of Authlete APIs.
-        AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        AuthleteApi api = ResilientAuthleteApiFactory.getDefaultApi();
 
         // Pre-process the request body as necessary.
         json = preprocessRequestBody(httpServletRequest, json);
@@ -92,7 +92,7 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
             @Context HttpServletRequest httpServletRequest)
     {
         // The interface of Authlete APIs.
-        AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        AuthleteApi api = ResilientAuthleteApiFactory.getDefaultApi();
 
         // Extra process before executing the "read" operation.
         preprocessClient(httpServletRequest, api, clientId);
@@ -115,7 +115,7 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
             @Context HttpServletRequest httpServletRequest)
     {
         // The interface of Authlete APIs.
-        AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        AuthleteApi api = ResilientAuthleteApiFactory.getDefaultApi();
 
         // Pre-process the request body as necessary.
         json = preprocessRequestBody(httpServletRequest, json);
@@ -136,7 +136,7 @@ public class ClientRegistrationEndpoint extends BaseClientRegistrationEndpoint
             @Context HttpServletRequest httpServletRequest)
     {
         // The interface of Authlete APIs.
-        AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        AuthleteApi api = ResilientAuthleteApiFactory.getDefaultApi();
 
         // Extra process before executing the "delete" operation.
         preprocessClient(httpServletRequest, api, clientId);

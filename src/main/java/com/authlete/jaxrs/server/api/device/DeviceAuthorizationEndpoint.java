@@ -27,7 +27,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.jakarta.BaseDeviceAuthorizationEndpoint;
 import com.authlete.jakarta.DeviceAuthorizationRequestHandler.Params;
 
@@ -54,7 +54,7 @@ public class DeviceAuthorizationEndpoint extends BaseDeviceAuthorizationEndpoint
             MultivaluedMap<String, String> parameters)
     {
         // Authlete API
-        AuthleteApi authleteApi = AuthleteApiFactory.getDefaultApi();
+        AuthleteApi authleteApi = ResilientAuthleteApiFactory.getDefaultApi();
 
         // Parameters for Authlete's /device/authorization API
         Params params = buildParams(request, parameters);

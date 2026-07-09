@@ -26,7 +26,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.web.BasicCredentials;
 import com.authlete.jakarta.BaseIntrospectionEndpoint;
 import com.authlete.jakarta.IntrospectionRequestHandler.Params;
@@ -104,7 +104,7 @@ public class IntrospectionEndpoint extends BaseIntrospectionEndpoint
         Params params = buildParams(parameters, accept, rsEntity);
 
         // Handle the introspection request.
-        return handle(AuthleteApiFactory.getDefaultApi(), params);
+        return handle(ResilientAuthleteApiFactory.getDefaultApi(), params);
     }
 
 

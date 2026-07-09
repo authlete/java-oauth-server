@@ -32,7 +32,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import org.glassfish.jersey.server.mvc.Viewable;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.types.User;
 import com.authlete.jakarta.BaseDeviceVerificationEndpoint;
 import com.authlete.jakarta.DeviceVerificationPageModel;
@@ -174,7 +174,7 @@ public class DeviceVerificationEndpoint extends BaseDeviceVerificationEndpoint
      */
     private Response handle(HttpSession session, String userCode)
     {
-        return handle(AuthleteApiFactory.getDefaultApi(),
+        return handle(ResilientAuthleteApiFactory.getDefaultApi(),
                 new DeviceVerificationRequestHandlerSpiImpl(session, userCode));
     }
 }

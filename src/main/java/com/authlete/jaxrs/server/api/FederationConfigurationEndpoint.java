@@ -20,7 +20,7 @@ package com.authlete.jaxrs.server.api;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.FederationConfigurationRequest;
 import com.authlete.common.types.EntityType;
 import com.authlete.jakarta.BaseFederationConfigurationEndpoint;
@@ -78,6 +78,6 @@ public class FederationConfigurationEndpoint extends BaseFederationConfiguration
     public Response get()
     {
         // Handle the request to the endpoint.
-        return handle(AuthleteApiFactory.getDefaultApi(), REQUEST);
+        return handle(ResilientAuthleteApiFactory.getDefaultApi(), REQUEST);
     }
 }

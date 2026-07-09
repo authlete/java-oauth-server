@@ -28,7 +28,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.util.Utils;
 import com.authlete.jakarta.BaseTokenEndpoint;
 import com.authlete.jakarta.TokenRequestHandler.Params;
@@ -80,7 +80,7 @@ public class TokenEndpoint extends BaseTokenEndpoint
             MultivaluedMap<String, String> parameters)
     {
         // Authlete API
-        AuthleteApi authleteApi = AuthleteApiFactory.getDefaultApi();
+        AuthleteApi authleteApi = ResilientAuthleteApiFactory.getDefaultApi();
 
         // Process the token request in a standard way.
         Response response = processTokenRequest(authleteApi, request, parameters);

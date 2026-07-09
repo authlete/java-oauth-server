@@ -24,7 +24,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.jakarta.BaseGrantManagementEndpoint;
 
 
@@ -47,7 +47,7 @@ public class GrantManagementEndpoint extends BaseGrantManagementEndpoint
             @PathParam("grantId") String grantId)
     {
         // Handle the grant management 'query' request.
-        return handle(AuthleteApiFactory.getDefaultApi(), req, grantId);
+        return handle(ResilientAuthleteApiFactory.getDefaultApi(), req, grantId);
     }
 
 
@@ -61,6 +61,6 @@ public class GrantManagementEndpoint extends BaseGrantManagementEndpoint
             @PathParam("grantId") String grantId)
     {
         // Handle the grant management 'revoke' request.
-        return handle(AuthleteApiFactory.getDefaultApi(), req, grantId);
+        return handle(ResilientAuthleteApiFactory.getDefaultApi(), req, grantId);
     }
 }

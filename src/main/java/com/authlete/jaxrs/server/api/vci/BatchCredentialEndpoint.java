@@ -30,7 +30,7 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.CredentialBatchIssueRequest;
 import com.authlete.common.dto.CredentialBatchIssueResponse;
 import com.authlete.common.dto.CredentialBatchParseRequest;
@@ -54,7 +54,7 @@ public class BatchCredentialEndpoint extends AbstractCredentialEndpoint
             @QueryParam("deferred") String deferred,
             String requestContent)
     {
-        final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        final AuthleteApi api = ResilientAuthleteApiFactory.getDefaultApi();
 
         // Extract the access token from the request.
         String accessToken = extractAccessToken(authorization, null);

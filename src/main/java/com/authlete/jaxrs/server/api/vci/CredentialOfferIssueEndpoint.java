@@ -30,7 +30,7 @@ import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.server.mvc.Viewable;
 import com.authlete.common.api.AuthleteApi;
-import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.server.resilience.ResilientAuthleteApiFactory;
 import com.authlete.common.dto.CredentialOfferCreateRequest;
 import com.authlete.common.dto.CredentialOfferCreateResponse;
 import com.authlete.common.types.User;
@@ -68,7 +68,7 @@ public class CredentialOfferIssueEndpoint extends BaseEndpoint
         final CredentialOfferPageModel model = new CredentialOfferPageModel()
                 .setValues(flatMap);
 
-        final AuthleteApi api = AuthleteApiFactory.getDefaultApi();
+        final AuthleteApi api = ResilientAuthleteApiFactory.getDefaultApi();
         final User user = ProcessingUtil.getUser(session, parameters);
 
         if (user == null)
