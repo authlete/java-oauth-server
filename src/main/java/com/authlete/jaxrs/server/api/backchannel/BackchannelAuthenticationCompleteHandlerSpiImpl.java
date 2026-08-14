@@ -228,7 +228,7 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
 
         try
         {
-            // Send the notification to the consumption device..
+            // Send the notification to the consumption device.
             return webClient.target(clientNotificationEndpointUri).request()
                     // CIBA Core says "The OP MUST NOT follow redirects."
                     .property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE)
@@ -267,9 +267,10 @@ public class BackchannelAuthenticationCompleteHandlerSpiImpl extends Backchannel
     {
         // SSLContext's for older TLS versions ("TLSv1" and "TLSv1.1") may not
         // include any FAPI cipher suites. Here we create an SSLContext with
-        // "TLSv1.2" whose getDefaultSSLParameters().getCipherSuites() probably
-        // includes FAPI cipher suites.
-        SSLContext sc = createSslContext("TLSv1.2");
+        // "TLSv1.3" that includes the required version 1.2 and the recommended
+        // 1.3 version. Both of whose getDefaultSSLParameters().getCipherSuites()
+        // should include FAPI compatible cipher suites.
+        SSLContext sc = createSslContext("TLSv1.3");
 
         return ClientBuilder.newBuilder().sslContext(sc).build();
     }
