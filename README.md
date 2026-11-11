@@ -219,11 +219,14 @@ This implementation uses `Viewable` class to implement the authorization page.
 The class is included in [Jersey][18] (the reference implementation of Jakarta
 REST), but it is not a part of the Jakarta REST API.
 
-This implementation is a reference for building your own authorization server,
-not a production-ready server. Some parts are deployment-specific and must be
-implemented by you. For example, the JWT bearer grant ([RFC 7523][30]) rejects
-every assertion until you implement the signature verification in
-`JwtAuthzGrantProcessor.verifySignature()`.
+This implementation is a reference for building your own authorization server
+and is not intended for production use. Some parts are deployment-specific and
+must be implemented by you. For example, the JWT bearer grant ([RFC 7523][30])
+returns an error for every assertion until you implement signature verification
+in `JwtAuthzGrantProcessor.verifySignature()`. Likewise, token exchange (RFC 8693)
+returns an error for every subject token of type
+`urn:ietf:params:oauth:token-type:jwt` until you implement
+`TokenExchanger.verifySignature()`.
 
 
 Related Specifications
