@@ -36,6 +36,7 @@ import com.authlete.common.types.TokenType;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
+import com.nimbusds.jwt.SignedJWT;
 
 
 /**
@@ -249,6 +250,24 @@ class TokenExchanger
                     "an encrypted JWT as a subject token.");
         }
 
+        // If the JWT is not signed. Authlete accepts unsigned JWTs unless the
+        // "tokenExchangeUnsignedJwtRejected" flag of the service is true, but
+        // the "sub" claim of an unsigned JWT cannot be trusted.
+        if (!(jwt instanceof SignedJWT))
+        {
+            throw invalidRequest(
+                    "This authorization server does not accept " +
+                    "an unsigned JWT as a subject token.");
+        }
+
+        // For the token type "urn:ietf:params:oauth:token-type:id_token",
+        // Authlete has already verified the signature of the ID Token. For the
+        // token type "urn:ietf:params:oauth:token-type:jwt", it has not.
+        if (mTokenResponse.getSubjectTokenType() == TokenType.JWT)
+        {
+            verifySignature((SignedJWT)jwt);
+        }
+
         try
         {
             // Get the value of the "sub" claim from the payload of the JWT.
@@ -263,6 +282,29 @@ class TokenExchanger
                     "The value of the 'sub' claim failed to be extracted " +
                     "from the payload of the subject token.");
         }
+    }
+
+
+    private void verifySignature(SignedJWT jwt)
+    {
+        // Authlete does not verify the signature of a subject token whose
+        // token type is "urn:ietf:params:oauth:token-type:jwt", because there
+        // is no standard way to obtain the key to verify it with. See the
+        // JavaDoc of the TokenResponse class for details. Each deployment has
+        // to define its own rules, for example "the subject token must be
+        // issued by https://example.com", and find the key accordingly (e.g.
+        // from a JWK Set document published by the issuer).
+
+        // TODO
+        // Your implementation must verify the signature of the JWT before
+        // trusting its "sub" claim.
+        //
+        // Until it does, this sample rejects every subject token of this type
+        // with a server error. Accepting a subject token whose signature has
+        // not been verified would let any client obtain an access token for
+        // an arbitrary subject.
+        throw serverError(
+                "Signature verification of the subject token is not implemented.");
     }
 
 

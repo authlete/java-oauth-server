@@ -194,6 +194,12 @@ class JwtAuthzGrantProcessor
 
         // TODO
         // In any case, your implementation must verify the signature of the JWT.
+        //
+        // Until it does, this sample rejects every assertion with a server
+        // error. Accepting an assertion whose signature has not been verified
+        // would let any client obtain an access token for an arbitrary subject.
+        throw serverError(
+                "Signature verification of the assertion is not implemented.");
     }
 
 
